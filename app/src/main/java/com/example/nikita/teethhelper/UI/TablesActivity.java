@@ -28,11 +28,13 @@ public class TablesActivity extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(), RequestActivity.class);
         startActivity(intent);
     }
+
     @OnClick(R.id.buttonCreateOrder)
     void onClickOrder() {
         Intent intent = new Intent(getApplicationContext(), ReportActivity.class);
         startActivity(intent);
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
