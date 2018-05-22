@@ -24,7 +24,7 @@
     <string name="month">Month</string>
     <string name="year">Year</string>
     <string name="createRequest">Create Request</string>
-    <string name="createOrder">Create Order</string>
+    <string name="createReport">Create Report</string>
     <string name="typeOfRequest">Type of Request</string>
     <string name="table">Table</string>
     <string name="requestField">Request</string>

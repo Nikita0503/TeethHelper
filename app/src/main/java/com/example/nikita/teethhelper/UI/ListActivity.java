@@ -30,8 +30,8 @@ import butterknife.ButterKnife;
 import es.dmoral.toasty.Toasty;
 
 public class ListActivity extends AppCompatActivity {
-
     int tableId;
+
     @BindView(R.id.elvMain)
     ExpandableListView elvMain;
     @Override

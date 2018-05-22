@@ -153,8 +153,6 @@ public class RequestActivityPresenter {
         return request;
     }
 
-
-
     public void fetchData(){
         String[] typesOfRequest = requestActivity.getResources().getStringArray(R.array.typesOfRequest);
         String[] tableNames = requestActivity.getResources().getStringArray(R.array.tableNames);

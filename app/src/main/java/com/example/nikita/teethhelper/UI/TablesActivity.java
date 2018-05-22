@@ -16,10 +16,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class TablesActivity extends AppCompatActivity {
-    @BindView(R.id.buttonCreateRequest)
-    Button buttonCreateRequest;
-    @BindView(R.id.buttonCreateOrder)
-    Button getButtonCreateOrder;
     @BindView(R.id.circle_menu)
     CircleMenuView menu;
     @OnClick(R.id.buttonCreateRequest)
@@ -28,7 +24,7 @@ public class TablesActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    @OnClick(R.id.buttonCreateOrder)
+    @OnClick(R.id.buttonCreateReport)
     void onClickOrder() {
         Intent intent = new Intent(getApplicationContext(), ReportActivity.class);
         startActivity(intent);

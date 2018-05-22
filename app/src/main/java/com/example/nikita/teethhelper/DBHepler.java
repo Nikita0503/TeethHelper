@@ -18,7 +18,7 @@ import java.util.List;
 public class DBHepler extends SQLiteOpenHelper {
     public DBHepler(Context context) {
         super(context, "Stomatology", null, 1);
-    }                                                                   //ПОФИКСИТЬ ХЕРНЮ С ЧИСЛОВЫМИ ЗНАЧЕНИЯМИ ИЗ ЕДИТТЕКСТОВ У ДОКТОРА
+    }
     @Override
     public void onCreate (SQLiteDatabase db){
         Log.d("LOG", "--- onCreate database ---");

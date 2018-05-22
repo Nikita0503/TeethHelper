@@ -284,29 +284,29 @@ public class ListPresenter {
         switch (tableId) {
             case 0:
                 object = getRenderByObjectData(objectData);
-                RendersTable rendersTable = new RendersTable(listActivity, this);
+                RendersTable rendersTable = new RendersTable(listActivity.getApplicationContext(), this);
                 rendersTable.addRow(object);
                 break;
             case 1:
                 object = getDoctorByObjectData(objectData);
-                DoctorsTable doctorsTable = new DoctorsTable(listActivity, this);
+                DoctorsTable doctorsTable = new DoctorsTable(listActivity.getApplicationContext(), this);
                 doctorsTable.addRow(object);
                 break;
             case 2:
                 object = getPatientByObjectData(objectData);
-                PatientsTable patientsTable = new PatientsTable(listActivity, this);
+                PatientsTable patientsTable = new PatientsTable(listActivity.getApplicationContext(), this);
                 patientsTable.addRow(object);
                 break;
             case 3:
                 object = getServiceByObjectData(objectData);
                 Service service = (Service) object;
                 Log.d("NEWSERVICE", service.manipulation + service.patient + service.doctor + service.cost + service.date);
-                ServicesTable servicesTable = new ServicesTable(listActivity, this);
+                ServicesTable servicesTable = new ServicesTable(listActivity.getApplicationContext(), this);
                 servicesTable.addRow(object);
                 break;
             case 4:
                 object = getVisitByObjectData(objectData);
-                VisitsTable visitsTable = new VisitsTable(listActivity, this);
+                VisitsTable visitsTable = new VisitsTable(listActivity.getApplicationContext(), this);
                 visitsTable.addRow(object);
                 break;
         }
@@ -317,27 +317,27 @@ public class ListPresenter {
         switch (tableId){
             case 0:
                 object = getRenderByObjectData(objectData);
-                RendersTable rendersTable = new RendersTable(listActivity, this);
+                RendersTable rendersTable = new RendersTable(listActivity.getApplicationContext(), this);
                 rendersTable.deleteRow(object);
                 break;
             case 1:
                 object = getDoctorByObjectData(objectData);
-                DoctorsTable doctorsTable = new DoctorsTable(listActivity, this);
+                DoctorsTable doctorsTable = new DoctorsTable(listActivity.getApplicationContext(), this);
                 doctorsTable.deleteRow(object);
                 break;
             case 2:
                 object = getPatientByObjectData(objectData);
-                PatientsTable patientsTable = new PatientsTable(listActivity, this);
+                PatientsTable patientsTable = new PatientsTable(listActivity.getApplicationContext(), this);
                 patientsTable.deleteRow(object);
                 break;
             case 3:
                 object = getServiceByObjectData(objectData);
-                ServicesTable servicesTable = new ServicesTable(listActivity, this);
+                ServicesTable servicesTable = new ServicesTable(listActivity.getApplicationContext(), this);
                 servicesTable.deleteRow(object);
                 break;
             case 4:
                 object = getVisitByObjectData(objectData);
-                VisitsTable visitsTable = new VisitsTable(listActivity, this);
+                VisitsTable visitsTable = new VisitsTable(listActivity.getApplicationContext(), this);
                 visitsTable.deleteRow(object);
                 break;
             default:
@@ -413,31 +413,31 @@ public class ListPresenter {
             case 0:
                 oldObject = getRenderByObjectData(oldObjectData);
                 newObject = getRenderByObjectData(newObjectData);
-                RendersTable rendersTable = new RendersTable(listActivity, this);
+                RendersTable rendersTable = new RendersTable(listActivity.getApplicationContext(), this);
                 rendersTable.updateRow(oldObject, newObject);
                 break;
             case 1:
                 oldObject = getDoctorByObjectData(oldObjectData);
                 newObject = getDoctorByObjectData(newObjectData);
-                DoctorsTable doctorsTable = new DoctorsTable(listActivity, this);
+                DoctorsTable doctorsTable = new DoctorsTable(listActivity.getApplicationContext(), this);
                 doctorsTable.updateRow(oldObject, newObject);
                 break;
             case 2:
                 oldObject = getPatientByObjectData(oldObjectData);
                 newObject = getPatientByObjectData(newObjectData);
-                PatientsTable patientsTable = new PatientsTable(listActivity, this);
+                PatientsTable patientsTable = new PatientsTable(listActivity.getApplicationContext(), this);
                 patientsTable.updateRow(oldObject, newObject);
                 break;
             case 3:
                 oldObject = getServiceByObjectData(oldObjectData);
                 newObject = getServiceByObjectData(newObjectData);
-                ServicesTable servicesTable = new ServicesTable(listActivity, this);
+                ServicesTable servicesTable = new ServicesTable(listActivity.getApplicationContext(), this);
                 servicesTable.updateRow(oldObject, newObject);
                 break;
             case 4:
                 oldObject = getVisitByObjectData(oldObjectData);
                 newObject = getVisitByObjectData(newObjectData);
-                VisitsTable visitsTable = new VisitsTable(listActivity, this);
+                VisitsTable visitsTable = new VisitsTable(listActivity.getApplicationContext(), this);
                 visitsTable.updateRow(oldObject, newObject);
                 break;
         }
@@ -532,19 +532,19 @@ public class ListPresenter {
         defaultTable presenter;
         switch (tableId){
             case 0:
-                presenter = new RendersTable(listActivity, this);
+                presenter = new RendersTable(listActivity.getApplicationContext(), this);
                 break;
             case 1:
-                presenter = new DoctorsTable(listActivity, this);
+                presenter = new DoctorsTable(listActivity.getApplicationContext(), this);
                 break;
             case 2:
-                presenter = new PatientsTable(listActivity, this);
+                presenter = new PatientsTable(listActivity.getApplicationContext(), this);
                 break;
             case 3:
-                presenter = new ServicesTable(listActivity, this);
+                presenter = new ServicesTable(listActivity.getApplicationContext(), this);
                 break;
             case 4:
-                presenter = new VisitsTable(listActivity, this);
+                presenter = new VisitsTable(listActivity.getApplicationContext(), this);
                 break;
             default:
                 presenter = null;

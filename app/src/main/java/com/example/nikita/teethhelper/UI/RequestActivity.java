@@ -21,7 +21,7 @@ import butterknife.OnClick;
 import es.dmoral.toasty.Toasty;
 
 public class RequestActivity extends AppCompatActivity {
-    private int tableId;//mTableId
+    private int tableId;
     Fragment fragment;
     @BindView(R.id.spinnerTypeOfRequest)
     Spinner spinnerTypeOfRequest;
