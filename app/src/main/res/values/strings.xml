@@ -1,0 +1,90 @@
+<resources>
+    <string name="app_name">TeethHelper</string>
+    <string name="nameField">Name</string>
+    <string name="passwordField">Password</string>
+    <string name="passportField">Passport</string>
+    <string name="addressField">Address</string>
+    <string name="diseaseField">Disease</string>
+    <string name="specializationField">Specialization</string>
+    <string name="experienceField">Experience</string>
+    <string name="berthField">Berth</string>
+    <string name="serviceField">Service</string>
+    <string name="patientField">Patient</string>
+    <string name="doctorField">Doctor</string>
+    <string name="sumField">Sum</string>
+    <string name="dateField">Date</string>
+    <string name="dateFieldAfter">After</string>
+    <string name="dateFieldBefore">Before</string>
+    <string name="manipulationField">Manipulation</string>
+    <string name="costField">Cost</string>
+    <string name="renderField">Render</string>
+    <string name="visitField">Visit</string>
+    <string name="add">Add</string>
+    <string name="day">Day</string>
+    <string name="month">Month</string>
+    <string name="year">Year</string>
+    <string name="createRequest">Create Request</string>
+    <string name="createOrder">Create Order</string>
+    <string name="typeOfRequest">Type of Request</string>
+    <string name="table">Table</string>
+    <string name="requestField">Request</string>
+    <string name="commit">Commit</string>
+    <string name="doctors">Doctors</string>
+    <string name="patients">Patients</string>
+    <string name="renders">Renders</string>
+    <string name="visits">Visits</string>
+    <string name="visitsStatistic">Visits\nStatistic</string>
+    <string name="done">Done!</string>
+    <string name="error">Error!</string>
+    <string name="invalidAfterDate">Invalid after date!</string>
+    <string name="invalidBeforeDate">Invalid before date!</string>
+    <string name="OK">OK</string>
+    <string-array name="patientTagNames">
+        <item>code</item>
+        <item>name</item>
+        <item>passport</item>
+        <item>address</item>
+        <item>disease</item>
+    </string-array>
+    <string-array name="doctorTagNames">
+        <item>code</item>
+        <item>name</item>
+        <item>passport</item>
+        <item>address</item>
+        <item>specialization</item>
+        <item>experience</item>
+        <item>berth</item>
+    </string-array>
+    <string-array name="serviceTagNames">
+        <item>manipulation</item>
+        <item>patient</item>
+        <item>doctor</item>
+        <item>cost</item>
+        <item>date</item>
+    </string-array>
+    <string-array name="renderTagNames">
+        <item>service</item>
+        <item>patient</item>
+        <item>doctor</item>
+        <item>sum</item>
+        <item>date</item>
+    </string-array>
+    <string-array name="visitTagNames">
+        <item>patient</item>
+        <item>date</item>
+        <item>service</item>
+    </string-array>
+    <string-array name="typesOfRequest">
+        <item>SELECT</item>
+        <item>INSERT</item>
+        <item>UPDATE</item>
+        <item>DELETE</item>
+    </string-array>
+    <string-array name="tableNames">
+        <item>renders</item>
+        <item>patients</item>
+        <item>doctors</item>
+        <item>service</item>
+        <item>visits</item>
+    </string-array>
+</resources>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="icons">
+        <item>@drawable/ic_payment</item>
+        <item>@drawable/ic_doctor</item>
+        <item>@drawable/ic_patient</item>
+        <item>@drawable/ic_services</item>
+        <item>@drawable/ic_visitation</item>
+    </array>
+    <array name="colors">
+        <item>@android:color/holo_blue_light</item>
+        <item>@android:color/holo_red_light</item>
+        <item>@android:color/holo_purple</item>
+        <item>@android:color/holo_orange_light</item>
+        <item>@android:color/holo_green_light</item>
+    </array>
+</resources>

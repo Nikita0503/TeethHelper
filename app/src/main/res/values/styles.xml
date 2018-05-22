@@ -1,0 +1,56 @@
+<resources>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorDarkPink</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="AppTheme.TableTheme" parent="NewFontTheme">
+        <item name="android:fontFamily">@font/hattori_hanzo</item>
+    </style>
+
+    <style name="RedTheme" parent="NewFontTheme">
+        <item name="colorPrimary">@color/colorRed</item>
+        <item name="colorPrimaryDark">@color/colorDarkRed</item>
+        <item name="colorAccent">@color/colorRed</item>
+    </style>
+
+    <style name="GreenTheme" parent="NewFontTheme">
+        <item name="colorPrimary">@color/colorGreen</item>
+        <item name="colorPrimaryDark">@color/colorDarkGreen</item>
+        <item name="colorAccent">@color/colorGreen</item>
+    </style>
+
+    <style name="AquaTheme" parent="NewFontTheme">
+        <item name="colorPrimary">@color/colorAqua</item>
+        <item name="colorPrimaryDark">@color/colorDarkAqua</item>
+        <item name="colorAccent">@color/colorAqua</item>
+    </style>
+
+    <style name="OrangeTheme" parent="NewFontTheme">
+        <item name="colorPrimary">@color/colorOrange</item>
+        <item name="colorPrimaryDark">@color/colorDarkOrange</item>
+        <item name="colorAccent">@color/colorOrange</item>
+
+    </style>
+
+    <style name="PurpleTheme" parent="NewFontTheme">
+        <item name="colorPrimary">@color/colorPurple</item>
+        <item name="colorPrimaryDark">@color/colorDarkPurple</item>
+        <item name="colorAccent">@color/colorPurple</item>
+    </style>
+
+    <style name="BlueTheme" parent="NewFontTheme">
+        <item name="colorPrimary">@color/colorBlue</item>
+        <item name="colorPrimaryDark">@color/colorDarkBlue</item>
+        <item name="colorAccent">@color/colorBlue</item>
+    </style>
+
+    <style name="NewFontTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:fontFamily">@font/hattori_hanzo</item>
+    </style>
+
+    <style name="MenuTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:fontFamily">@font/hattori_hanzo</item>
+    </style>
+</resources>

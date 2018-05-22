@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    tools:context="com.example.nikita.teethhelper.UI.DateActivity">
+
+    <TextView
+        android:id="@+id/textViewDateAfter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/dateFieldAfter"
+        android:textSize="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/editTextDataDayAfter"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:ems="10"
+        android:hint="@string/day"
+        android:inputType="number"
+        app:layout_constraintStart_toEndOf="@+id/editTextDataMonthAfter"
+        app:layout_constraintTop_toBottomOf="@+id/textViewDateAfter" />
+
+    <EditText
+        android:id="@+id/editTextDataMonthAfter"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:ems="10"
+        android:hint="@string/month"
+        android:inputType="number"
+        app:layout_constraintStart_toEndOf="@+id/editTextDataYearAfter"
+        app:layout_constraintTop_toBottomOf="@+id/textViewDateAfter" />
+
+    <EditText
+        android:id="@+id/editTextDataYearAfter"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:ems="10"
+        android:hint="@string/year"
+        android:inputType="number"
+        app:layout_constraintStart_toStartOf="@+id/textViewDateAfter"
+        app:layout_constraintTop_toBottomOf="@+id/textViewDateAfter" />
+
+    <TextView
+        android:id="@+id/textViewDateBefore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="100dp"
+        android:text="@string/dateFieldBefore"
+        android:textSize="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/editTextDataDayBefore"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:ems="10"
+        android:hint="@string/day"
+        android:inputType="number"
+        app:layout_constraintStart_toEndOf="@+id/editTextDataMonthBefore"
+        app:layout_constraintTop_toBottomOf="@+id/textViewDateBefore" />
+
+    <EditText
+        android:id="@+id/editTextDataMonthBefore"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:ems="10"
+        android:hint="@string/month"
+        android:inputType="number"
+        app:layout_constraintStart_toEndOf="@+id/editTextDataYearBefore"
+        app:layout_constraintTop_toBottomOf="@+id/textViewDateBefore" />
+
+    <EditText
+        android:id="@+id/editTextDataYearBefore"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:ems="10"
+        android:hint="@string/year"
+        android:inputType="number"
+        app:layout_constraintStart_toStartOf="@+id/textViewDateBefore"
+        app:layout_constraintTop_toBottomOf="@+id/textViewDateBefore" />
+
+    <Button
+        android:id="@+id/buttonGetDates"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="6dp"
+        android:layout_marginTop="32dp"
+        android:background="@color/colorGreen"
+        android:text="@string/OK"
+        android:textColor="@color/colorWhite"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextDataMonthBefore" />
+</android.support.constraint.ConstraintLayout>

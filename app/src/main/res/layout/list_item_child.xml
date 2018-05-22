@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:background="@color/colorGray"
+tools:context="com.example.nikita.teethhelper.UI.ListActivity">
+
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/list_item_child"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="8dp"
+        android:fontFamily="@font/hattori_hanzo"
+        android:paddingBottom="16dp"
+        android:paddingRight="18dp"
+        android:paddingTop="16dp"
+        android:paddingLeft="25dp"
+        android:text="1233"
+        android:textColor="#3B3B3B"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="0dp"></TextView>
+
+    <TextView
+        android:id="@+id/list_item_child_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:text="123"
+        android:textSize="16sp"
+        android:fontFamily="@font/hattori_hanzo"
+        android:textColor="#3B3B3B"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</android.support.constraint.ConstraintLayout>
