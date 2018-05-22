@@ -1,26 +1,17 @@
 package com.example.nikita.teethhelper;
 
 import android.content.Intent;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.pdf.PdfDocument;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.example.nikita.teethhelper.UI.DateActivity;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class OrderActivity extends AppCompatActivity {
+public class ReportActivity extends AppCompatActivity {
 
     public Intent date;
 
@@ -28,8 +19,8 @@ public class OrderActivity extends AppCompatActivity {
     Button buttonDoctorsOrder;
     @OnClick(R.id.buttonDoctorsOrder)
     void onClickDoctorsOrder() {
-        OrderActivityPresenter orderActivityPresenter = new OrderActivityPresenter(this);
-        orderActivityPresenter.writeToFile("doctors");
+        ReportActivityPresenter reportActivityPresenter = new ReportActivityPresenter(this);
+        reportActivityPresenter.writeToFile("doctors");
         /*PdfDocument document = new PdfDocument();
 
         // crate a page description
@@ -71,12 +62,12 @@ public class OrderActivity extends AppCompatActivity {
     }
     @OnClick(R.id.buttonPatientsOrder)
     void onClickPatientsOrder() {
-        OrderActivityPresenter orderActivityPresenter = new OrderActivityPresenter(this);
+        ReportActivityPresenter orderActivityPresenter = new ReportActivityPresenter(this);
         orderActivityPresenter.writeToFile("patients");
     }
     @OnClick(R.id.buttonRendersOrder)
     void onClickRendersOrder() {
-        OrderActivityPresenter orderActivityPresenter = new OrderActivityPresenter(this);
+        ReportActivityPresenter orderActivityPresenter = new ReportActivityPresenter(this);
         orderActivityPresenter.writeToFile("renders");
     }
     @OnClick(R.id.buttonVisitsOrder)
@@ -94,7 +85,7 @@ public class OrderActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_order);
+        setContentView(R.layout.activity_report);
         ButterKnife.bind(this);
     }
 
@@ -104,12 +95,12 @@ public class OrderActivity extends AppCompatActivity {
             switch (requestCode) {
                 case 1:
                     date = intent;
-                    OrderActivityPresenter orderActivityPresenter = new OrderActivityPresenter(this);
-                    orderActivityPresenter.writeToFile("visits for period");
+                    ReportActivityPresenter reportActivityPresenter = new ReportActivityPresenter(this);
+                    reportActivityPresenter.writeToFile("visits for period");
                 case 2:
                     date = intent;
-                    OrderActivityPresenter orderActivityPresenter2 = new OrderActivityPresenter(this);
-                    orderActivityPresenter2.writeToFile("visits statistic for period");
+                    ReportActivityPresenter reportActivityPresenter2 = new ReportActivityPresenter(this);
+                    reportActivityPresenter2.writeToFile("visits statistic for period");
             }
         }
     }

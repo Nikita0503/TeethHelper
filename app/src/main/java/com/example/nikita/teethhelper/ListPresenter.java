@@ -5,24 +5,22 @@ import android.util.Log;
 import android.widget.SimpleExpandableListAdapter;
 
 import com.example.nikita.teethhelper.UI.ListActivity;
-import com.example.nikita.teethhelper.UI.MainActivity;
 import com.example.nikita.teethhelper.UI.RecordActivities.DoctorDataActivity;
 import com.example.nikita.teethhelper.UI.RecordActivities.PatientDataActivity;
 import com.example.nikita.teethhelper.UI.RecordActivities.RenderDataActivity;
 import com.example.nikita.teethhelper.UI.RecordActivities.ServiceDataActivity;
 import com.example.nikita.teethhelper.UI.RecordActivities.VisitsDataActivity;
-import com.example.nikita.teethhelper.UI.TablesActivity;
 import com.example.nikita.teethhelper.data.Doctor;
 import com.example.nikita.teethhelper.data.Patient;
 import com.example.nikita.teethhelper.data.Render;
 import com.example.nikita.teethhelper.data.Service;
 import com.example.nikita.teethhelper.data.Visit;
 import com.example.nikita.teethhelper.data.defaultObject;
-import com.example.nikita.teethhelper.getters.DoctorsGetter;
-import com.example.nikita.teethhelper.getters.PatientsGetter;
-import com.example.nikita.teethhelper.getters.RendersGetter;
-import com.example.nikita.teethhelper.getters.ServicesGetter;
-import com.example.nikita.teethhelper.getters.VisitsGetter;
+import com.example.nikita.teethhelper.tables.DoctorsTable;
+import com.example.nikita.teethhelper.tables.PatientsTable;
+import com.example.nikita.teethhelper.tables.RendersTable;
+import com.example.nikita.teethhelper.tables.ServicesTable;
+import com.example.nikita.teethhelper.tables.VisitsTable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,28 +42,28 @@ public class ListPresenter {
     public void fetchData(int tableId){
         switch (tableId){
             case 0:
-                RendersGetter rendersGetter = new RendersGetter(listActivity, this);
-                rendersGetter.fetchData();
+                RendersTable rendersTable = new RendersTable(listActivity, this);
+                rendersTable.fetchData();
                 listActivity.setColors(listActivity.getResources().getColor(R.color.colorDarkAqua), listActivity.getResources().getColor(R.color.colorAqua), "Renders");
                 break;
             case 1:
-                DoctorsGetter doctorsGetter = new DoctorsGetter(listActivity, this);
-                doctorsGetter.fetchData();
+                DoctorsTable doctorsTable = new DoctorsTable(listActivity, this);
+                doctorsTable.fetchData();
                 listActivity.setColors(listActivity.getResources().getColor(R.color.colorDarkRed), listActivity.getResources().getColor(R.color.colorRed), "Doctors");
                 break;
             case 2:
-                PatientsGetter patientsGetter = new PatientsGetter(listActivity, this);
-                patientsGetter.fetchData();
+                PatientsTable patientsTable = new PatientsTable(listActivity, this);
+                patientsTable.fetchData();
                 listActivity.setColors(listActivity.getResources().getColor(R.color.colorDarkPurple), listActivity.getResources().getColor(R.color.colorPurple), "Patients");
                 break;
             case 3:
-                ServicesGetter servicesGetter = new ServicesGetter(listActivity, this);
-                servicesGetter.fetchData();
+                ServicesTable servicesTable = new ServicesTable(listActivity, this);
+                servicesTable.fetchData();
                 listActivity.setColors(listActivity.getResources().getColor(R.color.colorDarkOrange), listActivity.getResources().getColor(R.color.colorOrange), "Services");
                 break;
             case 4:
-                VisitsGetter visitsGetter = new VisitsGetter(listActivity, this);
-                visitsGetter.fetchData();
+                VisitsTable visitsTable = new VisitsTable(listActivity, this);
+                visitsTable.fetchData();
                 listActivity.setColors(listActivity.getResources().getColor(R.color.colorDarkGreen), listActivity.getResources().getColor(R.color.colorGreen), "Visits");
                 break;
         }
@@ -303,30 +301,30 @@ public class ListPresenter {
         switch (tableId) {
             case 0:
                 object = getRenderByObjectData(objectData);
-                RendersGetter rendersGetter = new RendersGetter(listActivity, this);
-                rendersGetter.addRow(object);
+                RendersTable rendersTable = new RendersTable(listActivity, this);
+                rendersTable.addRow(object);
                 break;
             case 1:
                 object = getDoctorByObjectData(objectData);
-                DoctorsGetter doctorsGetter = new DoctorsGetter(listActivity, this);
-                doctorsGetter.addRow(object);
+                DoctorsTable doctorsTable = new DoctorsTable(listActivity, this);
+                doctorsTable.addRow(object);
                 break;
             case 2:
                 object = getPatientByObjectData(objectData);
-                PatientsGetter patientsGetter = new PatientsGetter(listActivity, this);
-                patientsGetter.addRow(object);
+                PatientsTable patientsTable = new PatientsTable(listActivity, this);
+                patientsTable.addRow(object);
                 break;
             case 3:
                 object = getServiceByObjectData(objectData);
                 Service service = (Service) object;
                 Log.d("NEWSERVICE", service.manipulation + service.patient + service.doctor + service.cost + service.date);
-                ServicesGetter servicesGetter = new ServicesGetter(listActivity, this);
-                servicesGetter.addRow(object);
+                ServicesTable servicesTable = new ServicesTable(listActivity, this);
+                servicesTable.addRow(object);
                 break;
             case 4:
                 object = getVisitByObjectData(objectData);
-                VisitsGetter visitsGetter = new VisitsGetter(listActivity, this);
-                visitsGetter.addRow(object);
+                VisitsTable visitsTable = new VisitsTable(listActivity, this);
+                visitsTable.addRow(object);
                 break;
         }
     }
@@ -338,28 +336,28 @@ public class ListPresenter {
         switch (tableId){
             case 0:
                 object = getRenderByObjectData(objectData);
-                RendersGetter rendersGetter = new RendersGetter(listActivity, this);
-                rendersGetter.deleteRow(object);
+                RendersTable rendersTable = new RendersTable(listActivity, this);
+                rendersTable.deleteRow(object);
                 break;
             case 1:
                 object = getDoctorByObjectData(objectData);
-                DoctorsGetter doctorsGetter = new DoctorsGetter(listActivity, this);
-                doctorsGetter.deleteRow(object);
+                DoctorsTable doctorsTable = new DoctorsTable(listActivity, this);
+                doctorsTable.deleteRow(object);
                 break;
             case 2:
                 object = getPatientByObjectData(objectData);
-                PatientsGetter patientsGetter = new PatientsGetter(listActivity, this);
-                patientsGetter.deleteRow(object);
+                PatientsTable patientsTable = new PatientsTable(listActivity, this);
+                patientsTable.deleteRow(object);
                 break;
             case 3:
                 object = getServiceByObjectData(objectData);
-                ServicesGetter servicesGetter = new ServicesGetter(listActivity, this);
-                servicesGetter.deleteRow(object);
+                ServicesTable servicesTable = new ServicesTable(listActivity, this);
+                servicesTable.deleteRow(object);
                 break;
             case 4:
                 object = getVisitByObjectData(objectData);
-                VisitsGetter visitsGetter = new VisitsGetter(listActivity, this);
-                visitsGetter.deleteRow(object);
+                VisitsTable visitsTable = new VisitsTable(listActivity, this);
+                visitsTable.deleteRow(object);
                 break;
             default:
                 object = null;
@@ -434,32 +432,32 @@ public class ListPresenter {
             case 0:
                 oldObject = getRenderByObjectData(oldObjectData);
                 newObject = getRenderByObjectData(newObjectData);
-                RendersGetter rendersGetter = new RendersGetter(listActivity, this);
-                rendersGetter.updateRow(oldObject, newObject);
+                RendersTable rendersTable = new RendersTable(listActivity, this);
+                rendersTable.updateRow(oldObject, newObject);
                 break;
             case 1:
                 oldObject = getDoctorByObjectData(oldObjectData);
                 newObject = getDoctorByObjectData(newObjectData);
-                DoctorsGetter doctorsGetter = new DoctorsGetter(listActivity, this);
-                doctorsGetter.updateRow(oldObject, newObject);
+                DoctorsTable doctorsTable = new DoctorsTable(listActivity, this);
+                doctorsTable.updateRow(oldObject, newObject);
                 break;
             case 2:
                 oldObject = getPatientByObjectData(oldObjectData);
                 newObject = getPatientByObjectData(newObjectData);
-                PatientsGetter patientsGetter = new PatientsGetter(listActivity, this);
-                patientsGetter.updateRow(oldObject, newObject);
+                PatientsTable patientsTable = new PatientsTable(listActivity, this);
+                patientsTable.updateRow(oldObject, newObject);
                 break;
             case 3:
                 oldObject = getServiceByObjectData(oldObjectData);
                 newObject = getServiceByObjectData(newObjectData);
-                ServicesGetter servicesGetter = new ServicesGetter(listActivity, this);
-                servicesGetter.updateRow(oldObject, newObject);
+                ServicesTable servicesTable = new ServicesTable(listActivity, this);
+                servicesTable.updateRow(oldObject, newObject);
                 break;
             case 4:
                 oldObject = getVisitByObjectData(oldObjectData);
                 newObject = getVisitByObjectData(newObjectData);
-                VisitsGetter visitsGetter = new VisitsGetter(listActivity, this);
-                visitsGetter.updateRow(oldObject, newObject);
+                VisitsTable visitsTable = new VisitsTable(listActivity, this);
+                visitsTable.updateRow(oldObject, newObject);
                 break;
         }
     }
@@ -533,22 +531,22 @@ public class ListPresenter {
     }
 
     public void updateDataByTableId(int tableId){
-        defaultGetter presenter;
+        defaultTable presenter;
         switch (tableId){
             case 0:
-                presenter = new RendersGetter(listActivity, this);
+                presenter = new RendersTable(listActivity, this);
                 break;
             case 1:
-                presenter = new DoctorsGetter(listActivity, this);
+                presenter = new DoctorsTable(listActivity, this);
                 break;
             case 2:
-                presenter = new PatientsGetter(listActivity, this);
+                presenter = new PatientsTable(listActivity, this);
                 break;
             case 3:
-                presenter = new ServicesGetter(listActivity, this);
+                presenter = new ServicesTable(listActivity, this);
                 break;
             case 4:
-                presenter = new VisitsGetter(listActivity, this);
+                presenter = new VisitsTable(listActivity, this);
                 break;
             default:
                 presenter = null;

@@ -1,68 +1,58 @@
 package com.example.nikita.teethhelper;
 
-import android.content.Intent;
-import android.util.Log;
-
-import com.example.nikita.teethhelper.UI.DateActivity;
-import com.example.nikita.teethhelper.UI.ListActivity;
 import com.example.nikita.teethhelper.data.Doctor;
 import com.example.nikita.teethhelper.data.Patient;
 import com.example.nikita.teethhelper.data.Render;
 import com.example.nikita.teethhelper.data.Visit;
-import com.example.nikita.teethhelper.getters.DoctorsGetter;
-import com.example.nikita.teethhelper.getters.PatientsGetter;
-import com.example.nikita.teethhelper.getters.RendersGetter;
-import com.example.nikita.teethhelper.getters.VisitsGetter;
+import com.example.nikita.teethhelper.tables.DoctorsTable;
+import com.example.nikita.teethhelper.tables.PatientsTable;
+import com.example.nikita.teethhelper.tables.RendersTable;
+import com.example.nikita.teethhelper.tables.VisitsTable;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.StringTokenizer;
 
 /**
  * Created by Nikita on 21.05.2018.
  */
 
-public class OrderActivityPresenter {
-    OrderActivity orderActivity;
+public class ReportActivityPresenter {
+    ReportActivity reportActivity;
 
-    public OrderActivityPresenter(OrderActivity orderActivity){
-        this.orderActivity = orderActivity;
+    public ReportActivityPresenter(ReportActivity reportActivity){
+        this.reportActivity = reportActivity;
     }
 
     public void writeToFile(String typeOFOrder){
-        PDFWriter pdfWriter = new PDFWriter(orderActivity.getApplicationContext());
+        PDFWriter pdfWriter = new PDFWriter(reportActivity.getApplicationContext());
         switch (typeOFOrder){
             case "doctors":
-                DoctorsGetter doctorsGetter = new DoctorsGetter(orderActivity.getApplicationContext());
-                ArrayList<Doctor> doctors = doctorsGetter.getDoctors();
+                DoctorsTable doctorsTable = new DoctorsTable(reportActivity.getApplicationContext());
+                ArrayList<Doctor> doctors = doctorsTable.getDoctors();
                 pdfWriter.writeDoctors(getArrayListByDoctors(doctors));
                 break;
             case "patients":
-                PatientsGetter patientsGetter = new PatientsGetter(orderActivity.getApplicationContext());
-                ArrayList<Patient> patients = patientsGetter.getPatients();
+                PatientsTable patientsTable = new PatientsTable(reportActivity.getApplicationContext());
+                ArrayList<Patient> patients = patientsTable.getPatients();
                 pdfWriter.writePatients(getArrayListByPatients(patients));
                 break;
             case "renders":
-                RendersGetter rendersGetter = new RendersGetter(orderActivity.getApplicationContext());
-                ArrayList<Render> renders = rendersGetter.getRenders();
+                RendersTable rendersTable = new RendersTable(reportActivity.getApplicationContext());
+                ArrayList<Render> renders = rendersTable.getRenders();
                 pdfWriter.writeRenders(getArrayListByRenders(renders));
                 break;
             case "visits for period":
-                VisitsGetter visitsGetter = new VisitsGetter(orderActivity.getApplicationContext());
-                ArrayList<Visit> visitsBeforeSelection = visitsGetter.getVisits();
-                ArrayList<Visit> visitsAfterSelection = getVisitsSelectionByDates(visitsBeforeSelection , orderActivity.date.getStringExtra("dateAfter"), orderActivity.date.getStringExtra("dateBefore"));
+                VisitsTable visitsTable = new VisitsTable(reportActivity.getApplicationContext());
+                ArrayList<Visit> visitsBeforeSelection = visitsTable.getVisits();
+                ArrayList<Visit> visitsAfterSelection = getVisitsSelectionByDates(visitsBeforeSelection , reportActivity.date.getStringExtra("dateAfter"), reportActivity.date.getStringExtra("dateBefore"));
                 pdfWriter.writeVisits(getArrayListByVisits(visitsAfterSelection));
                 break;
             case "visits statistic for period":
-                VisitsGetter visitsGetter2 = new VisitsGetter(orderActivity.getApplicationContext());
-                ArrayList<Visit> visitsBeforeSelection2 = visitsGetter2.getVisits();
-                ArrayList<Visit> visitsAfterSelection2 = getVisitsSelectionByDates(visitsBeforeSelection2 , orderActivity.date.getStringExtra("dateAfter"), orderActivity.date.getStringExtra("dateBefore"));
+                VisitsTable visitsTable2 = new VisitsTable(reportActivity.getApplicationContext());
+                ArrayList<Visit> visitsBeforeSelection2 = visitsTable2.getVisits();
+                ArrayList<Visit> visitsAfterSelection2 = getVisitsSelectionByDates(visitsBeforeSelection2 , reportActivity.date.getStringExtra("dateAfter"), reportActivity.date.getStringExtra("dateBefore"));
                 pdfWriter.writeVisitsStatistic(getVisitsStatistic(visitsAfterSelection2));
                 break;
         }
@@ -70,7 +60,7 @@ public class OrderActivityPresenter {
 
     private ArrayList<String[]> getArrayListByDoctors(ArrayList<Doctor> doctors){
         ArrayList<String[]> arrayList = new ArrayList<String[]>();
-        String[] tagNames = orderActivity.getResources().getStringArray(R.array.doctorTagNames);
+        String[] tagNames = reportActivity.getResources().getStringArray(R.array.doctorTagNames);
         String row[];
         for(int i = 0; i < doctors.size(); i++){
             row = new String[6];
@@ -87,7 +77,7 @@ public class OrderActivityPresenter {
 
     private ArrayList<String[]> getArrayListByPatients(ArrayList<Patient> patients){
         ArrayList<String[]> arrayList = new ArrayList<String[]>();
-        String[] tagNames = orderActivity.getResources().getStringArray(R.array.patientTagNames);
+        String[] tagNames = reportActivity.getResources().getStringArray(R.array.patientTagNames);
         String row[];
         for(int i = 0; i < patients.size(); i++){
             row = new String[4];
@@ -102,7 +92,7 @@ public class OrderActivityPresenter {
 
     private ArrayList<String[]> getArrayListByRenders(ArrayList<Render> renders){
         ArrayList<String[]> arrayList = new ArrayList<String[]>();
-        String[] tagNames = orderActivity.getResources().getStringArray(R.array.renderTagNames);
+        String[] tagNames = reportActivity.getResources().getStringArray(R.array.renderTagNames);
         String row[];
         for(int i = 0; i < renders.size(); i++){
             row = new String[5];
@@ -118,7 +108,7 @@ public class OrderActivityPresenter {
 
     private ArrayList<String[]> getArrayListByVisits(ArrayList<Visit> visits){
         ArrayList<String[]> arrayList = new ArrayList<String[]>();;
-        String[] tagNames = orderActivity.getResources().getStringArray(R.array.visitTagNames);
+        String[] tagNames = reportActivity.getResources().getStringArray(R.array.visitTagNames);
         String row[];
         for(int i = 0; i < visits.size(); i++){
             row = new String[3];

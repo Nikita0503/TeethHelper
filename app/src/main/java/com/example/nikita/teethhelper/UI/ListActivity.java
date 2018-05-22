@@ -11,10 +11,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 import android.widget.SimpleExpandableListAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.nikita.teethhelper.ListPresenter;
@@ -24,8 +22,6 @@ import com.example.nikita.teethhelper.UI.RecordActivities.PatientDataActivity;
 import com.example.nikita.teethhelper.UI.RecordActivities.RenderDataActivity;
 import com.example.nikita.teethhelper.UI.RecordActivities.ServiceDataActivity;
 import com.example.nikita.teethhelper.UI.RecordActivities.VisitsDataActivity;
-import com.example.nikita.teethhelper.data.Doctor;
-import com.example.nikita.teethhelper.getters.DoctorsGetter;
 
 import java.util.ArrayList;
 import java.util.Map;

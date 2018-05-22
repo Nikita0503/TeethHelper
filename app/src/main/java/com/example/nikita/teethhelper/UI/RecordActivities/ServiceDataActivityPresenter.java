@@ -3,13 +3,10 @@ package com.example.nikita.teethhelper.UI.RecordActivities;
 import android.app.Activity;
 import android.util.Log;
 
-import com.example.nikita.teethhelper.UI.RecordActivities.PatientDataActivity;
-import com.example.nikita.teethhelper.UI.RecordActivities.ServiceDataActivity;
-import com.example.nikita.teethhelper.data.Patient;
 import com.example.nikita.teethhelper.data.Service;
 import com.example.nikita.teethhelper.defaultPresenter;
-import com.example.nikita.teethhelper.getters.DoctorsGetter;
-import com.example.nikita.teethhelper.getters.PatientsGetter;
+import com.example.nikita.teethhelper.tables.DoctorsTable;
+import com.example.nikita.teethhelper.tables.PatientsTable;
 
 import java.util.ArrayList;
 import java.util.StringTokenizer;
@@ -88,10 +85,10 @@ public class ServiceDataActivityPresenter implements defaultPresenter {
     }
 
     public void fetchDataForAdapters(){
-        PatientsGetter patientsGetter = new PatientsGetter(dataActivity.getApplicationContext());
-        ArrayList<String> patientNames = patientsGetter.getNames();
-        DoctorsGetter doctorsGetter = new DoctorsGetter(dataActivity.getApplicationContext());
-        ArrayList<String> doctorNames = doctorsGetter.getNames();
+        PatientsTable patientsTable = new PatientsTable(dataActivity.getApplicationContext());
+        ArrayList<String> patientNames = patientsTable.getNames();
+        DoctorsTable doctorsTable = new DoctorsTable(dataActivity.getApplicationContext());
+        ArrayList<String> doctorNames = doctorsTable.getNames();
         dataActivity.setAdaptersByData(patientNames, doctorNames);
     }
 

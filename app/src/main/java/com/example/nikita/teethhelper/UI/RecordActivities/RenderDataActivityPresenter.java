@@ -3,14 +3,11 @@ package com.example.nikita.teethhelper.UI.RecordActivities;
 import android.app.Activity;
 import android.util.Log;
 
-import com.example.nikita.teethhelper.UI.RecordActivities.RenderDataActivity;
-import com.example.nikita.teethhelper.UI.RecordActivities.ServiceDataActivity;
 import com.example.nikita.teethhelper.data.Render;
-import com.example.nikita.teethhelper.data.Service;
 import com.example.nikita.teethhelper.defaultPresenter;
-import com.example.nikita.teethhelper.getters.DoctorsGetter;
-import com.example.nikita.teethhelper.getters.PatientsGetter;
-import com.example.nikita.teethhelper.getters.ServicesGetter;
+import com.example.nikita.teethhelper.tables.DoctorsTable;
+import com.example.nikita.teethhelper.tables.PatientsTable;
+import com.example.nikita.teethhelper.tables.ServicesTable;
 
 import java.util.ArrayList;
 import java.util.StringTokenizer;
@@ -63,12 +60,12 @@ public class RenderDataActivityPresenter implements defaultPresenter {
     }
 
     public void fetchDataForAdapters(){
-        ServicesGetter servicesGetter = new ServicesGetter(dataActivity.getApplicationContext());
-        ArrayList<String> serviceNames = servicesGetter.getNames();
-        PatientsGetter patientsGetter = new PatientsGetter(dataActivity.getApplicationContext());
-        ArrayList<String> patientNames = patientsGetter.getNames();
-        DoctorsGetter doctorsGetter = new DoctorsGetter(dataActivity.getApplicationContext());
-        ArrayList<String> doctorNames = doctorsGetter.getNames();
+        ServicesTable servicesTable = new ServicesTable(dataActivity.getApplicationContext());
+        ArrayList<String> serviceNames = servicesTable.getNames();
+        PatientsTable patientsTable = new PatientsTable(dataActivity.getApplicationContext());
+        ArrayList<String> patientNames = patientsTable.getNames();
+        DoctorsTable doctorsTable = new DoctorsTable(dataActivity.getApplicationContext());
+        ArrayList<String> doctorNames = doctorsTable.getNames();
         dataActivity.setAdaptersByData(serviceNames, patientNames, doctorNames);
     }
 

@@ -1,7 +1,6 @@
 package com.example.nikita.teethhelper.UI;
 
 import android.app.Fragment;
-import android.database.Cursor;
 import android.util.Log;
 
 import com.example.nikita.teethhelper.R;
@@ -15,9 +14,6 @@ import com.example.nikita.teethhelper.data.Patient;
 import com.example.nikita.teethhelper.data.Render;
 import com.example.nikita.teethhelper.data.Service;
 import com.example.nikita.teethhelper.data.Visit;
-import com.example.nikita.teethhelper.getters.DoctorsGetter;
-import com.example.nikita.teethhelper.getters.PatientsGetter;
-import com.example.nikita.teethhelper.getters.ServicesGetter;
 
 /**
  * Created by Nikita on 19.05.2018.

@@ -11,9 +11,8 @@ import android.widget.Spinner;
 
 import com.example.nikita.teethhelper.R;
 import com.example.nikita.teethhelper.data.Visit;
-import com.example.nikita.teethhelper.getters.DoctorsGetter;
-import com.example.nikita.teethhelper.getters.PatientsGetter;
-import com.example.nikita.teethhelper.getters.ServicesGetter;
+import com.example.nikita.teethhelper.tables.PatientsTable;
+import com.example.nikita.teethhelper.tables.ServicesTable;
 
 import java.util.ArrayList;
 
@@ -44,14 +43,14 @@ public class VisitFragment extends Fragment {
     }
 
     private void setAdapters(){
-        ServicesGetter servicesGetter = new ServicesGetter(getActivity().getApplicationContext());
-        ArrayList<String> servicesNames = servicesGetter.getNames();
+        ServicesTable servicesTable = new ServicesTable(getActivity().getApplicationContext());
+        ArrayList<String> servicesNames = servicesTable.getNames();
         ArrayAdapter<String> spinnerServicesAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, servicesNames);
         spinnerServicesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerServices.setAdapter(spinnerServicesAdapter);
 
-        PatientsGetter patientsGetter = new PatientsGetter(getActivity().getApplicationContext());
-        ArrayList<String> patientNames = patientsGetter.getNames();
+        PatientsTable patientsTable = new PatientsTable(getActivity().getApplicationContext());
+        ArrayList<String> patientNames = patientsTable.getNames();
         ArrayAdapter<String> spinnerPatientAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, patientNames);
         spinnerPatientAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerPatients.setAdapter(spinnerPatientAdapter);

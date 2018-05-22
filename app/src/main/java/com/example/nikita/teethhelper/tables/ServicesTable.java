@@ -1,4 +1,4 @@
-package com.example.nikita.teethhelper.getters;
+package com.example.nikita.teethhelper.tables;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -10,10 +10,9 @@ import com.example.nikita.teethhelper.DBHepler;
 import com.example.nikita.teethhelper.ListPresenter;
 import com.example.nikita.teethhelper.R;
 import com.example.nikita.teethhelper.UI.ListActivity;
-import com.example.nikita.teethhelper.data.Patient;
 import com.example.nikita.teethhelper.data.Service;
 import com.example.nikita.teethhelper.data.defaultObject;
-import com.example.nikita.teethhelper.defaultGetter;
+import com.example.nikita.teethhelper.defaultTable;
 
 import java.util.ArrayList;
 
@@ -21,7 +20,7 @@ import java.util.ArrayList;
  * Created by Nikita on 15.04.2018.
  */
 
-public class ServicesGetter implements defaultGetter {
+public class ServicesTable implements defaultTable {
     String[] tagNames;
 
     DBHepler dbHepler;
@@ -29,12 +28,12 @@ public class ServicesGetter implements defaultGetter {
     ListActivity listActivity;
     ListPresenter listPresenter;
 
-    public ServicesGetter(Context context){//context
+    public ServicesTable(Context context){//context
         dbHepler = new DBHepler(context);
         db = dbHepler.getWritableDatabase();
     }
 
-    public ServicesGetter(ListActivity listActivity, ListPresenter listPresenter){
+    public ServicesTable(ListActivity listActivity, ListPresenter listPresenter){
         this.listPresenter = listPresenter;
         this.listActivity = listActivity;
         dbHepler = new DBHepler(listActivity);

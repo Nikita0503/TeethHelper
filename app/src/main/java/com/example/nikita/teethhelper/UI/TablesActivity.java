@@ -8,7 +8,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 
-import com.example.nikita.teethhelper.OrderActivity;
+import com.example.nikita.teethhelper.ReportActivity;
 import com.example.nikita.teethhelper.R;
 import com.ramotion.circlemenu.CircleMenuView;
 
@@ -30,7 +30,7 @@ public class TablesActivity extends AppCompatActivity {
     }
     @OnClick(R.id.buttonCreateOrder)
     void onClickOrder() {
-        Intent intent = new Intent(getApplicationContext(), OrderActivity.class);
+        Intent intent = new Intent(getApplicationContext(), ReportActivity.class);
         startActivity(intent);
     }
     @Override

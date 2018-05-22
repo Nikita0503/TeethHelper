@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.nikita.teethhelper.OrderActivity;
+import com.example.nikita.teethhelper.ReportActivity;
 import com.example.nikita.teethhelper.R;
 
 import butterknife.BindView;
