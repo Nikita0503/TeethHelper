@@ -25,13 +25,12 @@ public class RequestActivityPresenter {
         this.requestActivity = requestActivity;
     }
 
-    public String getRequestText(String tableName, String typeOfRequest, Fragment fragment){// слепить нормальный метод чтобы можно быдо получить Cursor, а не эту хуйню
+    public String getRequestText(String tableName, String typeOfRequest, Fragment fragment){
         String request = "";
         RequestMaker requestMaker = new RequestMaker();
         switch (typeOfRequest){
             case "SELECT":
                 request = typeOfRequest + " * FROM " + tableName;
-                Log.d("123", tableName);
                 switch (tableName){
                     case "renders":
                         RenderFragment renderFragment = (RenderFragment) fragment;
@@ -58,12 +57,9 @@ public class RequestActivityPresenter {
                         Visit visit = visitFragment.getVisit();
                         request += requestMaker.getRequestTextByVisit(visit);
                         break;
-                    //Cursor c = db.rawQuery("SELECT column1,column2,column3 FROM table ", null);
                 }
                 break;
             case "INSERT":
-                //INSERT INTO TABLE_NAME [(column1, column2, column3,...columnN)]
-                //VALUES (value1, value2, value3,...valueN);
                 request = typeOfRequest + " INTO " + tableName;
                 switch (tableName){
                     case "renders":
@@ -95,7 +91,6 @@ public class RequestActivityPresenter {
                 break;
             case "DELETE":
                 request = typeOfRequest + " FROM " + tableName;
-                Log.d("123", tableName);
                 switch (tableName) {
                     case "renders":
                         RenderFragment renderFragment = (RenderFragment) fragment;
@@ -125,9 +120,6 @@ public class RequestActivityPresenter {
                 }
                 break;
             case "UPDATE":
-                //UPDATE table_name
-                //SET column1 = value1, column2 = value2, ...
-                //WHERE condition;
                 request = typeOfRequest + " " + tableName + " SET ";
                 switch (tableName){
                     case "renders":
@@ -163,13 +155,12 @@ public class RequestActivityPresenter {
 
 
     public void fetchData(){
-        
         String[] typesOfRequest = requestActivity.getResources().getStringArray(R.array.typesOfRequest);
         String[] tableNames = requestActivity.getResources().getStringArray(R.array.tableNames);
         requestActivity.setAdapters(typesOfRequest, tableNames);
     }
 
-    public Fragment getFragmentByTableId(int tableId){ //возвращать фрагмент в активити с готовыми спиннерами
+    public Fragment getFragmentByTableId(int tableId){
         Fragment fragment;
         switch (tableId){
             case 0:

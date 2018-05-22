@@ -38,7 +38,6 @@ public class ListPresenter {
         this.listActivity = listActivity;
     }
 
-
     public void fetchData(int tableId){
         switch (tableId){
             case 0:
@@ -70,22 +69,46 @@ public class ListPresenter {
 
     }
 
-    public void makeListAdapter(ArrayList<Map<String, String>> groupData, ArrayList<ArrayList<Map<String, String>>> childData){
-        String groupFrom[] = new String[] {"groupName"};
-        int groupTo[] = new int[] {R.id.list_item_group};
-        String childFrom[] = new String[] {"data", "tagName"};
-        int childTo[] = new int[] {R.id.list_item_child, R.id.list_item_child_tag};
-        SimpleExpandableListAdapter adapter = new SimpleExpandableListAdapter(
-                listActivity,
-                groupData,
-                R.layout.list_item_group,
-                groupFrom,
-                groupTo,
-                childData,
-                R.layout.list_item_child,
-                childFrom,
-                childTo);
-        listActivity.setListAdapter(adapter);
+    public void prepareDataByRenders(ArrayList<Render> renders, String[] tagNames) {
+        Map<String, String> m;
+        ArrayList<Map<String, String>> groupData;
+        ArrayList<Map<String, String>> childDataItem;
+        ArrayList<ArrayList<Map<String, String>>> childData;
+
+        groupData = new ArrayList<Map<String, String>>();
+        for (Render render : renders) {
+            m = new HashMap<String, String>();
+            m.put("groupName", render.patient);
+            groupData.add(m);
+        }
+
+        childData = new ArrayList<ArrayList<Map<String, String>>>();
+        for(Render render : renders) {
+            childDataItem = new ArrayList<Map<String, String>>();
+            m = new HashMap<String, String>();
+            m.put("data", String.valueOf(render.service));
+            m.put("tagName", tagNames[0]);
+            childDataItem.add(m);
+            m = new HashMap<String, String>();
+            m.put("data", String.valueOf(render.patient));
+            m.put("tagName", tagNames[1]);
+            childDataItem.add(m);
+            m = new HashMap<String, String>();
+            m.put("data", String.valueOf(render.doctor));
+            m.put("tagName", tagNames[2]);
+            childDataItem.add(m);
+            m = new HashMap<String, String>();
+            m.put("data", String.valueOf(render.sum));
+            m.put("tagName", tagNames[3]);
+            childDataItem.add(m);
+            m = new HashMap<String, String>();
+            m.put("data", String.valueOf(render.date));
+            m.put("tagName", tagNames[4]);
+            childDataItem.add(m);
+            childData.add(childDataItem);
+        }
+
+        makeListAdapter(groupData, childData);
     }
 
     public void prepareDataByPatients(ArrayList<Patient> patients, String[] tagNames) {
@@ -220,48 +243,6 @@ public class ListPresenter {
         makeListAdapter(groupData, childData);
     }
 
-    public void prepareDataByRenders(ArrayList<Render> renders, String[] tagNames) {
-        Map<String, String> m;
-        ArrayList<Map<String, String>> groupData;
-        ArrayList<Map<String, String>> childDataItem;
-        ArrayList<ArrayList<Map<String, String>>> childData;
-
-        groupData = new ArrayList<Map<String, String>>();
-        for (Render render : renders) {
-            m = new HashMap<String, String>();
-            m.put("groupName", render.patient);
-            groupData.add(m);
-        }
-
-        childData = new ArrayList<ArrayList<Map<String, String>>>();
-        for(Render render : renders) {
-            childDataItem = new ArrayList<Map<String, String>>();
-            m = new HashMap<String, String>();
-            m.put("data", String.valueOf(render.service));
-            m.put("tagName", tagNames[0]);
-            childDataItem.add(m);
-            m = new HashMap<String, String>();
-            m.put("data", String.valueOf(render.patient));
-            m.put("tagName", tagNames[1]);
-            childDataItem.add(m);
-            m = new HashMap<String, String>();
-            m.put("data", String.valueOf(render.doctor));
-            m.put("tagName", tagNames[2]);
-            childDataItem.add(m);
-            m = new HashMap<String, String>();
-            m.put("data", String.valueOf(render.sum));
-            m.put("tagName", tagNames[3]);
-            childDataItem.add(m);
-            m = new HashMap<String, String>();
-            m.put("data", String.valueOf(render.date));
-            m.put("tagName", tagNames[4]);
-            childDataItem.add(m);
-            childData.add(childDataItem);
-        }
-
-        makeListAdapter(groupData, childData);
-    }
-
     public void prepareDataByVisits(ArrayList<Visit> visits, String[] tagNames) {
         Map<String, String> m;
         ArrayList<Map<String, String>> groupData;
@@ -328,8 +309,6 @@ public class ListPresenter {
                 break;
         }
     }
-
-
 
     public void prepareDataForDelete(ArrayList<String> objectData, int tableId){
         defaultObject object;
@@ -462,6 +441,16 @@ public class ListPresenter {
         }
     }
 
+    private Render getRenderByObjectData(ArrayList<String> objectData){
+        Render render;
+        render = new Render(objectData.get(0),
+                objectData.get(1),
+                objectData.get(2),
+                Float.parseFloat(objectData.get(3)),
+                objectData.get(4));
+        return render;
+    }
+
     private Patient getPatientByObjectData(ArrayList<String> objectData){
         Patient patient;
         if(objectData.size()==5){
@@ -479,7 +468,6 @@ public class ListPresenter {
             return patient;
         }
     }
-
 
     private Doctor getDoctorByObjectData(ArrayList<String> objectData){
         Doctor doctor;
@@ -520,14 +508,22 @@ public class ListPresenter {
         return visit;
     }
 
-    private Render getRenderByObjectData(ArrayList<String> objectData){
-        Render render;
-        render = new Render(objectData.get(0),
-                objectData.get(1),
-                objectData.get(2),
-                Float.parseFloat(objectData.get(3)),
-                objectData.get(4));
-        return render;
+    public void makeListAdapter(ArrayList<Map<String, String>> groupData, ArrayList<ArrayList<Map<String, String>>> childData){
+        String groupFrom[] = new String[] {"groupName"};
+        int groupTo[] = new int[] {R.id.list_item_group};
+        String childFrom[] = new String[] {"data", "tagName"};
+        int childTo[] = new int[] {R.id.list_item_child, R.id.list_item_child_tag};
+        SimpleExpandableListAdapter adapter = new SimpleExpandableListAdapter(
+                listActivity,
+                groupData,
+                R.layout.list_item_group,
+                groupFrom,
+                groupTo,
+                childData,
+                R.layout.list_item_child,
+                childFrom,
+                childTo);
+        listActivity.setListAdapter(adapter);
     }
 
     public void updateDataByTableId(int tableId){
@@ -552,5 +548,9 @@ public class ListPresenter {
                 presenter = null;
         }
         presenter.fetchData();
+    }
+
+    public void sendMessage(String result){
+        listActivity.showMessage(result);
     }
 }

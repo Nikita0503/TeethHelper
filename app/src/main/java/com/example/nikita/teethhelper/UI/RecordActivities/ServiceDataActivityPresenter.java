@@ -47,7 +47,6 @@ public class ServiceDataActivityPresenter implements defaultPresenter {
         if(!checkCorrectDate(service.date)){
             return;
         }
-        Log.d("233", "OKAY");
         dataActivity.data.putExtra("patient", service.patient);
         dataActivity.data.putExtra("doctor", service.doctor);
         dataActivity.data.putExtra("manipulation", service.manipulation);
@@ -57,13 +56,20 @@ public class ServiceDataActivityPresenter implements defaultPresenter {
         dataActivity.finish();
     }
 
+    public void fetchDataForAdapters(){
+        PatientsTable patientsTable = new PatientsTable(dataActivity.getApplicationContext());
+        ArrayList<String> patientNames = patientsTable.getNames();
+        DoctorsTable doctorsTable = new DoctorsTable(dataActivity.getApplicationContext());
+        ArrayList<String> doctorNames = doctorsTable.getNames();
+        dataActivity.setAdaptersByData(patientNames, doctorNames);
+    }
+
     private boolean checkCorrectDate(String str){
         StringTokenizer date = new StringTokenizer(str, ".");
         int day = -1;
         int month = -1;
         int year = -1;
         while(date.hasMoreTokens()) {
-            Log.d("123", str);
             day = Integer.parseInt(date.nextToken());
             month = Integer.parseInt(date.nextToken());
             year = Integer.parseInt(date.nextToken());
@@ -82,14 +88,6 @@ public class ServiceDataActivityPresenter implements defaultPresenter {
             return false;
         }
         return true;
-    }
-
-    public void fetchDataForAdapters(){
-        PatientsTable patientsTable = new PatientsTable(dataActivity.getApplicationContext());
-        ArrayList<String> patientNames = patientsTable.getNames();
-        DoctorsTable doctorsTable = new DoctorsTable(dataActivity.getApplicationContext());
-        ArrayList<String> doctorNames = doctorsTable.getNames();
-        dataActivity.setAdaptersByData(patientNames, doctorNames);
     }
 
     @Override

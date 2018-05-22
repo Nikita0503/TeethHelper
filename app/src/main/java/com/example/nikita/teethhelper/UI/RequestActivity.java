@@ -42,29 +42,16 @@ public class RequestActivity extends AppCompatActivity {
     @OnClick(R.id.buttonCommit)
     void onClickCommit(){
         Fragment fragment = getFragmentManager().findFragmentById(R.id.fragmentSlot);
-        //RenderFragment renderFragment = (RenderFragment) fragmemt;
-        //Log.d("sdf", renderFragment.getRender().doctor);
         String tableName = "";
         tableName = spinnerTable.getSelectedItem().toString();
-        Log.d("123", tableName);
         String typeOfRequest = "";
         typeOfRequest = spinnerTypeOfRequest.getSelectedItem().toString();
         RequestActivityPresenter requestActivityPresenter = new RequestActivityPresenter(this);
         String request = requestActivityPresenter.getRequestText(tableName, typeOfRequest, fragment);
         Log.d("REQUEST", request);
         Toasty.info(getApplicationContext(), request, Toast.LENGTH_LONG).show();
-        //Log.d("REQUEST", requestActivityPresenter.getRequestText("renders", "SELECT", renderFragment));
-        /*((EditText) frag2.getView().findViewById(R.id.editTextDataDayOfRender))//захуячить в презентере к всем view => getDoctor()...
-                .setText("Access to Fragment 2 from Activity");*/
-
-        //UPDATE table_name
-        //SET column1 = value1, column2 = value2, ...
-        //WHERE condition;
-
-        //INSERT INTO TABLE_NAME [(column1, column2, column3,...columnN)]
-        //VALUES (value1, value2, value3,...valueN);
-
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

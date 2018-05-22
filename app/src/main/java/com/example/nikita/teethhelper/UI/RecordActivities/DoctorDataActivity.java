@@ -55,7 +55,7 @@ public class DoctorDataActivity extends AppCompatActivity {
         }
     }
 
-    public Doctor getDoctor(){  //ПОФИКСИТЬ ХЕРНЮ С ЧИСЛОВЫМИ ЗНАЧЕНИЯМИ ИЗ ЕДИТТЕКСТОВ У ДОКТОРА
+    public Doctor getDoctor(){
         String name = editTextName.getText().toString();
         String passport = editTextPassport.getText().toString();
         String address = editTextAddress.getText().toString();
@@ -70,7 +70,7 @@ public class DoctorDataActivity extends AppCompatActivity {
     }
 
     public void showError(String result){
-        Log.d("444", result);
+        Log.d("ERROR: ", result);
         Toasty.error(getApplicationContext(), result, Toast.LENGTH_SHORT, true).show();
     }
 }

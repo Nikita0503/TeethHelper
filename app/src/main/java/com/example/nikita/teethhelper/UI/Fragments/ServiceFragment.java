@@ -89,4 +89,6 @@ public class ServiceFragment extends Fragment {
         Service service = new Service(manipulation, patient, doctor, cost, date);
         return service;
     }
+
+
 }

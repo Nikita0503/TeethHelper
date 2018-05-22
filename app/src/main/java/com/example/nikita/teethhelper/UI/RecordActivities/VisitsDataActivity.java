@@ -41,6 +41,7 @@ public class VisitsDataActivity extends AppCompatActivity {
         VisitsDataActivityPresenter presenter = new VisitsDataActivityPresenter(this);
         presenter.checkData();
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,18 +59,6 @@ public class VisitsDataActivity extends AppCompatActivity {
         }
         VisitsDataActivityPresenter presenter = new VisitsDataActivityPresenter(this);
         presenter.fetchDataForAdapters();
-    }
-
-    public void setAdaptersByData(ArrayList<String> patientNames, ArrayList<String> doctorNames){
-        ArrayAdapter<String> spinnerPatientAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, patientNames);
-        spinnerPatientAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerPatients.setAdapter(spinnerPatientAdapter);
-        ArrayAdapter<String> spinnerServicesAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, doctorNames);
-        spinnerServicesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerServices.setAdapter(spinnerServicesAdapter);
-        //spinnerServices.setSelection(1); через цикл узнать номер имени с списке и поставить этот номер в спиннер
     }
 
     public Visit getVisit(){
@@ -97,8 +86,19 @@ public class VisitsDataActivity extends AppCompatActivity {
         return visit;
     }
 
+    public void setAdaptersByData(ArrayList<String> patientNames, ArrayList<String> doctorNames){
+        ArrayAdapter<String> spinnerPatientAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, patientNames);
+        spinnerPatientAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerPatients.setAdapter(spinnerPatientAdapter);
+        ArrayAdapter<String> spinnerServicesAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, doctorNames);
+        spinnerServicesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerServices.setAdapter(spinnerServicesAdapter);
+    }
+
     public void showError(String result){
-        Log.d("444", result);
+        Log.d("ERROR: ", result);
         Toasty.error(getApplicationContext(), result, Toast.LENGTH_SHORT, true).show();
     }
 }

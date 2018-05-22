@@ -41,37 +41,34 @@ public class TablesActivity extends AppCompatActivity {
         menu.setEventListener(new CircleMenuView.EventListener() {
             @Override
             public void onMenuOpenAnimationStart(@NonNull CircleMenuView view) {
-                //Toast.makeText(getApplicationContext(), "onMenuOpenAnimationStart", Toast.LENGTH_SHORT).show();
+
             }
 
             @Override
             public void onMenuOpenAnimationEnd(@NonNull CircleMenuView view) {
-                //Toast.makeText(getApplicationContext(), "onMenuOpenAnimationEnd", Toast.LENGTH_SHORT).show();
+
             }
 
             @Override
             public void onMenuCloseAnimationStart(@NonNull CircleMenuView view) {
-                //Toast.makeText(getApplicationContext(), "onMenuCloseAnimationStart", Toast.LENGTH_SHORT).show();
+
             }
 
             @Override
             public void onMenuCloseAnimationEnd(@NonNull CircleMenuView view) {
-                //Toast.makeText(getApplicationContext(), "onMenuCloseAnimationEnd", Toast.LENGTH_SHORT).show();
+
             }
 
             @Override
             public void onButtonClickAnimationStart(@NonNull CircleMenuView view, int index) {
-                //Toast.makeText(getApplicationContext(), "onButtonClickAnimationStart| index: " + index, Toast.LENGTH_SHORT).show();
+
             }
 
             @Override
             public void onButtonClickAnimationEnd(@NonNull CircleMenuView view, int index) {
-                //Toast.makeText(getApplicationContext(), "onButtonClickAnimationEnd| index: " + index, Toast.LENGTH_SHORT).show();
-
                         Intent intent = new Intent(getApplicationContext(), ListActivity.class);
                         intent.putExtra("tableId", index);
                         startActivity(intent);
-
             }
         });
         Animation alphaAnimation = AnimationUtils.loadAnimation(this, R.anim.scale_menu);

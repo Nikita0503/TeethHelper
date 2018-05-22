@@ -36,7 +36,7 @@ public class PatientFragment extends Fragment {
         return v;
     }
 
-    public Patient getPatient(){  //ПОФИКСИТЬ ХЕРНЮ С ЧИСЛОВЫМИ ЗНАЧЕНИЯМИ ИЗ ЕДИТТЕКСТОВ У ДОКТОРА
+    public Patient getPatient(){
         String name = editTextName.getText().toString();
         String passport = editTextPassport.getText().toString();
         String address = editTextAddress.getText().toString();

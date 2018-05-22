@@ -39,7 +39,6 @@ public class VisitsDataActivityPresenter implements defaultPresenter {
         if(!checkCorrectDate(visit.date)){
             return;
         }
-        Log.d("233", "OKAY");
         dataActivity.data.putExtra("patient", visit.patient);
         dataActivity.data.putExtra("service", visit.service);
         dataActivity.data.putExtra("date", visit.date);
@@ -53,11 +52,6 @@ public class VisitsDataActivityPresenter implements defaultPresenter {
         ServicesTable doctorsGetter = new ServicesTable(dataActivity.getApplicationContext());
         ArrayList<String> doctorNames = doctorsGetter.getManipulations();
         dataActivity.setAdaptersByData(patientNames, doctorNames);
-    }
-
-    @Override
-    public void sendResult(String result) {
-        dataActivity.showError(result);
     }
 
     private boolean checkCorrectDate(String str){
@@ -85,5 +79,10 @@ public class VisitsDataActivityPresenter implements defaultPresenter {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public void sendResult(String result) {
+        dataActivity.showError(result);
     }
 }

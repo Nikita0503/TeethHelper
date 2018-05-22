@@ -44,6 +44,7 @@ public class ServiceDataActivity extends AppCompatActivity {
         ServiceDataActivityPresenter presenter = new ServiceDataActivityPresenter(this);
         presenter.checkData();
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) { //в бд засунуть контекст везде, пофиксить все в спинерах
         super.onCreate(savedInstanceState);
@@ -53,13 +54,6 @@ public class ServiceDataActivity extends AppCompatActivity {
         if(data.getFloatExtra("oldCost", -1) != -1) {
             editTextManipulation.setText(data.getStringExtra("oldManipulation"));
             editTextCost.setText(String.valueOf(data.getFloatExtra("oldCost", 0)));
-            Log.d("#!@#!@#@#!@#", data.getStringExtra("oldManipulation"));
-            Log.d("#!@#!@#@#!@#", data.getStringExtra("oldPatient"));
-            Log.d("#!@#!@#@#!@#", data.getStringExtra("oldDoctor"));
-            Log.d("#!@#!@#@#!@#", data.getFloatExtra("oldCost", 0)+"");
-            Log.d("#!@#!@#@#!@#", data.getStringExtra("oldDate"));
-
-
             StringTokenizer date = new StringTokenizer(data.getStringExtra("oldDate"), ".");
             while(date.hasMoreTokens()) {
                 editTextDataDay.setText(date.nextToken());
@@ -70,24 +64,6 @@ public class ServiceDataActivity extends AppCompatActivity {
         }
         ServiceDataActivityPresenter presenter = new ServiceDataActivityPresenter(this);
         presenter.fetchDataForAdapters();
-    }
-
-    public void setAdaptersByData(ArrayList<String> patientNames, ArrayList<String> doctorNames){
-        ArrayAdapter<String> spinnerPatientAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, patientNames);
-        spinnerPatientAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerPatients.setAdapter(spinnerPatientAdapter);
-        ArrayAdapter<String> spinnerDoctorAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, doctorNames);
-        spinnerDoctorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerDoctors.setAdapter(spinnerDoctorAdapter);
-    }
-
-
-
-    public void showError(String result){
-        Log.d("444", result);
-        Toasty.error(getApplicationContext(), result, Toast.LENGTH_SHORT, true).show();
     }
 
     public Service getService(){
@@ -120,9 +96,19 @@ public class ServiceDataActivity extends AppCompatActivity {
         return service;
     }
 
-    @Override
-    protected void onDestroy(){
-        super.onDestroy();
-        //ArrayAdapter<String>.flag = false;
+    public void setAdaptersByData(ArrayList<String> patientNames, ArrayList<String> doctorNames){
+        ArrayAdapter<String> spinnerPatientAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, patientNames);
+        spinnerPatientAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerPatients.setAdapter(spinnerPatientAdapter);
+        ArrayAdapter<String> spinnerDoctorAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, doctorNames);
+        spinnerDoctorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerDoctors.setAdapter(spinnerDoctorAdapter);
+    }
+
+    public void showError(String result){
+        Log.d("ERROR: ", result);
+        Toasty.error(getApplicationContext(), result, Toast.LENGTH_SHORT, true).show();
     }
 }

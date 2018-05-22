@@ -38,7 +38,6 @@ public class PatientDataActivityPresenter implements defaultPresenter {
             sendResult("Invalid disease");
             return;
         }
-        Log.d("233", "OKAY");
         dataActivity.data.putExtra("name", patient.name);
         dataActivity.data.putExtra("passport", patient.passport);
         dataActivity.data.putExtra("address", patient.address);

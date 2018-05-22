@@ -58,6 +58,33 @@ public class ReportActivityPresenter {
         }
     }
 
+    private Date getDateByStringTokenizer(StringTokenizer stringDate){
+        Date date = null;
+        while(stringDate.hasMoreTokens()) {
+            int day = Integer.parseInt(stringDate.nextToken());
+            int month = Integer.parseInt(stringDate.nextToken());
+            int year = Integer.parseInt(stringDate.nextToken());
+            date = new Date(year, month, day);
+        }
+        return date;
+    }
+
+    private ArrayList<String[]> getArrayListByRenders(ArrayList<Render> renders){
+        ArrayList<String[]> arrayList = new ArrayList<String[]>();
+        String[] tagNames = reportActivity.getResources().getStringArray(R.array.renderTagNames);
+        String row[];
+        for(int i = 0; i < renders.size(); i++){
+            row = new String[5];
+            row[0] = tagNames[0] + " : " + renders.get(i).service;
+            row[1] = tagNames[1] + " : " + renders.get(i).patient;
+            row[2] = tagNames[2] + " : " + renders.get(i).doctor;
+            row[3] = tagNames[3] + " : " + renders.get(i).sum;
+            row[4] = tagNames[4] + " : " + renders.get(i).date;
+            arrayList.add(row);
+        }
+        return arrayList;
+    }
+
     private ArrayList<String[]> getArrayListByDoctors(ArrayList<Doctor> doctors){
         ArrayList<String[]> arrayList = new ArrayList<String[]>();
         String[] tagNames = reportActivity.getResources().getStringArray(R.array.doctorTagNames);
@@ -85,22 +112,6 @@ public class ReportActivityPresenter {
             row[1] = tagNames[2] + " : " + patients.get(i).passport;
             row[2] = tagNames[3] + " : " + patients.get(i).address;
             row[3] = tagNames[4] + " : " + patients.get(i).disease;
-            arrayList.add(row);
-        }
-        return arrayList;
-    }
-
-    private ArrayList<String[]> getArrayListByRenders(ArrayList<Render> renders){
-        ArrayList<String[]> arrayList = new ArrayList<String[]>();
-        String[] tagNames = reportActivity.getResources().getStringArray(R.array.renderTagNames);
-        String row[];
-        for(int i = 0; i < renders.size(); i++){
-            row = new String[5];
-            row[0] = tagNames[0] + " : " + renders.get(i).service;
-            row[1] = tagNames[1] + " : " + renders.get(i).patient;
-            row[2] = tagNames[2] + " : " + renders.get(i).doctor;
-            row[3] = tagNames[3] + " : " + renders.get(i).sum;
-            row[4] = tagNames[4] + " : " + renders.get(i).date;
             arrayList.add(row);
         }
         return arrayList;
@@ -154,17 +165,4 @@ public class ReportActivityPresenter {
         }
         return statistic;
     }
-
-    private Date getDateByStringTokenizer(StringTokenizer stringDate){
-        Date date = null;
-        while(stringDate.hasMoreTokens()) {
-            int day = Integer.parseInt(stringDate.nextToken());
-            int month = Integer.parseInt(stringDate.nextToken());
-            int year = Integer.parseInt(stringDate.nextToken());
-            date = new Date(year, month, day);
-        }
-        return date;
-    }
-
-
 }

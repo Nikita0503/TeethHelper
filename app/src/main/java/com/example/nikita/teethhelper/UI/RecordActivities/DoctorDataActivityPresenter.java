@@ -44,7 +44,6 @@ public class DoctorDataActivityPresenter implements defaultPresenter {
             sendResult("Invalid berth");
             return;
         }
-        Log.d("233", "OKAY");
         dataActivity.data.putExtra("name", doctor.name);
         dataActivity.data.putExtra("passport", doctor.passport);
         dataActivity.data.putExtra("address", doctor.address);

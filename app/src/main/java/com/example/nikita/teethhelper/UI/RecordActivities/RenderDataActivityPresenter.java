@@ -49,7 +49,6 @@ public class RenderDataActivityPresenter implements defaultPresenter {
         if(!checkCorrectDate(render.date)){
             return;
         }
-        Log.d("233", "OKAY");
         dataActivity.data.putExtra("service", render.service);
         dataActivity.data.putExtra("patient", render.patient);
         dataActivity.data.putExtra("doctor", render.doctor);
@@ -61,12 +60,12 @@ public class RenderDataActivityPresenter implements defaultPresenter {
 
     public void fetchDataForAdapters(){
         ServicesTable servicesTable = new ServicesTable(dataActivity.getApplicationContext());
-        ArrayList<String> serviceNames = servicesTable.getNames();
+        ArrayList<String> serviceManipulations = servicesTable.getManipulations();
         PatientsTable patientsTable = new PatientsTable(dataActivity.getApplicationContext());
         ArrayList<String> patientNames = patientsTable.getNames();
         DoctorsTable doctorsTable = new DoctorsTable(dataActivity.getApplicationContext());
         ArrayList<String> doctorNames = doctorsTable.getNames();
-        dataActivity.setAdaptersByData(serviceNames, patientNames, doctorNames);
+        dataActivity.setAdaptersByData(serviceManipulations, patientNames, doctorNames);
     }
 
 
@@ -76,7 +75,6 @@ public class RenderDataActivityPresenter implements defaultPresenter {
         int month = -1;
         int year = -1;
         while(date.hasMoreTokens()) {
-            Log.d("123", str);
             day = Integer.parseInt(date.nextToken());
             month = Integer.parseInt(date.nextToken());
             year = Integer.parseInt(date.nextToken());

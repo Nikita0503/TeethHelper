@@ -22,22 +22,82 @@ import java.util.ArrayList;
 
 public class PatientsTable implements defaultTable {
     String[] tagNames;
-
     DBHepler dbHepler;
     SQLiteDatabase db;
-    ListActivity listActivity;
+    Context context;
     ListPresenter listPresenter;
 
-    public PatientsTable(Context context){//context
+    public PatientsTable(Context context){
         dbHepler = new DBHepler(context);
         db = dbHepler.getWritableDatabase();
     }
 
-    public PatientsTable(ListActivity listActivity, ListPresenter listPresenter){
+    public PatientsTable(Context context, ListPresenter listPresenter){
         this.listPresenter = listPresenter;
-        this.listActivity = listActivity;
-        dbHepler = new DBHepler(listActivity);
+        this.context = context;
+        dbHepler = new DBHepler(context);
         db = dbHepler.getWritableDatabase();
+    }
+
+    @Override
+    public void fetchData(){
+        tagNames = context.getResources().getStringArray(R.array.patientTagNames);
+        ArrayList<Patient> patients = getPatients();
+        listPresenter.prepareDataByPatients(patients, tagNames);
+    }
+
+    @Override
+    public void addRow(defaultObject defaultObject) {
+        Patient patient = (Patient) defaultObject;
+        ContentValues cv = new ContentValues();
+        cv.put("name", patient.name);
+        cv.put("passport", patient.passport);
+        cv.put("address", patient.address);
+        cv.put("disease", patient.disease);
+        long rowID = db.insert("patients", null, cv);
+        Log.d("ADDED: ", "id = " + rowID);
+        listPresenter.sendMessage("new patient was added successful!");
+    }
+
+    @Override
+    public boolean deleteRow(defaultObject defaultObject) {
+        Patient patient = (Patient) defaultObject;
+        String code = String.valueOf(patient.code);
+        String name = patient.name;
+        String passport = patient.passport;
+        String address = patient.address;
+        String disease = patient.disease;
+        String[] values = new String[]{code, name, passport, address, disease};
+        long dltCount = db.delete("patients","code=? and name=? and passport=? and address=? and disease=?", values);
+        Log.d("DELETED: ", "deleted " + dltCount + " rows");
+        listPresenter.updateDataByTableId(2);
+        listPresenter.sendMessage("patient was deleted successfully!");
+        return true;
+    }
+
+    @Override
+    public boolean updateRow(defaultObject oldDefaultObject, defaultObject newDefaultObject) {
+        Patient oldPatient = (Patient) oldDefaultObject;
+        Patient newPatient = (Patient) newDefaultObject;
+        ContentValues cv = new ContentValues();
+        cv.put("code", oldPatient.code);
+        cv.put("name", newPatient.name);
+        cv.put("passport", newPatient.passport);
+        cv.put("address", newPatient.address);
+        cv.put("disease", newPatient.disease);
+        String code = String.valueOf(oldPatient.code);
+        String name = oldPatient.name;
+        String passport = oldPatient.passport;
+        String address = oldPatient.address;
+        String disease = oldPatient.disease;
+        Log.d("OLD DATA: ", oldPatient.code + " " + oldPatient.name + " " + oldPatient.passport + " " + oldPatient.address + " " + oldPatient.disease);
+        Log.d("NEW DATA: ", newPatient.code + " " + newPatient.name + " " + newPatient.passport + " " + newPatient.address + " " + newPatient.disease);
+        String[] values = new String[]{code, name, passport, address, disease};
+        int updCount = db.update("patients", cv, "code=? and name=? and passport=? and address=? and disease=?", values);
+        Log.d("UPDATE: ", "updated " + updCount+" rows ");
+        listPresenter.updateDataByTableId(2);
+        listPresenter.sendMessage("patient was updated!");
+        return true;
     }
 
     public ArrayList<String> getNames(){
@@ -63,7 +123,7 @@ public class PatientsTable implements defaultTable {
             int diseaseColIndex = c.getColumnIndex("disease");
             do {
                 patients.add(new Patient(c.getInt(idColIndex),  c.getString(nameColIndex), c.getString(passportColIndex), c.getString(addressColIndex), c.getString(diseaseColIndex)));
-                Log.d("LOG",
+                Log.d("PATIENT: ",
                         "ID = " + c.getInt(idColIndex) + ", name = "
                                 + c.getString(nameColIndex) + ", passport = "
                                 + c.getString(passportColIndex) + ", address = "
@@ -71,73 +131,8 @@ public class PatientsTable implements defaultTable {
                                 + c.getString(diseaseColIndex));
             } while (c.moveToNext());
         } else
-            Log.d("LOG", "0 rows");
+            Log.d("PATIENT: ", "0 rows");
         c.close();
         return patients;
-    }
-
-    @Override
-    public void fetchData(){
-        tagNames = listActivity.getResources().getStringArray(R.array.patientTagNames);
-        ArrayList<Patient> patients = getPatients();
-        listPresenter.prepareDataByPatients(patients, tagNames);
-    }
-
-    @Override
-    public void addRow(defaultObject defaultObject) {
-        Patient patient = (Patient) defaultObject;
-        Log.d("123", patient.name);
-        ContentValues cv = new ContentValues();
-        cv.put("name", patient.name);
-        cv.put("passport", patient.passport);
-        cv.put("address", patient.address);
-        cv.put("disease", patient.disease);
-        // вставляем запись и получаем ее ID
-        long rowID = db.insert("patients", null, cv);
-        listActivity.showResult("new patient was added successful!");
-    }
-
-    @Override
-    public boolean deleteRow(defaultObject defaultObject) {
-        Patient patient = (Patient) defaultObject;
-        String code = String.valueOf(patient.code);
-        String name = patient.name;
-        String passport = patient.passport;
-        String address = patient.address;
-        String disease = patient.disease;
-        //String specialization = patient.specialization;
-        //String experience = String.valueOf(doctor.experience);
-        //String berth = doctor.berth;
-        String[] values = new String[]{code, name, passport, address, disease};
-        db.delete("patients","code=? and name=? and passport=? and address=? and disease=?", values);//через listPresenter
-        listPresenter.updateDataByTableId(2);
-        listActivity.showResult("patient was deleted successfully!");//ЗАСУНУТЬ ЭТО К ПРЕЗЕНТЕРУ!!!!
-        return true;
-    }
-
-    @Override
-    public boolean updateRow(defaultObject oldDefaultObject, defaultObject newDefaultObject) {
-        Patient oldPatient = (Patient) oldDefaultObject;
-        Patient newPatient = (Patient) newDefaultObject;
-        ContentValues cv = new ContentValues();
-        cv.put("code", oldPatient.code);
-        cv.put("name", newPatient.name);
-        cv.put("passport", newPatient.passport);
-        cv.put("address", newPatient.address);
-        cv.put("disease", newPatient.disease);
-
-        String code = String.valueOf(oldPatient.code);
-        String name = oldPatient.name;
-        String passport = oldPatient.passport;
-        String address = oldPatient.address;
-        String disease = oldPatient.disease;
-        Log.d("123", oldPatient.code + " " + oldPatient.name + " " + oldPatient.passport + " " + oldPatient.address + " " + oldPatient.disease);
-        Log.d("123", newPatient.code + " " + newPatient.name + " " + newPatient.passport + " " + newPatient.address + " " + newPatient.disease);
-        String[] values = new String[]{code, name, passport, address, disease};
-        int updCount = db.update("patients", cv, "code=? and name=? and passport=? and address=? and disease=?", values);
-        Log.d("asd", updCount+"!!");
-        listPresenter.updateDataByTableId(2);
-        listActivity.showResult("patient was updated!");
-        return true;
     }
 }

@@ -27,6 +27,41 @@ public class PDFWriter {
         this.context = context;
     }
 
+    public void writeRenders(ArrayList<String[]> text){
+        PdfDocument document = new PdfDocument();
+        Paint redPaint = new Paint();
+        redPaint.setColor(Color.BLUE);
+        redPaint.setTextSize(28);
+        int x = 100;
+        int y = 40;
+        for(int i = 0; i < text.size(); i++){
+            PdfDocument.PageInfo pageInfo =
+                    new PdfDocument.PageInfo.Builder(800, 1200, i+1).create();
+            PdfDocument.Page page = document.startPage(pageInfo);
+            Canvas canvas = page.getCanvas();
+            Drawable d = context.getResources().getDrawable(R.drawable.ic_doctor_order);
+            d.setBounds(100, 100, 300,400);
+            d.draw(canvas);
+            Drawable p = context.getResources().getDrawable(R.drawable.ic_patient_order);
+            p.setBounds(500, 100, 700,400);
+            p.draw(canvas);
+            for(int j = 0; j < text.get(0).length; j++) {
+                canvas.drawText(text.get(i)[j], x, (j+1)*y+800, redPaint);
+            }
+            document.finishPage(page);
+        }
+        String targetPdf = "/sdcard/Renders.pdf";
+        File filePath = new File(targetPdf);
+        try {
+            document.writeTo(new FileOutputStream(filePath));
+            Toasty.success(context, context.getResources().getString(R.string.done), Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toasty.error(context, context.getResources().getString(R.string.error), Toast.LENGTH_SHORT).show();
+        }
+        document.close();
+    }
+
     public void writeDoctors(ArrayList<String[]> text){
         PdfDocument document = new PdfDocument();
         Paint redPaint = new Paint();
@@ -91,43 +126,7 @@ public class PDFWriter {
         document.close();
     }
 
-    public void writeRenders(ArrayList<String[]> text){
-        PdfDocument document = new PdfDocument();
-        Paint redPaint = new Paint();
-        redPaint.setColor(Color.BLUE);
-        redPaint.setTextSize(28);
-        int x = 100;
-        int y = 40;
-        for(int i = 0; i < text.size(); i++){
-            PdfDocument.PageInfo pageInfo =
-                    new PdfDocument.PageInfo.Builder(800, 1200, i+1).create();
-            PdfDocument.Page page = document.startPage(pageInfo);
-            Canvas canvas = page.getCanvas();
-            Drawable d = context.getResources().getDrawable(R.drawable.ic_doctor_order);
-            d.setBounds(100, 100, 300,400);
-            d.draw(canvas);
-            Drawable p = context.getResources().getDrawable(R.drawable.ic_patient_order);
-            p.setBounds(500, 100, 700,400);
-            p.draw(canvas);
-            for(int j = 0; j < text.get(0).length; j++) {
-                canvas.drawText(text.get(i)[j], x, (j+1)*y+800, redPaint);
-            }
-            document.finishPage(page);
-        }
-        String targetPdf = "/sdcard/Renders.pdf";
-        File filePath = new File(targetPdf);
-        try {
-            document.writeTo(new FileOutputStream(filePath));
-            Toasty.success(context, context.getResources().getString(R.string.done), Toast.LENGTH_SHORT).show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            Toasty.error(context, context.getResources().getString(R.string.error), Toast.LENGTH_SHORT).show();
-        }
-        document.close();
-    }
-
     public void writeVisits(ArrayList<String[]> text){
-        //Toast.makeText(context, text.size()+"", Toast.LENGTH_SHORT).show();
         PdfDocument document = new PdfDocument();
         Paint redPaint = new Paint();
         redPaint.setColor(Color.parseColor("#AA66CC"));
@@ -160,7 +159,6 @@ public class PDFWriter {
     }
 
     public void writeVisitsStatistic(ArrayList<String> text){
-        //Toast.makeText(context, text.size()+"", Toast.LENGTH_SHORT).show();
         PdfDocument document = new PdfDocument();
         Paint redPaint = new Paint();
         redPaint.setColor(Color.parseColor("#AA66CC"));

@@ -44,8 +44,8 @@ public class VisitFragment extends Fragment {
 
     private void setAdapters(){
         ServicesTable servicesTable = new ServicesTable(getActivity().getApplicationContext());
-        ArrayList<String> servicesNames = servicesTable.getNames();
-        ArrayAdapter<String> spinnerServicesAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, servicesNames);
+        ArrayList<String> servicesManipulations = servicesTable.getManipulations();
+        ArrayAdapter<String> spinnerServicesAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, servicesManipulations);
         spinnerServicesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerServices.setAdapter(spinnerServicesAdapter);
 

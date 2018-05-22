@@ -22,10 +22,9 @@ import java.util.ArrayList;
 
 public class DoctorsTable implements defaultTable {
     String[] tagNames;
-
     DBHepler dbHepler;
     SQLiteDatabase db;
-    ListActivity listActivity;
+    Context context;
     ListPresenter listPresenter;
 
     public DoctorsTable(Context context){
@@ -33,11 +32,80 @@ public class DoctorsTable implements defaultTable {
         db = dbHepler.getWritableDatabase();
     }
 
-    public DoctorsTable(ListActivity listActivity, ListPresenter listPresenter){
+    public DoctorsTable(Context context, ListPresenter listPresenter){
         this.listPresenter = listPresenter;
-        this.listActivity = listActivity;
-        dbHepler = new DBHepler(listActivity);
+        this.context = context;
+        dbHepler = new DBHepler(context);
         db = dbHepler.getWritableDatabase();
+    }
+
+    @Override
+    public void fetchData() {
+        ArrayList doctors = getDoctors();
+        tagNames = context.getResources().getStringArray(R.array.doctorTagNames);
+        listPresenter.prepareDataByDoctors(doctors, tagNames);
+    }
+
+    @Override
+    public void addRow(defaultObject defaultObject) {
+        Doctor doctor = (Doctor) defaultObject;
+        ContentValues cv = new ContentValues();
+        cv.put("name", doctor.name);
+        cv.put("passport", doctor.passport);
+        cv.put("address", doctor.address);
+        cv.put("specialization", doctor.specialization);
+        cv.put("experience", doctor.experience);
+        cv.put("berth", doctor.berth);
+        long rowID = db.insert("doctors", null, cv);
+        Log.d("ADDED: ", "id = " + rowID);
+        listPresenter.sendMessage("new doctor was added successful!");
+    }
+
+    @Override
+    public boolean deleteRow(defaultObject defaultObject) {
+        Doctor doctor = (Doctor) defaultObject;
+        String code = String.valueOf(doctor.code);
+        String name = doctor.name;
+        String passport = doctor.passport;
+        String address = doctor.address;
+        String specialization = doctor.specialization;
+        String experience = String.valueOf(doctor.experience);
+        String berth = doctor.berth;
+        String[] values = new String[]{code, name, passport, address, specialization, experience, berth};
+        long dltCount = db.delete("doctors","code=? and name=? and passport=? and address = ? and specialization=? and experience=? and berth=?", values);
+        Log.d("DELETED: ", "deleted " + dltCount + " rows");
+        listPresenter.updateDataByTableId(1);
+        listPresenter.sendMessage("doctor was deleted successfully!");
+        return true;
+    }
+
+    @Override
+    public boolean updateRow(defaultObject oldDefaultObject, defaultObject newDefaultObject) {
+        Doctor oldDoctor = (Doctor) oldDefaultObject;
+        Doctor newDoctor = (Doctor) newDefaultObject;
+        ContentValues cv = new ContentValues();
+        cv.put("code", oldDoctor.code);
+        cv.put("name", newDoctor.name);
+        cv.put("passport", newDoctor.passport);
+        cv.put("address", newDoctor.address);
+        cv.put("specialization", newDoctor.specialization);
+        cv.put("experience", newDoctor.experience);
+        cv.put("berth", newDoctor.berth);
+        String code = String.valueOf(oldDoctor.code);
+        String name = oldDoctor.name;
+        String passport = oldDoctor.passport;
+        String address = oldDoctor.address;
+        String specialization = oldDoctor.specialization;
+        String experience = String.valueOf(oldDoctor.experience);
+        String berth = oldDoctor.berth;
+        Log.d("OLD DATA: ", oldDoctor.code + " " + oldDoctor.name + " " + oldDoctor.passport + " " + oldDoctor.address + " " + oldDoctor.specialization + " " + oldDoctor.experience + " " + oldDoctor.berth);
+        Log.d("NEW DATA: ", newDoctor.code + " " + newDoctor.name + " " + newDoctor.passport + " " + newDoctor.address + " " + newDoctor.specialization + " " + newDoctor.experience + " " + newDoctor.berth);
+        String[] values = new String[]{code, name, passport, address, specialization, experience, berth};
+        int updCount = db.update("doctors", cv, "code=? and name=? and passport=? and address=? and specialization=? and experience=? and berth=?", values);
+        Log.d("UPDATED: ", "updated " + updCount + " rows ");
+        listPresenter.updateDataByTableId(1);
+        listPresenter.sendMessage("doctor was updated!");
+        return true;
     }
 
     public ArrayList<String> getNames(){
@@ -65,7 +133,7 @@ public class DoctorsTable implements defaultTable {
             int berthColIndex = c.getColumnIndex("berth");
             do {
                 doctors.add(new Doctor(c.getInt(idColIndex), c.getString(nameColIndex), c.getString(passportColIndex), c.getString(addressColIndex), c.getString(specializationColIndex), c.getInt(experienceColIndex), c.getString(berthColIndex)));
-                Log.d("LOG",
+                Log.d("DOCTOR: ",
                         "ID = " + c.getInt(idColIndex) + ", name = "
                                 + c.getString(nameColIndex) + ", passport = "
                                 + c.getString(passportColIndex) + ", address = "
@@ -75,81 +143,8 @@ public class DoctorsTable implements defaultTable {
                                 + c.getString(berthColIndex));
             } while (c.moveToNext());
         } else
-            Log.d("LOG", "0 rows");
+            Log.d("DOCTOR: ", "0 rows");
         c.close();
         return doctors;
     }
-
-    @Override
-    public void fetchData() { //формирование адаптеров можно делать в View??
-        ArrayList doctors = getDoctors();
-        tagNames = listActivity.getResources().getStringArray(R.array.doctorTagNames);
-
-        listPresenter.prepareDataByDoctors(doctors, tagNames);
-    }
-
-    @Override  //ПОФИКСИТЬ ХЕРНЮ С ЧИСЛОВЫМИ ЗНАЧЕНИЯМИ ИЗ ЕДИТТЕКСТОВ У ДОКТОРА
-    public void addRow(defaultObject defaultObject) {
-        Doctor doctor = (Doctor) defaultObject;
-        Log.d("123", doctor.name);
-        ContentValues cv = new ContentValues();
-        cv.put("name", doctor.name);
-        cv.put("passport", doctor.passport);
-        cv.put("address", doctor.address);
-        cv.put("specialization", doctor.specialization);
-        cv.put("experience", doctor.experience);
-        cv.put("berth", doctor.berth);
-        // вставляем запись и получаем ее ID
-        long rowID = db.insert("doctors", null, cv);
-        listActivity.showResult("new doctor was added successful!");
-    }
-
-    @Override
-    public boolean deleteRow(defaultObject defaultObject) {  //ПОФИКСИТЬ ХЕРНЮ С ЧИСЛОВЫМИ ЗНАЧЕНИЯМИ ИЗ ЕДИТТЕКСТОВ У ДОКТОРА
-        Doctor doctor = (Doctor) defaultObject;
-        String code = String.valueOf(doctor.code);
-        String name = doctor.name;
-        String passport = doctor.passport;
-        String address = doctor.address;
-        String specialization = doctor.specialization;
-        String experience = String.valueOf(doctor.experience);
-        String berth = doctor.berth;
-        String[] values = new String[]{code, name, passport, address, specialization, experience, berth};
-        db.delete("doctors","code=? and name=? and passport=? and address = ? and specialization=? and experience=? and berth=?", values);//через listPresenter
-        listPresenter.updateDataByTableId(1);
-        listActivity.showResult("doctor was deleted successfully!");
-        return true;
-    }
-
-    @Override
-    public boolean updateRow(defaultObject oldDefaultObject, defaultObject newDefaultObject) {
-        Doctor oldDoctor = (Doctor) oldDefaultObject;
-        Doctor newDoctor = (Doctor) newDefaultObject;
-        ContentValues cv = new ContentValues();
-        cv.put("code", oldDoctor.code);
-        cv.put("name", newDoctor.name);
-        cv.put("passport", newDoctor.passport);
-        cv.put("address", newDoctor.address);
-        cv.put("specialization", newDoctor.specialization);
-        cv.put("experience", newDoctor.experience);
-        cv.put("berth", newDoctor.berth);
-
-        String code = String.valueOf(oldDoctor.code);
-        String name = oldDoctor.name;
-        String passport = oldDoctor.passport;
-        String address = oldDoctor.address;
-        String specialization = oldDoctor.specialization;
-        String experience = String.valueOf(oldDoctor.experience);
-        String berth = oldDoctor.berth;
-        Log.d("123", oldDoctor.code + " " + oldDoctor.name + " " + oldDoctor.passport + " " + oldDoctor.address + " " + oldDoctor.specialization + " " + oldDoctor.experience + " " + oldDoctor.berth);
-        Log.d("123", newDoctor.code + " " + newDoctor.name + " " + newDoctor.passport + " " + newDoctor.address + " " + newDoctor.specialization + " " + newDoctor.experience + " " + newDoctor.berth);
-        String[] values = new String[]{code, name, passport, address, specialization, experience, berth};
-        int updCount = db.update("doctors", cv, "code=? and name=? and passport=? and address=? and specialization=? and experience=? and berth=?", values);
-        Log.d("asd", updCount+"!!");
-        listPresenter.updateDataByTableId(1);
-        listActivity.showResult("doctor was updated!");
-        return true;
-    }
-
-
 }
