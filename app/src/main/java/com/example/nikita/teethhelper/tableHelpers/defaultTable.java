@@ -9,6 +9,6 @@ import com.example.nikita.teethhelper.data.defaultObject;
 public interface defaultTable {
     public void fetchData();
     public void addRow(defaultObject defaultObject);
-    public boolean deleteRow(defaultObject defaultObject);
-    public boolean updateRow(defaultObject oldDefaultObject, defaultObject newDefaultObject);
+    public void deleteRow(defaultObject defaultObject);
+    public void updateRow(defaultObject oldDefaultObject, defaultObject newDefaultObject);
 }

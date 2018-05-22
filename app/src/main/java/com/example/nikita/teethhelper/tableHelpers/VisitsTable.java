@@ -58,7 +58,7 @@ public class VisitsTable implements defaultTable {
     }
 
     @Override
-    public boolean deleteRow(defaultObject defaultObject) {
+    public void deleteRow(defaultObject defaultObject) {
         Visit visit = (Visit) defaultObject;
         String patient = visit.patient;
         String date = visit.date;
@@ -68,11 +68,10 @@ public class VisitsTable implements defaultTable {
         Log.d("DELETED: ", "deleted " + dltCount + " rows");
         listPresenter.updateDataByTableId(4);
         listPresenter.sendMessage("visit was deleted successfully!");
-        return true;
     }
 
     @Override
-    public boolean updateRow(defaultObject oldDefaultObject, defaultObject newDefaultObject) {
+    public void updateRow(defaultObject oldDefaultObject, defaultObject newDefaultObject) {
         Visit oldVisit = (Visit) oldDefaultObject;
         Visit newVisit = (Visit) newDefaultObject;
         ContentValues cv = new ContentValues();
@@ -89,7 +88,6 @@ public class VisitsTable implements defaultTable {
         Log.d("UPDATED: ", "updated " + updCount + " rows ");
         listPresenter.updateDataByTableId(4);
         listPresenter.sendMessage("visit was updated!");
-        return true;
     }
 
     public ArrayList<Visit> getVisits(){

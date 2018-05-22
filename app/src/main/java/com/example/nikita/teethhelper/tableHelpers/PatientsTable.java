@@ -58,7 +58,7 @@ public class PatientsTable implements defaultTable {
     }
 
     @Override
-    public boolean deleteRow(defaultObject defaultObject) {
+    public void deleteRow(defaultObject defaultObject) {
         Patient patient = (Patient) defaultObject;
         String code = String.valueOf(patient.code);
         String name = patient.name;
@@ -70,11 +70,10 @@ public class PatientsTable implements defaultTable {
         Log.d("DELETED: ", "deleted " + dltCount + " rows");
         listPresenter.updateDataByTableId(2);
         listPresenter.sendMessage("patient was deleted successfully!");
-        return true;
     }
 
     @Override
-    public boolean updateRow(defaultObject oldDefaultObject, defaultObject newDefaultObject) {
+    public void updateRow(defaultObject oldDefaultObject, defaultObject newDefaultObject) {
         Patient oldPatient = (Patient) oldDefaultObject;
         Patient newPatient = (Patient) newDefaultObject;
         ContentValues cv = new ContentValues();
@@ -95,7 +94,6 @@ public class PatientsTable implements defaultTable {
         Log.d("UPDATE: ", "updated " + updCount+" rows ");
         listPresenter.updateDataByTableId(2);
         listPresenter.sendMessage("patient was updated!");
-        return true;
     }
 
     public ArrayList<String> getNames(){

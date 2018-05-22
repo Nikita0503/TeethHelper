@@ -59,7 +59,7 @@ public class RendersTable implements defaultTable {
     }
 
     @Override
-    public boolean deleteRow(defaultObject defaultObject) {
+    public void deleteRow(defaultObject defaultObject) {
         Render render = (Render) defaultObject;
         String service = render.service;
         String patient = render.patient;
@@ -72,11 +72,10 @@ public class RendersTable implements defaultTable {
         Log.d("DELETED: ", "deleted " + dltCount + " rows");
         listPresenter.updateDataByTableId(0);
         listPresenter.sendMessage("render was deleted successfully!");
-        return true;
     }
 
     @Override
-    public boolean updateRow(defaultObject oldDefaultObject, defaultObject newDefaultObject) {
+    public void updateRow(defaultObject oldDefaultObject, defaultObject newDefaultObject) {
         Render oldRender = (Render) oldDefaultObject;
         Render newRender = (Render) newDefaultObject;
         ContentValues cv = new ContentValues();
@@ -97,7 +96,6 @@ public class RendersTable implements defaultTable {
         Log.d("UPDATED", "updated " + updCount + " rows ");
         listPresenter.updateDataByTableId(0);
         listPresenter.sendMessage("render was updated!");
-        return true;
     }
 
     public ArrayList<Render> getRenders(){

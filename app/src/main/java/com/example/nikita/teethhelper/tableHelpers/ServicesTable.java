@@ -61,7 +61,7 @@ public class ServicesTable implements defaultTable {
 
 
     @Override
-    public boolean deleteRow(defaultObject defaultObject) {
+    public void deleteRow(defaultObject defaultObject) {
         Service service = (Service) defaultObject;
         String manipulation = service.manipulation;
         String patient = service.patient;
@@ -73,11 +73,10 @@ public class ServicesTable implements defaultTable {
         Log.d("DELETED: ", "deleted " + dltCount + " rows");
         listPresenter.updateDataByTableId(3);
         listPresenter.sendMessage("service was deleted successfully!");//ЗАСУНУТЬ ЭТО К ПРЕЗЕНТЕРУ!!!!
-        return true;
     }
 
     @Override
-    public boolean updateRow(defaultObject oldDefaultObject, defaultObject newDefaultObject) {
+    public void updateRow(defaultObject oldDefaultObject, defaultObject newDefaultObject) {
         Service oldService = (Service) oldDefaultObject;
         Service newService = (Service) newDefaultObject;
         ContentValues cv = new ContentValues();
@@ -98,7 +97,6 @@ public class ServicesTable implements defaultTable {
         Log.d("UPDATED: ", "updated " + updCount + " rows ");
         listPresenter.updateDataByTableId(3);
         listPresenter.sendMessage("service was updated successful!");
-        return true;
     }
 
     public ArrayList<Service> getServices(){
