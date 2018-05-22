@@ -1,57 +1,47 @@
-package com.example.nikita.teethhelper.UI.RecordActivities;
+package com.example.nikita.teethhelper.presenters;
 
 import android.app.Activity;
 import android.util.Log;
 
-import com.example.nikita.teethhelper.data.Service;
-import com.example.nikita.teethhelper.defaultPresenter;
-import com.example.nikita.teethhelper.tables.DoctorsTable;
-import com.example.nikita.teethhelper.tables.PatientsTable;
+import com.example.nikita.teethhelper.UI.RecordActivities.VisitsDataActivity;
+import com.example.nikita.teethhelper.data.Visit;
+import com.example.nikita.teethhelper.tableHelpers.PatientsTable;
+import com.example.nikita.teethhelper.tableHelpers.ServicesTable;
 
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 /**
- * Created by Nikita on 08.05.2018.
+ * Created by Nikita on 13.05.2018.
  */
 
-public class ServiceDataActivityPresenter implements defaultPresenter {
-    ServiceDataActivity dataActivity;
+public class VisitsDataActivityPresenter implements defaultPresenter {
+    VisitsDataActivity dataActivity;
 
-    public ServiceDataActivityPresenter(ServiceDataActivity dataActivity){
+    public VisitsDataActivityPresenter(VisitsDataActivity dataActivity){
         this.dataActivity = dataActivity;
     }
     @Override
     public void checkData() {
-        Service service = dataActivity.getService();
-        if (service.patient.trim().length() <= 0){
+        Visit visit = dataActivity.getVisit();
+        if (visit.patient.trim().length() <= 0){
             sendResult("Invalid patient");
             return;
         }
-        if (service.doctor.trim().length() <= 0){
-            sendResult("Invalid doctor");
+        if (visit.service.trim().length() <= 0){
+            sendResult("Invalid service");
             return;
         }
-        if (service.manipulation.trim().length() <= 0){
-            sendResult("Invalid manipulation");
+        if (visit.date.trim().length() <= 0){
+            sendResult("Invalid date");
             return;
         }
-        if (service.cost < 0){
-            sendResult("Invalid cost");
+        if(!checkCorrectDate(visit.date)){
             return;
         }
-        if (service.date.trim().length() <= 0) {
-            sendResult("Invalid data");
-            return;
-        }
-        if(!checkCorrectDate(service.date)){
-            return;
-        }
-        dataActivity.data.putExtra("patient", service.patient);
-        dataActivity.data.putExtra("doctor", service.doctor);
-        dataActivity.data.putExtra("manipulation", service.manipulation);
-        dataActivity.data.putExtra("cost", service.cost);
-        dataActivity.data.putExtra("date", service.date);
+        dataActivity.data.putExtra("patient", visit.patient);
+        dataActivity.data.putExtra("service", visit.service);
+        dataActivity.data.putExtra("date", visit.date);
         dataActivity.setResult(Activity.RESULT_OK, dataActivity.data);
         dataActivity.finish();
     }
@@ -59,8 +49,8 @@ public class ServiceDataActivityPresenter implements defaultPresenter {
     public void fetchDataForAdapters(){
         PatientsTable patientsTable = new PatientsTable(dataActivity.getApplicationContext());
         ArrayList<String> patientNames = patientsTable.getNames();
-        DoctorsTable doctorsTable = new DoctorsTable(dataActivity.getApplicationContext());
-        ArrayList<String> doctorNames = doctorsTable.getNames();
+        ServicesTable doctorsGetter = new ServicesTable(dataActivity.getApplicationContext());
+        ArrayList<String> doctorNames = doctorsGetter.getManipulations();
         dataActivity.setAdaptersByData(patientNames, doctorNames);
     }
 
@@ -70,6 +60,7 @@ public class ServiceDataActivityPresenter implements defaultPresenter {
         int month = -1;
         int year = -1;
         while(date.hasMoreTokens()) {
+            Log.d("123", str);
             day = Integer.parseInt(date.nextToken());
             month = Integer.parseInt(date.nextToken());
             year = Integer.parseInt(date.nextToken());
@@ -91,7 +82,7 @@ public class ServiceDataActivityPresenter implements defaultPresenter {
     }
 
     @Override
-    public void sendResult(String result)  {
+    public void sendResult(String result) {
         dataActivity.showError(result);
     }
 }

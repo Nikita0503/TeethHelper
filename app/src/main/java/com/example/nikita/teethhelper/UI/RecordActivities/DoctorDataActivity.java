@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.nikita.teethhelper.R;
+import com.example.nikita.teethhelper.presenters.DoctorDataActivityPresenter;
 import com.example.nikita.teethhelper.data.Doctor;
 
 import butterknife.BindView;

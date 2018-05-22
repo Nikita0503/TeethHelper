@@ -1,13 +1,16 @@
-package com.example.nikita.teethhelper;
+package com.example.nikita.teethhelper.presenters;
 
+import com.example.nikita.teethhelper.PDFWriter;
+import com.example.nikita.teethhelper.R;
+import com.example.nikita.teethhelper.UI.ReportActivity;
 import com.example.nikita.teethhelper.data.Doctor;
 import com.example.nikita.teethhelper.data.Patient;
 import com.example.nikita.teethhelper.data.Render;
 import com.example.nikita.teethhelper.data.Visit;
-import com.example.nikita.teethhelper.tables.DoctorsTable;
-import com.example.nikita.teethhelper.tables.PatientsTable;
-import com.example.nikita.teethhelper.tables.RendersTable;
-import com.example.nikita.teethhelper.tables.VisitsTable;
+import com.example.nikita.teethhelper.tableHelpers.DoctorsTable;
+import com.example.nikita.teethhelper.tableHelpers.PatientsTable;
+import com.example.nikita.teethhelper.tableHelpers.RendersTable;
+import com.example.nikita.teethhelper.tableHelpers.VisitsTable;
 
 import java.util.ArrayList;
 import java.util.Date;

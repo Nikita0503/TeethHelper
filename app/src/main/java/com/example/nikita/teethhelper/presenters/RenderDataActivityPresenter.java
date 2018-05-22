@@ -1,13 +1,12 @@
-package com.example.nikita.teethhelper.UI.RecordActivities;
+package com.example.nikita.teethhelper.presenters;
 
 import android.app.Activity;
-import android.util.Log;
 
+import com.example.nikita.teethhelper.UI.RecordActivities.RenderDataActivity;
 import com.example.nikita.teethhelper.data.Render;
-import com.example.nikita.teethhelper.defaultPresenter;
-import com.example.nikita.teethhelper.tables.DoctorsTable;
-import com.example.nikita.teethhelper.tables.PatientsTable;
-import com.example.nikita.teethhelper.tables.ServicesTable;
+import com.example.nikita.teethhelper.tableHelpers.DoctorsTable;
+import com.example.nikita.teethhelper.tableHelpers.PatientsTable;
+import com.example.nikita.teethhelper.tableHelpers.ServicesTable;
 
 import java.util.ArrayList;
 import java.util.StringTokenizer;

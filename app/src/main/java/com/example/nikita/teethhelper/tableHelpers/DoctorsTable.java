@@ -1,4 +1,4 @@
-package com.example.nikita.teethhelper.tables;
+package com.example.nikita.teethhelper.tableHelpers;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -7,12 +7,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.example.nikita.teethhelper.DBHepler;
-import com.example.nikita.teethhelper.ListPresenter;
+import com.example.nikita.teethhelper.presenters.ListPresenter;
 import com.example.nikita.teethhelper.R;
-import com.example.nikita.teethhelper.UI.ListActivity;
 import com.example.nikita.teethhelper.data.Doctor;
 import com.example.nikita.teethhelper.data.defaultObject;
-import com.example.nikita.teethhelper.defaultTable;
 
 import java.util.ArrayList;
 

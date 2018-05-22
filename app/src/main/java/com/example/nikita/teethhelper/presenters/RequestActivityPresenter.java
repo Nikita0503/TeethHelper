@@ -1,14 +1,15 @@
-package com.example.nikita.teethhelper.UI;
+package com.example.nikita.teethhelper.presenters;
 
 import android.app.Fragment;
-import android.util.Log;
 
 import com.example.nikita.teethhelper.R;
+import com.example.nikita.teethhelper.RequestMaker;
 import com.example.nikita.teethhelper.UI.Fragments.DoctorFragment;
 import com.example.nikita.teethhelper.UI.Fragments.PatientFragment;
 import com.example.nikita.teethhelper.UI.Fragments.RenderFragment;
 import com.example.nikita.teethhelper.UI.Fragments.ServiceFragment;
 import com.example.nikita.teethhelper.UI.Fragments.VisitFragment;
+import com.example.nikita.teethhelper.UI.RequestActivity;
 import com.example.nikita.teethhelper.data.Doctor;
 import com.example.nikita.teethhelper.data.Patient;
 import com.example.nikita.teethhelper.data.Render;

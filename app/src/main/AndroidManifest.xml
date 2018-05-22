@@ -46,7 +46,7 @@
             android:name=".UI.RequestActivity"
             android:label="@string/requestField"
             android:theme="@style/BlueTheme" />
-        <activity android:name=".ReportActivity" />
+        <activity android:name=".UI.ReportActivity" />
         <activity android:name=".UI.DateActivity"
             android:label="@string/dateField"
             android:theme="@style/GreenTheme" />

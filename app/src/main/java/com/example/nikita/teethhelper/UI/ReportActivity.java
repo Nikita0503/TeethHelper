@@ -1,13 +1,13 @@
-package com.example.nikita.teethhelper;
+package com.example.nikita.teethhelper.UI;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.Button;
 
+import com.example.nikita.teethhelper.R;
 import com.example.nikita.teethhelper.UI.DateActivity;
+import com.example.nikita.teethhelper.presenters.ReportActivityPresenter;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 

@@ -1,4 +1,4 @@
-package com.example.nikita.teethhelper;
+package com.example.nikita.teethhelper.tableHelpers;
 
 import com.example.nikita.teethhelper.data.defaultObject;
 

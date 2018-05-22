@@ -1,4 +1,4 @@
-package com.example.nikita.teethhelper.UI;
+package com.example.nikita.teethhelper;
 
 import com.example.nikita.teethhelper.data.Doctor;
 import com.example.nikita.teethhelper.data.Patient;

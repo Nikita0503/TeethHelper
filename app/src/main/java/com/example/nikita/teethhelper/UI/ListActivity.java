@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,7 +14,7 @@ import android.widget.ExpandableListView;
 import android.widget.SimpleExpandableListAdapter;
 import android.widget.Toast;
 
-import com.example.nikita.teethhelper.ListPresenter;
+import com.example.nikita.teethhelper.presenters.ListPresenter;
 import com.example.nikita.teethhelper.R;
 import com.example.nikita.teethhelper.UI.RecordActivities.DoctorDataActivity;
 import com.example.nikita.teethhelper.UI.RecordActivities.PatientDataActivity;

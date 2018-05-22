@@ -1,9 +1,10 @@
-package com.example.nikita.teethhelper;
+package com.example.nikita.teethhelper.presenters;
 
 import android.content.Intent;
 import android.util.Log;
 import android.widget.SimpleExpandableListAdapter;
 
+import com.example.nikita.teethhelper.R;
 import com.example.nikita.teethhelper.UI.ListActivity;
 import com.example.nikita.teethhelper.UI.RecordActivities.DoctorDataActivity;
 import com.example.nikita.teethhelper.UI.RecordActivities.PatientDataActivity;
@@ -16,11 +17,12 @@ import com.example.nikita.teethhelper.data.Render;
 import com.example.nikita.teethhelper.data.Service;
 import com.example.nikita.teethhelper.data.Visit;
 import com.example.nikita.teethhelper.data.defaultObject;
-import com.example.nikita.teethhelper.tables.DoctorsTable;
-import com.example.nikita.teethhelper.tables.PatientsTable;
-import com.example.nikita.teethhelper.tables.RendersTable;
-import com.example.nikita.teethhelper.tables.ServicesTable;
-import com.example.nikita.teethhelper.tables.VisitsTable;
+import com.example.nikita.teethhelper.tableHelpers.defaultTable;
+import com.example.nikita.teethhelper.tableHelpers.DoctorsTable;
+import com.example.nikita.teethhelper.tableHelpers.PatientsTable;
+import com.example.nikita.teethhelper.tableHelpers.RendersTable;
+import com.example.nikita.teethhelper.tableHelpers.ServicesTable;
+import com.example.nikita.teethhelper.tableHelpers.VisitsTable;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -9,22 +9,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.nikita.teethhelper.R;
-import com.example.nikita.teethhelper.UI.Fragments.DoctorFragment;
-import com.example.nikita.teethhelper.UI.Fragments.PatientFragment;
-import com.example.nikita.teethhelper.UI.Fragments.RenderFragment;
-import com.example.nikita.teethhelper.UI.Fragments.ServiceFragment;
-import com.example.nikita.teethhelper.UI.Fragments.VisitFragment;
-import com.example.nikita.teethhelper.UI.RecordActivities.DoctorDataActivityPresenter;
-import com.example.nikita.teethhelper.data.Doctor;
-import com.example.nikita.teethhelper.data.Patient;
+import com.example.nikita.teethhelper.presenters.RequestActivityPresenter;
 
-import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;

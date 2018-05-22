@@ -8,7 +8,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 
-import com.example.nikita.teethhelper.ReportActivity;
 import com.example.nikita.teethhelper.R;
 import com.ramotion.circlemenu.CircleMenuView;
 

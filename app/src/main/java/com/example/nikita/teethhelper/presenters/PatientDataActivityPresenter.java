@@ -1,13 +1,9 @@
-package com.example.nikita.teethhelper.UI.RecordActivities;
+package com.example.nikita.teethhelper.presenters;
 
 import android.app.Activity;
-import android.util.Log;
 
-import com.example.nikita.teethhelper.UI.RecordActivities.DoctorDataActivity;
 import com.example.nikita.teethhelper.UI.RecordActivities.PatientDataActivity;
-import com.example.nikita.teethhelper.data.Doctor;
 import com.example.nikita.teethhelper.data.Patient;
-import com.example.nikita.teethhelper.defaultPresenter;
 
 /**
  * Created by Nikita on 07.05.2018.

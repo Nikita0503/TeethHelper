@@ -11,8 +11,8 @@ import android.widget.Spinner;
 
 import com.example.nikita.teethhelper.R;
 import com.example.nikita.teethhelper.data.Service;
-import com.example.nikita.teethhelper.tables.DoctorsTable;
-import com.example.nikita.teethhelper.tables.PatientsTable;
+import com.example.nikita.teethhelper.tableHelpers.DoctorsTable;
+import com.example.nikita.teethhelper.tableHelpers.PatientsTable;
 
 import java.util.ArrayList;
 
