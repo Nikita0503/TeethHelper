@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.imageViewTeeth)
     void onClick(){
         if(editTextName.getText().length()==0) {
-            Toasty.error(getApplicationContext(), "User not found!", Toast.LENGTH_SHORT, true).show();
+            Toasty.error(getApplicationContext(), getResources().getString(R.string.accessDenied), Toast.LENGTH_SHORT, true).show();
             Animation translateAnimation = AnimationUtils.loadAnimation(this, R.anim.translate_shake_teeth);
             imageViewTeeth.startAnimation(translateAnimation);
             Animation scaleAnimation = AnimationUtils.loadAnimation(this, R.anim.scale_cloud);
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
             imageViewTeethCloud.setVisibility(View.VISIBLE);
             imageViewTeethCloud.startAnimation(scaleAnimation);
         }else {
-            Toasty.success(getApplicationContext(), "Welcome!", Toast.LENGTH_SHORT, true).show();
+            Toasty.success(getApplicationContext(), getResources().getString(R.string.welcome), Toast.LENGTH_SHORT, true).show();
             final Animation translateEditTextName = AnimationUtils.loadAnimation(this, R.anim.translate_edittext_name);
             editTextName.startAnimation(translateEditTextName);
             Animation translateEditTextPassword =  AnimationUtils.loadAnimation(this, R.anim.translate_edittext_password);

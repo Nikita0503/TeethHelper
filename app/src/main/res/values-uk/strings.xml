@@ -1,0 +1,110 @@
+<resources>
+    <string name="app_name">TeethHelper</string>
+    <string name="nameField">Ім`я</string>
+    <string name="passwordField">Пароль</string>
+    <string name="passportField">Паспорт</string>
+    <string name="addressField">Адреса</string>
+    <string name="diseaseField">Хвороба</string>
+    <string name="specializationField">Спеціалізація</string>
+    <string name="experienceField">Досвід</string>
+    <string name="berthField">Посада</string>
+    <string name="serviceField">Послуга</string>
+    <string name="patientField">Пацієнт</string>
+    <string name="doctorField">Доктор</string>
+    <string name="sumField">Сума</string>
+    <string name="dateField">Дата</string>
+    <string name="dateFieldAfter">Після</string>
+    <string name="dateFieldBefore">До</string>
+    <string name="manipulationField">Маніпуляція</string>
+    <string name="costField">Ціна</string>
+    <string name="renderField">Сплата</string>
+    <string name="visitField">Відвідування</string>
+    <string name="add">Додати</string>
+    <string name="day">День</string>
+    <string name="month">Місяць</string>
+    <string name="year">Рік</string>
+    <string name="createRequest">Створити запит</string>
+    <string name="createReport">Створити звіт</string>
+    <string name="typeOfRequest">Тип запиту</string>
+    <string name="table">Таблиця</string>
+    <string name="requestField">Запит</string>
+    <string name="commit">Виконати</string>
+    <string name="doctors">Доктори</string>
+    <string name="patients">Пацієнти</string>
+    <string name="services">Послуги</string>
+    <string name="renders">Cплати</string>
+    <string name="visits">Відвідування</string>
+    <string name="visitsStatistic">Статистика\nВідвідувань</string>
+    <string name="done">Зроблено!</string>
+    <string name="error">Помилка!</string>
+    <string name="invalidAfterDate">Некоректна дата "Після"!</string>
+    <string name="invalidBeforeDate">Некоректна дата "До"!</string>
+    <string name="OK">OK</string>
+    <string name="invalidName">Некоректне і`мя</string>
+    <string name="invalidPassport">Некоректний паспорт</string>
+    <string name="invalidAddress">Некоректний адрес</string>
+    <string name="invalidSpecialization">Некоректний спеціалізація</string>
+    <string name="invalidExperience">Некоректний досвід</string>
+    <string name="invalidBerth">Некоректна посада</string>
+    <string name="invalidDisease">Некоректна хвороба</string>
+    <string name="invalidPatient">Некоректний пацієнт</string>
+    <string name="invalidDoctor">Некоректний доктор</string>
+    <string name="invalidService">Некоректна послуга</string>
+    <string name="invalidManipulation">Некоректна маніпуляція</string>
+    <string name="invalidCost">Некоректна ціна</string>
+    <string name="invalidSum">Некоректна сума</string>
+    <string name="invalidDate">Некоректа дата</string>
+    <string name="invalidYear">Некоректний рік</string>
+    <string name="invalidMonth">Некоректний місяць</string>
+    <string name="invalidDay">Некоректний день</string>
+    <string name="welcome">Ласкаво просимо!</string>
+    <string name="accessDenied">Користувача не знайдено!</string>
+    <string-array name="patientTagNames">
+        <item>код</item>
+        <item>ім`я</item>
+        <item>паспорт</item>
+        <item>адреса</item>
+        <item>хвороба</item>
+    </string-array>
+    <string-array name="doctorTagNames">
+        <item>код</item>
+        <item>ім`я</item>
+        <item>паспорт</item>
+        <item>адреса</item>
+        <item>спеціалізація</item>
+        <item>досвід</item>
+        <item>посада</item>
+    </string-array>
+    <string-array name="serviceTagNames">
+        <item>маніпуляція</item>
+        <item>пацієнт</item>
+        <item>доктор</item>
+        <item>ціна</item>
+        <item>дата</item>
+    </string-array>
+    <string-array name="renderTagNames">
+        <item>послуга</item>
+        <item>пацієнт</item>
+        <item>доктор</item>
+        <item>сума</item>
+        <item>дата</item>
+    </string-array>
+    <string-array name="visitTagNames">
+        <item>пацієнт</item>
+        <item>дата</item>
+        <item>послуга</item>
+    </string-array>
+    <string-array name="typesOfRequest">
+        <item>SELECT</item>
+        <item>INSERT</item>
+        <item>UPDATE</item>
+        <item>DELETE</item>
+    </string-array>
+    <string-array name="tableNames">
+        <item>renders</item>
+        <item>patients</item>
+        <item>doctors</item>
+        <item>service</item>
+        <item>visits</item>
+    </string-array>
+</resources>

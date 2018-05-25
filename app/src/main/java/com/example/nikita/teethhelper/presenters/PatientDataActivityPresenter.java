@@ -2,6 +2,7 @@ package com.example.nikita.teethhelper.presenters;
 
 import android.app.Activity;
 
+import com.example.nikita.teethhelper.R;
 import com.example.nikita.teethhelper.UI.RecordActivities.PatientDataActivity;
 import com.example.nikita.teethhelper.data.Patient;
 
@@ -19,19 +20,19 @@ public class PatientDataActivityPresenter implements defaultPresenter {
     public void checkData() {
         Patient patient = dataActivity.getPatient();
         if (patient.name.trim().length() <= 0){
-            sendResult("Invalid name");
+            sendResult(dataActivity.getResources().getString(R.string.invalidName));
             return;
         }
         if (patient.passport.trim().length() <= 0){
-            sendResult("Invalid passport");
+            sendResult(dataActivity.getResources().getString(R.string.invalidPassport));
             return;
         }
         if (patient.address.trim().length() <= 0){
-            sendResult("Invalid address");
+            sendResult(dataActivity.getResources().getString(R.string.invalidAddress));
             return;
         }
         if (patient.disease.trim().length() <= 0){
-            sendResult("Invalid disease");
+            sendResult(dataActivity.getResources().getString(R.string.invalidDisease));
             return;
         }
         dataActivity.data.putExtra("name", patient.name);

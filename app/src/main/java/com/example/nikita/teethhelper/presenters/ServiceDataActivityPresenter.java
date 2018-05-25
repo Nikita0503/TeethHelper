@@ -2,6 +2,7 @@ package com.example.nikita.teethhelper.presenters;
 
 import android.app.Activity;
 
+import com.example.nikita.teethhelper.R;
 import com.example.nikita.teethhelper.UI.RecordActivities.ServiceDataActivity;
 import com.example.nikita.teethhelper.data.Service;
 import com.example.nikita.teethhelper.tableHelpers.DoctorsTable;
@@ -24,23 +25,23 @@ public class ServiceDataActivityPresenter implements defaultPresenter {
     public void checkData() {
         Service service = dataActivity.getService();
         if (service.patient.trim().length() <= 0){
-            sendResult("Invalid patient");
+            sendResult(dataActivity.getResources().getString(R.string.invalidPatient));
             return;
         }
         if (service.doctor.trim().length() <= 0){
-            sendResult("Invalid doctor");
+            sendResult(dataActivity.getResources().getString(R.string.invalidDoctor));
             return;
         }
         if (service.manipulation.trim().length() <= 0){
-            sendResult("Invalid manipulation");
+            sendResult(dataActivity.getResources().getString(R.string.invalidManipulation));
             return;
         }
         if (service.cost < 0){
-            sendResult("Invalid cost");
+            sendResult(dataActivity.getResources().getString(R.string.invalidService));
             return;
         }
         if (service.date.trim().length() <= 0) {
-            sendResult("Invalid data");
+            sendResult(dataActivity.getResources().getString(R.string.invalidDate));
             return;
         }
         if(!checkCorrectDate(service.date)){
@@ -74,16 +75,16 @@ public class ServiceDataActivityPresenter implements defaultPresenter {
             year = Integer.parseInt(date.nextToken());
         }
         if(year < 2018){
-            sendResult("Invalid year");
+            sendResult(dataActivity.getResources().getString(R.string.invalidYear));
             return false;
         }
         if(month <= 0 || month >12){
-            sendResult("Invalid month");
+            sendResult(dataActivity.getResources().getString(R.string.invalidMonth));
             return false;
         }
         int [] daysInMonths = {31,28,31,30,31,30,31,31,30,31,30,31};
         if(day <= 0 || day > daysInMonths[month-1]){
-            sendResult("Invalid day");
+            sendResult(dataActivity.getResources().getString(R.string.invalidDay));
             return false;
         }
         return true;

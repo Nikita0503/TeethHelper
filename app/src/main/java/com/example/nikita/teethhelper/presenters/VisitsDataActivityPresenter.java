@@ -3,6 +3,7 @@ package com.example.nikita.teethhelper.presenters;
 import android.app.Activity;
 import android.util.Log;
 
+import com.example.nikita.teethhelper.R;
 import com.example.nikita.teethhelper.UI.RecordActivities.VisitsDataActivity;
 import com.example.nikita.teethhelper.data.Visit;
 import com.example.nikita.teethhelper.tableHelpers.PatientsTable;
@@ -25,15 +26,15 @@ public class VisitsDataActivityPresenter implements defaultPresenter {
     public void checkData() {
         Visit visit = dataActivity.getVisit();
         if (visit.patient.trim().length() <= 0){
-            sendResult("Invalid patient");
+            sendResult(dataActivity.getResources().getString(R.string.invalidPatient));
             return;
         }
         if (visit.service.trim().length() <= 0){
-            sendResult("Invalid service");
+            sendResult(dataActivity.getResources().getString(R.string.invalidService));
             return;
         }
         if (visit.date.trim().length() <= 0){
-            sendResult("Invalid date");
+            sendResult(dataActivity.getResources().getString(R.string.invalidDate));
             return;
         }
         if(!checkCorrectDate(visit.date)){
@@ -66,16 +67,16 @@ public class VisitsDataActivityPresenter implements defaultPresenter {
             year = Integer.parseInt(date.nextToken());
         }
         if(year < 2018){
-            sendResult("Invalid year");
+            sendResult(dataActivity.getResources().getString(R.string.invalidYear));
             return false;
         }
         if(month <= 0 || month >12){
-            sendResult("Invalid month");
+            sendResult(dataActivity.getResources().getString(R.string.invalidMonth));
             return false;
         }
         int [] daysInMonths = {31,28,31,30,31,30,31,31,30,31,30,31};
         if(day <= 0 || day > daysInMonths[month-1]){
-            sendResult("Invalid day");
+            sendResult(dataActivity.getResources().getString(R.string.invalidDay));
             return false;
         }
         return true;

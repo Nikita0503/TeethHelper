@@ -2,6 +2,7 @@ package com.example.nikita.teethhelper.presenters;
 
 import android.app.Activity;
 
+import com.example.nikita.teethhelper.R;
 import com.example.nikita.teethhelper.UI.RecordActivities.DoctorDataActivity;
 import com.example.nikita.teethhelper.data.Doctor;
 
@@ -20,27 +21,27 @@ public class DoctorDataActivityPresenter implements defaultPresenter {
     public void checkData() {
         Doctor doctor = dataActivity.getDoctor();
         if (doctor.name.trim().length() <= 0){
-            sendResult("Invalid name");
+            sendResult(dataActivity.getResources().getString(R.string.invalidName));
             return;
         }
         if (doctor.passport.trim().length() <= 0){
-            sendResult("Invalid passport");
+            sendResult(dataActivity.getResources().getString(R.string.invalidPassport));
             return;
         }
         if (doctor.address.trim().length() <= 0){
-            sendResult("Invalid address");
+            sendResult(dataActivity.getResources().getString(R.string.invalidAddress));
             return;
         }
         if (doctor.specialization.trim().length() <= 0){
-            sendResult("Invalid specialization");
+            sendResult(dataActivity.getResources().getString(R.string.invalidSpecialization));
             return;
         }
         if (doctor.experience < 0){
-            sendResult("Invalid experience");
+            sendResult(dataActivity.getResources().getString(R.string.invalidExperience));
             return;
         }
         if (doctor.berth.trim().length() <= 0){
-            sendResult("Invalid berth");
+            sendResult(dataActivity.getResources().getString(R.string.invalidBerth));
             return;
         }
         dataActivity.data.putExtra("name", doctor.name);

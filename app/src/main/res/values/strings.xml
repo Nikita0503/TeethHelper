@@ -31,6 +31,7 @@
     <string name="commit">Commit</string>
     <string name="doctors">Doctors</string>
     <string name="patients">Patients</string>
+    <string name="services">Services</string>
     <string name="renders">Renders</string>
     <string name="visits">Visits</string>
     <string name="visitsStatistic">Visits\nStatistic</string>
@@ -39,6 +40,25 @@
     <string name="invalidAfterDate">Invalid after date!</string>
     <string name="invalidBeforeDate">Invalid before date!</string>
     <string name="OK">OK</string>
+    <string name="invalidName">Invalid name</string>
+    <string name="invalidPassport">Invalid passport</string>
+    <string name="invalidAddress">Invalid address</string>
+    <string name="invalidSpecialization">Invalid specialization</string>
+    <string name="invalidExperience">Invalid experience</string>
+    <string name="invalidBerth">Invalid berth</string>
+    <string name="invalidDisease">Invalid disease</string>
+    <string name="invalidPatient">Invalid patient</string>
+    <string name="invalidDoctor">Invalid doctor</string>
+    <string name="invalidService">Invalid service</string>
+    <string name="invalidManipulation">Invalid manipulation</string>
+    <string name="invalidCost">Invalid cost</string>
+    <string name="invalidSum">Invalid sum</string>
+    <string name="invalidDate">Invalid date</string>
+    <string name="invalidYear">Invalid year</string>
+    <string name="invalidMonth">Invalid month</string>
+    <string name="invalidDay">Invalid day</string>
+    <string name="welcome">Welcome!</string>
+    <string name="accessDenied">User not found!</string>
     <string-array name="patientTagNames">
         <item>code</item>
         <item>name</item>
