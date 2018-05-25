@@ -43,7 +43,7 @@
     <string name="invalidName">Некоректне і`мя</string>
     <string name="invalidPassport">Некоректний паспорт</string>
     <string name="invalidAddress">Некоректний адрес</string>
-    <string name="invalidSpecialization">Некоректний спеціалізація</string>
+    <string name="invalidSpecialization">Некоректна спеціалізація</string>
     <string name="invalidExperience">Некоректний досвід</string>
     <string name="invalidBerth">Некоректна посада</string>
     <string name="invalidDisease">Некоректна хвороба</string>

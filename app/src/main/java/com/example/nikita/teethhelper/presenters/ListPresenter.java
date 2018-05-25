@@ -45,27 +45,27 @@ public class ListPresenter {
             case 0:
                 RendersTable rendersTable = new RendersTable(listActivity, this);
                 rendersTable.fetchData();
-                listActivity.setColors(listActivity.getResources().getColor(R.color.colorDarkAqua), listActivity.getResources().getColor(R.color.colorAqua), "Renders");
+                listActivity.setColors(listActivity.getResources().getColor(R.color.colorDarkAqua), listActivity.getResources().getColor(R.color.colorAqua), listActivity.getResources().getString(R.string.renders));
                 break;
             case 1:
                 DoctorsTable doctorsTable = new DoctorsTable(listActivity, this);
                 doctorsTable.fetchData();
-                listActivity.setColors(listActivity.getResources().getColor(R.color.colorDarkRed), listActivity.getResources().getColor(R.color.colorRed), "Doctors");
+                listActivity.setColors(listActivity.getResources().getColor(R.color.colorDarkRed), listActivity.getResources().getColor(R.color.colorRed), listActivity.getResources().getString(R.string.doctors));
                 break;
             case 2:
                 PatientsTable patientsTable = new PatientsTable(listActivity, this);
                 patientsTable.fetchData();
-                listActivity.setColors(listActivity.getResources().getColor(R.color.colorDarkPurple), listActivity.getResources().getColor(R.color.colorPurple), "Patients");
+                listActivity.setColors(listActivity.getResources().getColor(R.color.colorDarkPurple), listActivity.getResources().getColor(R.color.colorPurple), listActivity.getResources().getString(R.string.patients));
                 break;
             case 3:
                 ServicesTable servicesTable = new ServicesTable(listActivity, this);
                 servicesTable.fetchData();
-                listActivity.setColors(listActivity.getResources().getColor(R.color.colorDarkOrange), listActivity.getResources().getColor(R.color.colorOrange), "Services");
+                listActivity.setColors(listActivity.getResources().getColor(R.color.colorDarkOrange), listActivity.getResources().getColor(R.color.colorOrange), listActivity.getResources().getString(R.string.services));
                 break;
             case 4:
                 VisitsTable visitsTable = new VisitsTable(listActivity, this);
                 visitsTable.fetchData();
-                listActivity.setColors(listActivity.getResources().getColor(R.color.colorDarkGreen), listActivity.getResources().getColor(R.color.colorGreen), "Visits");
+                listActivity.setColors(listActivity.getResources().getColor(R.color.colorDarkGreen), listActivity.getResources().getColor(R.color.colorGreen), listActivity.getResources().getString(R.string.visits));
                 break;
         }
 
