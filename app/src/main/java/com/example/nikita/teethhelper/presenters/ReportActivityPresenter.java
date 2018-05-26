@@ -17,6 +17,11 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.StringTokenizer;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
+
 /**
  * Created by Nikita on 21.05.2018.
  */
@@ -29,34 +34,88 @@ public class ReportActivityPresenter {
     }
 
     public void writeToFile(String typeOFOrder){
-        PDFWriter pdfWriter = new PDFWriter(reportActivity.getApplicationContext());
+        final PDFWriter pdfWriter = new PDFWriter(reportActivity.getApplicationContext());
         switch (typeOFOrder){
             case "doctors":
                 DoctorsTable doctorsTable = new DoctorsTable(reportActivity.getApplicationContext());
-                ArrayList<Doctor> doctors = doctorsTable.getDoctors();
-                pdfWriter.writeDoctors(getArrayListByDoctors(doctors));
+                Disposable doctorsDisposable =  doctorsTable.getDoctors.subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<ArrayList<Doctor>>() {
+                            @Override
+                            public void onSuccess(ArrayList<Doctor> doctors) {
+                                pdfWriter.writeDoctors(getArrayListByDoctors(doctors));
+                            }
+                            @Override
+                            public void onError(Throwable e) {
+                                reportActivity.showError(reportActivity.getResources().getString(R.string.error));
+
+                            }
+                        });
+
+
                 break;
             case "patients":
                 PatientsTable patientsTable = new PatientsTable(reportActivity.getApplicationContext());
-                ArrayList<Patient> patients = patientsTable.getPatients();
-                pdfWriter.writePatients(getArrayListByPatients(patients));
+                Disposable patientDisposable = patientsTable.getPatients.subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<ArrayList<Patient>>() {
+                            @Override
+                            public void onSuccess(ArrayList<Patient> patients) {
+                                pdfWriter.writePatients(getArrayListByPatients(patients));
+                            }
+                            @Override
+                            public void onError(Throwable e) {
+                                //
+                            }
+                        });
+
                 break;
             case "renders":
                 RendersTable rendersTable = new RendersTable(reportActivity.getApplicationContext());
-                ArrayList<Render> renders = rendersTable.getRenders();
-                pdfWriter.writeRenders(getArrayListByRenders(renders));
+                Disposable rendersDisposable = rendersTable.getRenders.subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<ArrayList<Render>>() {
+                            @Override
+                            public void onSuccess(ArrayList<Render> renders) {
+                                pdfWriter.writeRenders(getArrayListByRenders(renders));
+                            }
+                            @Override
+                            public void onError(Throwable e) {
+                                //
+                            }
+                        });
                 break;
             case "visits for period":
                 VisitsTable visitsTable = new VisitsTable(reportActivity.getApplicationContext());
-                ArrayList<Visit> visitsBeforeSelection = visitsTable.getVisits();
-                ArrayList<Visit> visitsAfterSelection = getVisitsSelectionByDates(visitsBeforeSelection , reportActivity.date.getStringExtra("dateAfter"), reportActivity.date.getStringExtra("dateBefore"));
-                pdfWriter.writeVisits(getArrayListByVisits(visitsAfterSelection));
+                Disposable visitsDisposable = visitsTable.getVisits.subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<ArrayList<Visit>>() {
+                            @Override
+                            public void onSuccess(ArrayList<Visit> visitsBeforeSelection) {
+                                ArrayList<Visit> visitsAfterSelection = getVisitsSelectionByDates(visitsBeforeSelection , reportActivity.date.getStringExtra("dateAfter"), reportActivity.date.getStringExtra("dateBefore"));
+                                pdfWriter.writeVisits(getArrayListByVisits(visitsAfterSelection));
+                            }
+                            @Override
+                            public void onError(Throwable e) {
+                                //
+                            }
+                        });
                 break;
             case "visits statistic for period":
                 VisitsTable visitsTable2 = new VisitsTable(reportActivity.getApplicationContext());
-                ArrayList<Visit> visitsBeforeSelection2 = visitsTable2.getVisits();
-                ArrayList<Visit> visitsAfterSelection2 = getVisitsSelectionByDates(visitsBeforeSelection2 , reportActivity.date.getStringExtra("dateAfter"), reportActivity.date.getStringExtra("dateBefore"));
-                pdfWriter.writeVisitsStatistic(getVisitsStatistic(visitsAfterSelection2));
+                Disposable visitsStatisticDisposable = visitsTable2.getVisits.subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<ArrayList<Visit>>() {
+                            @Override
+                            public void onSuccess(ArrayList<Visit> visitsBeforeSelection) {
+                                ArrayList<Visit> visitsAfterSelection2 = getVisitsSelectionByDates(visitsBeforeSelection , reportActivity.date.getStringExtra("dateAfter"), reportActivity.date.getStringExtra("dateBefore"));
+                                pdfWriter.writeVisitsStatistic(getVisitsStatistic(visitsAfterSelection2));
+                            }
+                            @Override
+                            public void onError(Throwable e) {
+                                //
+                            }
+                        });
                 break;
         }
     }

@@ -18,6 +18,10 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Nikita on 19.05.2018.
@@ -46,18 +50,45 @@ public class ServiceFragment extends Fragment {
         return v;
     }
 
-    private void setAdapters(){
+    private void setPatientAdapter(){
         PatientsTable patientsTable = new PatientsTable(getActivity().getApplicationContext());
-        ArrayList<String> patientNames = patientsTable.getNames();
-        ArrayAdapter<String> spinnerPatientAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, patientNames);
-        spinnerPatientAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerPatients.setAdapter(spinnerPatientAdapter);
+        Disposable disposable =  patientsTable.getNames.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<ArrayList<String>>() {
+                    @Override
+                    public void onSuccess(ArrayList<String> patientNames) {
+                        ArrayAdapter<String> spinnerPatientAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, patientNames);
+                        spinnerPatientAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        spinnerPatients.setAdapter(spinnerPatientAdapter);
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        //
+                    }
+                });
+    }
 
+    private void setDoctorAdapter(){
         DoctorsTable doctorsTable = new DoctorsTable(getActivity().getApplicationContext());
-        ArrayList<String> doctorNames = doctorsTable.getNames();
-        ArrayAdapter<String> spinnerDoctorsAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, doctorNames);
-        spinnerDoctorsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerDoctors.setAdapter(spinnerDoctorsAdapter);
+        Disposable disposable =  doctorsTable.getNames.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<ArrayList<String>>() {
+                    @Override
+                    public void onSuccess(ArrayList<String> doctorNames) {
+                        ArrayAdapter<String> spinnerDoctorsAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, doctorNames);
+                        spinnerDoctorsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        spinnerDoctors.setAdapter(spinnerDoctorsAdapter);
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        //
+                    }
+                });
+    }
+
+    private void setAdapters(){
+        setPatientAdapter();
+        setDoctorAdapter();
     }
 
     public Service getService(){

@@ -3,6 +3,8 @@ package com.example.nikita.teethhelper.UI;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.example.nikita.teethhelper.R;
 import com.example.nikita.teethhelper.UI.DateActivity;
@@ -10,6 +12,7 @@ import com.example.nikita.teethhelper.presenters.ReportActivityPresenter;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import es.dmoral.toasty.Toasty;
 
 public class ReportActivity extends AppCompatActivity {
 
@@ -66,5 +69,10 @@ public class ReportActivity extends AppCompatActivity {
                     reportActivityPresenter2.writeToFile("visits statistic for period");
             }
         }
+    }
+
+    public void showError(String result){
+        Log.d("ERROR: ", result);
+        Toasty.error(getApplicationContext(), result, Toast.LENGTH_SHORT, true).show();
     }
 }

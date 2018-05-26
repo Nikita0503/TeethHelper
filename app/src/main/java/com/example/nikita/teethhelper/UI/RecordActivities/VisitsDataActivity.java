@@ -87,16 +87,20 @@ public class VisitsDataActivity extends AppCompatActivity {
         return visit;
     }
 
-    public void setAdaptersByData(ArrayList<String> patientNames, ArrayList<String> doctorNames){
+    public void setPatientAdapter(ArrayList<String> patientNames){
         ArrayAdapter<String> spinnerPatientAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, patientNames);
         spinnerPatientAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerPatients.setAdapter(spinnerPatientAdapter);
+    }
+
+    public void setServiceAdapter(ArrayList<String> serviceNames){
         ArrayAdapter<String> spinnerServicesAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, doctorNames);
+                android.R.layout.simple_spinner_item, serviceNames);
         spinnerServicesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerServices.setAdapter(spinnerServicesAdapter);
     }
+
 
     public void showError(String result){
         Log.d("ERROR: ", result);

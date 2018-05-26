@@ -14,6 +14,19 @@ import com.example.nikita.teethhelper.data.defaultObject;
 
 import java.util.ArrayList;
 
+import io.reactivex.Completable;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Single;
+import io.reactivex.SingleEmitter;
+import io.reactivex.SingleObserver;
+import io.reactivex.SingleOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
+
 /**
  * Created by Nikita on 10.04.2018.
  */
@@ -39,9 +52,19 @@ public class DoctorsTable implements defaultTable {
 
     @Override
     public void fetchData() {
-        ArrayList doctors = getDoctors();
-        tagNames = context.getResources().getStringArray(R.array.doctorTagNames);
-        listPresenter.prepareDataByDoctors(doctors, tagNames);
+        Disposable disposable = getDoctors.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<ArrayList<Doctor>>() {
+                    @Override
+                    public void onSuccess(ArrayList<Doctor> doctors) {
+                        tagNames = context.getResources().getStringArray(R.array.doctorTagNames);
+                        listPresenter.prepareDataByDoctors(doctors, tagNames);
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        listPresenter.sendMessage(context.getResources().getString(R.string.error));
+                    }
+                });
     }
 
     @Override
@@ -104,19 +127,55 @@ public class DoctorsTable implements defaultTable {
         listPresenter.sendMessage("doctor was updated!");
     }
 
-    public ArrayList<String> getNames(){
-        ArrayList<String> names = new ArrayList<String>();
-        Cursor c = db.query("doctors", null, null, null, null, null, null);
-        if (c.moveToFirst()) {
-            int nameColIndex = c.getColumnIndex("name");
-            do {
-                names.add(c.getString(nameColIndex));
-            } while (c.moveToNext());
+    public Single<ArrayList<String>> getNames = Single.create(new SingleOnSubscribe<ArrayList<String>>() {
+        @Override
+        public void subscribe(SingleEmitter<ArrayList<String>> e) throws Exception {
+            ArrayList<String> names = new ArrayList<String>();
+            Cursor c = db.query("doctors", null, null, null, null, null, null);
+            if (c.moveToFirst()) {
+                int nameColIndex = c.getColumnIndex("name");
+                do {
+                    names.add(c.getString(nameColIndex));
+                } while (c.moveToNext());
+            }
+            c.close();
+            e.onSuccess(names);
         }
-        return names;
-    }
+    });
 
-    public ArrayList<Doctor> getDoctors(){
+
+    public Single<ArrayList<Doctor>> getDoctors = Single.create(new SingleOnSubscribe<ArrayList<Doctor>>() {
+        @Override
+        public void subscribe(SingleEmitter<ArrayList<Doctor>> e) throws Exception {
+            ArrayList<Doctor> doctors = new ArrayList<Doctor>();
+            Cursor c = db.query("doctors", null, null, null, null, null, null);
+            if (c.moveToFirst()) {
+                int idColIndex = c.getColumnIndex("code");
+                int nameColIndex = c.getColumnIndex("name");
+                int passportColIndex = c.getColumnIndex("passport");
+                int addressColIndex = c.getColumnIndex("address");
+                int specializationColIndex = c.getColumnIndex("specialization");
+                int experienceColIndex = c.getColumnIndex("experience");
+                int berthColIndex = c.getColumnIndex("berth");
+                do {
+                    doctors.add(new Doctor(c.getInt(idColIndex), c.getString(nameColIndex), c.getString(passportColIndex), c.getString(addressColIndex), c.getString(specializationColIndex), c.getInt(experienceColIndex), c.getString(berthColIndex)));
+                    Log.d("DOCTOR: ",
+                            "ID = " + c.getInt(idColIndex) + ", name = "
+                                    + c.getString(nameColIndex) + ", passport = "
+                                    + c.getString(passportColIndex) + ", address = "
+                                    + c.getString(addressColIndex) + ", specialization = "
+                                    + c.getString(specializationColIndex) + ", experience = "
+                                    + c.getString(experienceColIndex) + ", berth = "
+                                    + c.getString(berthColIndex));
+                } while (c.moveToNext());
+            } else
+                Log.d("DOCTOR: ", "0 rows");
+            c.close();
+            e.onSuccess(doctors);
+        }
+    });
+
+    /*public ArrayList<Doctor> getDoctors(){
         ArrayList<Doctor> doctors = new ArrayList<Doctor>();
         Cursor c = db.query("doctors", null, null, null, null, null, null);
         if (c.moveToFirst()) {
@@ -142,5 +201,5 @@ public class DoctorsTable implements defaultTable {
             Log.d("DOCTOR: ", "0 rows");
         c.close();
         return doctors;
-    }
+    }*/
 }

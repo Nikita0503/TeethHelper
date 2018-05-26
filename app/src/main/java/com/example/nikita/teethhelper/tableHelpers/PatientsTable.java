@@ -7,12 +7,21 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.example.nikita.teethhelper.DBHepler;
+import com.example.nikita.teethhelper.data.Doctor;
 import com.example.nikita.teethhelper.presenters.ListPresenter;
 import com.example.nikita.teethhelper.R;
 import com.example.nikita.teethhelper.data.Patient;
 import com.example.nikita.teethhelper.data.defaultObject;
 
 import java.util.ArrayList;
+
+import io.reactivex.Single;
+import io.reactivex.SingleEmitter;
+import io.reactivex.SingleOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Nikita on 15.04.2018.
@@ -39,9 +48,20 @@ public class PatientsTable implements defaultTable {
 
     @Override
     public void fetchData(){
-        tagNames = context.getResources().getStringArray(R.array.patientTagNames);
-        ArrayList<Patient> patients = getPatients();
-        listPresenter.prepareDataByPatients(patients, tagNames);
+        Disposable disposable = getPatients.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<ArrayList<Patient>>() {
+                    @Override
+                    public void onSuccess(ArrayList<Patient> patients) {
+                        tagNames = context.getResources().getStringArray(R.array.patientTagNames);
+                        listPresenter.prepareDataByPatients(patients, tagNames);
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        listPresenter.sendMessage(context.getResources().getString(R.string.error));
+                    }
+                });
+
     }
 
     @Override
@@ -96,39 +116,49 @@ public class PatientsTable implements defaultTable {
         listPresenter.sendMessage("patient was updated!");
     }
 
-    public ArrayList<String> getNames(){
-        ArrayList<String> names = new ArrayList<String>();
-        Cursor c = db.query("patients", null, null, null, null, null, null);
-        if (c.moveToFirst()) {
-            int nameColIndex = c.getColumnIndex("name");
-            do {
-                names.add(c.getString(nameColIndex));
-            } while (c.moveToNext());
+    public Single<ArrayList<String>> getNames = Single.create(new SingleOnSubscribe<ArrayList<String>>() {
+        @Override
+        public void subscribe(SingleEmitter<ArrayList<String>> e) throws Exception {
+            ArrayList<String> names = new ArrayList<String>();
+            Cursor c = db.query("patients", null, null, null, null, null, null);
+            if (c.moveToFirst()) {
+                int nameColIndex = c.getColumnIndex("name");
+                do {
+                    names.add(c.getString(nameColIndex));
+                } while (c.moveToNext());
+            }
+            c.close();
+            e.onSuccess(names);
         }
-        return names;
-    }
+    });
 
-    public ArrayList<Patient> getPatients(){
-        ArrayList<Patient> patients = new ArrayList<Patient>();
-        Cursor c = db.query("patients", null, null, null, null, null, null);
-        if (c.moveToFirst()) {
-            int idColIndex = c.getColumnIndex("code");
-            int nameColIndex = c.getColumnIndex("name");
-            int passportColIndex = c.getColumnIndex("passport");
-            int addressColIndex = c.getColumnIndex("address");
-            int diseaseColIndex = c.getColumnIndex("disease");
-            do {
-                patients.add(new Patient(c.getInt(idColIndex),  c.getString(nameColIndex), c.getString(passportColIndex), c.getString(addressColIndex), c.getString(diseaseColIndex)));
-                Log.d("PATIENT: ",
-                        "ID = " + c.getInt(idColIndex) + ", name = "
-                                + c.getString(nameColIndex) + ", passport = "
-                                + c.getString(passportColIndex) + ", address = "
-                                + c.getString(addressColIndex) + ", disease = "
-                                + c.getString(diseaseColIndex));
-            } while (c.moveToNext());
-        } else
-            Log.d("PATIENT: ", "0 rows");
-        c.close();
-        return patients;
-    }
+
+    public Single<ArrayList<Patient>> getPatients = Single.create(new SingleOnSubscribe<ArrayList<Patient>>() {
+        @Override
+        public void subscribe(SingleEmitter<ArrayList<Patient>> e) throws Exception {
+            ArrayList<Patient> patients = new ArrayList<Patient>();
+            Cursor c = db.query("patients", null, null, null, null, null, null);
+            if (c.moveToFirst()) {
+                int idColIndex = c.getColumnIndex("code");
+                int nameColIndex = c.getColumnIndex("name");
+                int passportColIndex = c.getColumnIndex("passport");
+                int addressColIndex = c.getColumnIndex("address");
+                int diseaseColIndex = c.getColumnIndex("disease");
+                do {
+                    patients.add(new Patient(c.getInt(idColIndex),  c.getString(nameColIndex), c.getString(passportColIndex), c.getString(addressColIndex), c.getString(diseaseColIndex)));
+                    Log.d("PATIENT: ",
+                            "ID = " + c.getInt(idColIndex) + ", name = "
+                                    + c.getString(nameColIndex) + ", passport = "
+                                    + c.getString(passportColIndex) + ", address = "
+                                    + c.getString(addressColIndex) + ", disease = "
+                                    + c.getString(diseaseColIndex));
+                } while (c.moveToNext());
+            } else
+                Log.d("PATIENT: ", "0 rows");
+            c.close();
+            e.onSuccess(patients);
+        }
+    });
+
+
 }

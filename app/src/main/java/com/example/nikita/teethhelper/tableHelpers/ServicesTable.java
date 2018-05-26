@@ -7,12 +7,21 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.example.nikita.teethhelper.DBHepler;
+import com.example.nikita.teethhelper.data.Patient;
 import com.example.nikita.teethhelper.presenters.ListPresenter;
 import com.example.nikita.teethhelper.R;
 import com.example.nikita.teethhelper.data.Service;
 import com.example.nikita.teethhelper.data.defaultObject;
 
 import java.util.ArrayList;
+
+import io.reactivex.Single;
+import io.reactivex.SingleEmitter;
+import io.reactivex.SingleOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Nikita on 15.04.2018.
@@ -39,9 +48,19 @@ public class ServicesTable implements defaultTable {
 
     @Override
     public void fetchData() {
-        ArrayList<Service> services = getServices();
-        tagNames = context.getResources().getStringArray(R.array.serviceTagNames);
-        listPresenter.prepareDataByServices(services, tagNames);
+        Disposable disposable = getServices.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<ArrayList<Service>>() {
+                    @Override
+                    public void onSuccess(ArrayList<Service> services) {
+                        tagNames = context.getResources().getStringArray(R.array.serviceTagNames);
+                        listPresenter.prepareDataByServices(services, tagNames);
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        listPresenter.sendMessage(context.getResources().getString(R.string.error));
+                    }
+                });
     }
 
     @Override
@@ -99,40 +118,47 @@ public class ServicesTable implements defaultTable {
         listPresenter.sendMessage("service was updated successful!");
     }
 
-    public ArrayList<Service> getServices(){
-        ArrayList<Service> services = new ArrayList<Service>();
-        Cursor c = db.query("service", null, null, null, null, null, null);
-        if (c.moveToFirst()) {
-            int patientColIndex = c.getColumnIndex("patient");
-            int doctorColIndex = c.getColumnIndex("doctor");
-            int dateColIndex = c.getColumnIndex("date");
-            int costColIndex = c.getColumnIndex("cost");
-            int manipulationColIndex = c.getColumnIndex("manipulation");
-            do {
-                services.add(new Service(c.getString(manipulationColIndex), c.getString(patientColIndex), c.getString(doctorColIndex), c.getFloat(costColIndex), c.getString(dateColIndex)));
-                Log.d("SERVICE: ",
-                        "patient = "
-                                + c.getString(patientColIndex) + ", doctor = "
-                                + c.getString(doctorColIndex) + ", date = "
-                                + c.getString(dateColIndex) + ", cost = "
-                                + c.getString(costColIndex) + ", manipulation = "
-                                + c.getString(manipulationColIndex));
-            } while (c.moveToNext());
-        } else
-            Log.d("SERVICE:", "0 rows");
-        c.close();
-        return services;
-    }
-
-    public ArrayList<String> getManipulations(){
-        ArrayList<String> names = new ArrayList<String>();
-        Cursor c = db.query("service", null, null, null, null, null, null);
-        if (c.moveToFirst()) {
-            int nameColIndex = c.getColumnIndex("manipulation");
-            do {
-                names.add(c.getString(nameColIndex));
-            } while (c.moveToNext());
+    public Single<ArrayList<Service>> getServices = Single.create(new SingleOnSubscribe<ArrayList<Service>>() {
+        @Override
+        public void subscribe(SingleEmitter<ArrayList<Service>> e) throws Exception {
+            ArrayList<Service> services = new ArrayList<Service>();
+            Cursor c = db.query("service", null, null, null, null, null, null);
+            if (c.moveToFirst()) {
+                int patientColIndex = c.getColumnIndex("patient");
+                int doctorColIndex = c.getColumnIndex("doctor");
+                int dateColIndex = c.getColumnIndex("date");
+                int costColIndex = c.getColumnIndex("cost");
+                int manipulationColIndex = c.getColumnIndex("manipulation");
+                do {
+                    services.add(new Service(c.getString(manipulationColIndex), c.getString(patientColIndex), c.getString(doctorColIndex), c.getFloat(costColIndex), c.getString(dateColIndex)));
+                    Log.d("SERVICE: ",
+                            "patient = "
+                                    + c.getString(patientColIndex) + ", doctor = "
+                                    + c.getString(doctorColIndex) + ", date = "
+                                    + c.getString(dateColIndex) + ", cost = "
+                                    + c.getString(costColIndex) + ", manipulation = "
+                                    + c.getString(manipulationColIndex));
+                } while (c.moveToNext());
+            } else
+                Log.d("SERVICE:", "0 rows");
+            c.close();
+            e.onSuccess(services);
         }
-        return names;
-    }
+    });
+
+    public Single<ArrayList<String>> getManipulations = Single.create(new SingleOnSubscribe<ArrayList<String>>() {
+        @Override
+        public void subscribe(SingleEmitter<ArrayList<String>> e) throws Exception {
+            ArrayList<String> manipulations = new ArrayList<String>();
+            Cursor c = db.query("service", null, null, null, null, null, null);
+            if (c.moveToFirst()) {
+                int nameColIndex = c.getColumnIndex("manipulation");
+                do {
+                    manipulations.add(c.getString(nameColIndex));
+                } while (c.moveToNext());
+            }
+            e.onSuccess(manipulations);
+        }
+    });
+
 }

@@ -97,16 +97,20 @@ public class ServiceDataActivity extends AppCompatActivity {
         return service;
     }
 
-    public void setAdaptersByData(ArrayList<String> patientNames, ArrayList<String> doctorNames){
+    public void setPatientAdapter(ArrayList<String> patientNames){
         ArrayAdapter<String> spinnerPatientAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, patientNames);
         spinnerPatientAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerPatients.setAdapter(spinnerPatientAdapter);
+    }
+
+    public void setDoctorAdapter(ArrayList<String> doctorNames){
         ArrayAdapter<String> spinnerDoctorAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, doctorNames);
         spinnerDoctorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerDoctors.setAdapter(spinnerDoctorAdapter);
     }
+
 
     public void showError(String result){
         Log.d("ERROR: ", result);

@@ -12,6 +12,11 @@ import com.example.nikita.teethhelper.tableHelpers.ServicesTable;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
+
 /**
  * Created by Nikita on 13.05.2018.
  */
@@ -49,10 +54,31 @@ public class VisitsDataActivityPresenter implements defaultPresenter {
 
     public void fetchDataForAdapters(){
         PatientsTable patientsTable = new PatientsTable(dataActivity.getApplicationContext());
-        ArrayList<String> patientNames = patientsTable.getNames();
-        ServicesTable doctorsGetter = new ServicesTable(dataActivity.getApplicationContext());
-        ArrayList<String> doctorNames = doctorsGetter.getManipulations();
-        dataActivity.setAdaptersByData(patientNames, doctorNames);
+        Disposable patientsDisposable =  patientsTable.getNames.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<ArrayList<String>>() {
+                    @Override
+                    public void onSuccess(ArrayList<String> doctorNames) {
+                        dataActivity.setPatientAdapter(doctorNames);
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        //
+                    }
+                });
+        ServicesTable servicesTable = new ServicesTable(dataActivity.getApplicationContext());
+        Disposable serviceDisposable =  servicesTable.getManipulations.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<ArrayList<String>>() {
+                    @Override
+                    public void onSuccess(ArrayList<String> serviceManipulations) {
+                        dataActivity.setServiceAdapter(serviceManipulations);
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        //
+                    }
+                });
     }
 
     private boolean checkCorrectDate(String str){

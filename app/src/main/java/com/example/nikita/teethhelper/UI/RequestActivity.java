@@ -64,14 +64,22 @@ public class RequestActivity extends AppCompatActivity {
         });
     }
 
-    public void setAdapters(String[] typesOfRequest, String[] tableNames){
+    private void setTypeOfRequestAdapter(String[] typesOfRequest){
         ArrayAdapter<String> spinnerTypeOfRequestAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, typesOfRequest);
         spinnerTypeOfRequestAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerTypeOfRequest.setAdapter(spinnerTypeOfRequestAdapter);
+    }
+
+    private void setTableAdapter(String[] tableNames){
         ArrayAdapter<String> spinnerTableAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, tableNames);
         spinnerTableAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerTable.setAdapter(spinnerTableAdapter);
+    }
+
+    public void setAdapters(String[] typesOfRequest, String[] tableNames){
+        setTypeOfRequestAdapter(typesOfRequest);
+        setTableAdapter(tableNames);
     }
 }

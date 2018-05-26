@@ -4,6 +4,7 @@ import android.app.Activity;
 
 import com.example.nikita.teethhelper.R;
 import com.example.nikita.teethhelper.UI.RecordActivities.RenderDataActivity;
+import com.example.nikita.teethhelper.data.Doctor;
 import com.example.nikita.teethhelper.data.Render;
 import com.example.nikita.teethhelper.tableHelpers.DoctorsTable;
 import com.example.nikita.teethhelper.tableHelpers.PatientsTable;
@@ -11,6 +12,11 @@ import com.example.nikita.teethhelper.tableHelpers.ServicesTable;
 
 import java.util.ArrayList;
 import java.util.StringTokenizer;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Nikita on 14.05.2018.
@@ -60,12 +66,45 @@ public class RenderDataActivityPresenter implements defaultPresenter {
 
     public void fetchDataForAdapters(){
         ServicesTable servicesTable = new ServicesTable(dataActivity.getApplicationContext());
-        ArrayList<String> serviceManipulations = servicesTable.getManipulations();
+        Disposable serviceDisposable =  servicesTable.getManipulations.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<ArrayList<String>>() {
+                    @Override
+                    public void onSuccess(ArrayList<String> serviceManipulations) {
+                        dataActivity.setServiceAdapter(serviceManipulations);
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        //
+                    }
+                });
         PatientsTable patientsTable = new PatientsTable(dataActivity.getApplicationContext());
-        ArrayList<String> patientNames = patientsTable.getNames();
+        Disposable patientsDisposable =  patientsTable.getNames.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<ArrayList<String>>() {
+                    @Override
+                    public void onSuccess(ArrayList<String> patientNames) {
+                        dataActivity.setPatientAdapter(patientNames);
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        //
+                    }
+                });
         DoctorsTable doctorsTable = new DoctorsTable(dataActivity.getApplicationContext());
-        ArrayList<String> doctorNames = doctorsTable.getNames();
-        dataActivity.setAdaptersByData(serviceManipulations, patientNames, doctorNames);
+        Disposable disposable =  doctorsTable.getNames.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<ArrayList<String>>() {
+                    @Override
+                    public void onSuccess(ArrayList<String> doctorNames) {
+                        dataActivity.setDoctorAdapter(doctorNames);
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        //
+                    }
+                });
+
     }
 
 

@@ -11,6 +11,11 @@ import com.example.nikita.teethhelper.tableHelpers.PatientsTable;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
+
 /**
  * Created by Nikita on 08.05.2018.
  */
@@ -58,10 +63,31 @@ public class ServiceDataActivityPresenter implements defaultPresenter {
 
     public void fetchDataForAdapters(){
         PatientsTable patientsTable = new PatientsTable(dataActivity.getApplicationContext());
-        ArrayList<String> patientNames = patientsTable.getNames();
+        Disposable patientsDisposable =  patientsTable.getNames.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<ArrayList<String>>() {
+                    @Override
+                    public void onSuccess(ArrayList<String> patientNames) {
+                        dataActivity.setPatientAdapter(patientNames);
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        //
+                    }
+                });
         DoctorsTable doctorsTable = new DoctorsTable(dataActivity.getApplicationContext());
-        ArrayList<String> doctorNames = doctorsTable.getNames();
-        dataActivity.setAdaptersByData(patientNames, doctorNames);
+        Disposable doctorsDisposable =  doctorsTable.getNames.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<ArrayList<String>>() {
+                    @Override
+                    public void onSuccess(ArrayList<String> doctorNames) {
+                        dataActivity.setDoctorAdapter(doctorNames);
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        //
+                    }
+                });
     }
 
     private boolean checkCorrectDate(String str){

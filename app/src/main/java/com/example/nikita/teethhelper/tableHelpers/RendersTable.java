@@ -7,12 +7,21 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.example.nikita.teethhelper.DBHepler;
+import com.example.nikita.teethhelper.data.Visit;
 import com.example.nikita.teethhelper.presenters.ListPresenter;
 import com.example.nikita.teethhelper.R;
 import com.example.nikita.teethhelper.data.Render;
 import com.example.nikita.teethhelper.data.defaultObject;
 
 import java.util.ArrayList;
+
+import io.reactivex.Single;
+import io.reactivex.SingleEmitter;
+import io.reactivex.SingleOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Nikita on 16.04.2018.
@@ -39,9 +48,19 @@ public class RendersTable implements defaultTable {
 
     @Override
     public void fetchData() {
-        ArrayList<Render> renders = getRenders();
-        tagNames = context.getResources().getStringArray(R.array.renderTagNames);
-        listPresenter.prepareDataByRenders(renders, tagNames);
+        Disposable disposable = getRenders.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<ArrayList<Render>>() {
+                    @Override
+                    public void onSuccess(ArrayList<Render> renders) {
+                        tagNames = context.getResources().getStringArray(R.array.renderTagNames);
+                        listPresenter.prepareDataByRenders(renders, tagNames);
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        listPresenter.sendMessage(context.getResources().getString(R.string.error));
+                    }
+                });
     }
 
     @Override
@@ -98,29 +117,31 @@ public class RendersTable implements defaultTable {
         listPresenter.sendMessage("render was updated!");
     }
 
-    public ArrayList<Render> getRenders(){
-        ArrayList<Render> renders = new ArrayList<Render>();
-        Cursor c = db.query("renders", null, null, null, null, null, null);
-        if (c.moveToFirst()) {
-            int patientColIndex = c.getColumnIndex("patient");
-            int doctorColIndex = c.getColumnIndex("doctor");
-            int sumColIndex = c.getColumnIndex("sum");
-            int dateColIndex = c.getColumnIndex("date");
-            int serviceColIndex = c.getColumnIndex("service");
-            do {
-                renders.add(new Render(c.getString(serviceColIndex), c.getString(patientColIndex), c.getString(doctorColIndex), c.getFloat(sumColIndex), c.getString(dateColIndex)));
-                Log.d("RENDER",
-                        "patient = "
-                                + c.getString(patientColIndex) + ", doctor = "
-                                + c.getString(doctorColIndex) + ", sum = "
-                                + c.getString(sumColIndex) + ", date = "
-                                + c.getString(dateColIndex) + ", service = "
-                                + c.getString(serviceColIndex));
-            } while (c.moveToNext());
-        } else
-            Log.d("RENDER", "0 rows");
-        c.close();
-        return renders;
-    }
-
+    public Single<ArrayList<Render>> getRenders = Single.create(new SingleOnSubscribe<ArrayList<Render>>() {
+        @Override
+        public void subscribe(SingleEmitter<ArrayList<Render>> e) throws Exception {
+            ArrayList<Render> renders = new ArrayList<Render>();
+            Cursor c = db.query("renders", null, null, null, null, null, null);
+            if (c.moveToFirst()) {
+                int patientColIndex = c.getColumnIndex("patient");
+                int doctorColIndex = c.getColumnIndex("doctor");
+                int sumColIndex = c.getColumnIndex("sum");
+                int dateColIndex = c.getColumnIndex("date");
+                int serviceColIndex = c.getColumnIndex("service");
+                do {
+                    renders.add(new Render(c.getString(serviceColIndex), c.getString(patientColIndex), c.getString(doctorColIndex), c.getFloat(sumColIndex), c.getString(dateColIndex)));
+                    Log.d("RENDER",
+                            "patient = "
+                                    + c.getString(patientColIndex) + ", doctor = "
+                                    + c.getString(doctorColIndex) + ", sum = "
+                                    + c.getString(sumColIndex) + ", date = "
+                                    + c.getString(dateColIndex) + ", service = "
+                                    + c.getString(serviceColIndex));
+                } while (c.moveToNext());
+            } else
+                Log.d("RENDER", "0 rows");
+            c.close();
+            e.onSuccess(renders);
+        }
+    });
 }

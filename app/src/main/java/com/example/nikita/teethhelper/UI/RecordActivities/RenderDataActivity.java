@@ -103,15 +103,21 @@ public class RenderDataActivity extends AppCompatActivity {
         return render;
     }
 
-    public void setAdaptersByData(ArrayList<String> serviceNames, ArrayList<String> patientNames, ArrayList<String> doctorNames){
+    public void setServiceAdapter(ArrayList<String> serviceNames){
         ArrayAdapter<String> spinnerServicesAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, serviceNames);
         spinnerServicesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerServices.setAdapter(spinnerServicesAdapter);
+    }
+
+    public void setPatientAdapter(ArrayList<String> patientNames){
         ArrayAdapter<String> spinnerPatientAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, patientNames);
         spinnerPatientAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerPatients.setAdapter(spinnerPatientAdapter);
+    }
+
+    public void setDoctorAdapter(ArrayList<String> doctorNames){
         ArrayAdapter<String> spinnerDoctorAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, doctorNames);
         spinnerDoctorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
