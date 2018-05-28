@@ -11,6 +11,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.nikita.teethhelper.R;
+import com.example.nikita.teethhelper.TableContract;
+import com.example.nikita.teethhelper.presenters.ReportActivityPresenter;
 import com.example.nikita.teethhelper.presenters.ServiceDataActivityPresenter;
 import com.example.nikita.teethhelper.data.Service;
 
@@ -22,28 +24,28 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import es.dmoral.toasty.Toasty;
 
-public class ServiceDataActivity extends AppCompatActivity {
+public class ServiceDataActivity extends AppCompatActivity implements TableContract.TableView {
+    private ServiceDataActivityPresenter mPresenter;
     public Intent data;
     @BindView(R.id.editTextDataDayOfService)
-    EditText editTextDataDay;
+    EditText mEditTextDataDay;
     @BindView(R.id.editTextDataMonthOfService)
-    EditText editTextDataMonth;
+    EditText mEditTextDataMonth;
     @BindView(R.id.editTextDataYearOfService)
-    EditText editTextDataYear;
+    EditText mEditTextDataYear;
     @BindView(R.id.spinnerPatientOfService)
-    Spinner spinnerPatients;
+    Spinner mSpinnerPatients;
     @BindView(R.id.spinnerDoctorOfService)
-    Spinner spinnerDoctors;
+    Spinner mSpinnerDoctors;
     @BindView(R.id.editTextManipulationOfService)
-    EditText editTextManipulation;
+    EditText mEditTextManipulation;
     @BindView(R.id.editTextCostOfService)
-    EditText editTextCost;
+    EditText mEditTextCost;
     @BindView(R.id.buttonAddOfService)
-    Button buttonAdd;
+    Button mButtonAdd;
     @OnClick(R.id.buttonAddOfService)
     void onClickAdd(){
-        ServiceDataActivityPresenter presenter = new ServiceDataActivityPresenter(this);
-        presenter.checkData();
+        mPresenter.checkData();
     }
 
     @Override
@@ -53,45 +55,52 @@ public class ServiceDataActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         data = getIntent();
         if(data.getFloatExtra("oldCost", -1) != -1) {
-            editTextManipulation.setText(data.getStringExtra("oldManipulation"));
-            editTextCost.setText(String.valueOf(data.getFloatExtra("oldCost", 0)));
+            mEditTextManipulation.setText(data.getStringExtra("oldManipulation"));
+            mEditTextCost.setText(String.valueOf(data.getFloatExtra("oldCost", 0)));
             StringTokenizer date = new StringTokenizer(data.getStringExtra("oldDate"), ".");
             while(date.hasMoreTokens()) {
-                editTextDataDay.setText(date.nextToken());
-                editTextDataMonth.setText(date.nextToken());
-                editTextDataYear.setText(date.nextToken());
+                mEditTextDataDay.setText(date.nextToken());
+                mEditTextDataMonth.setText(date.nextToken());
+                mEditTextDataYear.setText(date.nextToken());
             }
-            buttonAdd.setText("edit");
+            mButtonAdd.setText(getResources().getString(R.string.edit));
         }
-        ServiceDataActivityPresenter presenter = new ServiceDataActivityPresenter(this);
-        presenter.fetchDataForAdapters();
+        mPresenter = new ServiceDataActivityPresenter(this);
+        mPresenter.onStart();
+        mPresenter.fetchDataForAdapters();
+    }
+
+    @Override
+    public void showError(String result){
+        Log.d("ERROR: ", result);
+        Toasty.error(getApplicationContext(), result, Toast.LENGTH_SHORT, true).show();
     }
 
     public Service getService(){
         String patient ="";
         try {
-            patient = spinnerPatients.getSelectedItem().toString();
+            patient = mSpinnerPatients.getSelectedItem().toString();
         }catch (Exception c){
             c.printStackTrace();
         }
         String doctor = "";
         try {
-            doctor = spinnerDoctors.getSelectedItem().toString();
+            doctor = mSpinnerDoctors.getSelectedItem().toString();
         }catch (Exception c){
             c.printStackTrace();
         }
-        String manipulation = editTextManipulation.getText().toString();
+        String manipulation = mEditTextManipulation.getText().toString();
         String date = "";
-        if(editTextDataDay.getText().length()!=0
-                && editTextDataMonth.length()!=0
-                && editTextDataYear.length()!=0){
-            date = editTextDataDay.getText().toString()+"."
-                    +editTextDataMonth.getText().toString()+"."
-                    +editTextDataYear.getText().toString();
+        if(mEditTextDataDay.getText().length()!=0
+                && mEditTextDataMonth.length()!=0
+                && mEditTextDataYear.length()!=0){
+            date = mEditTextDataDay.getText().toString()+"."
+                    + mEditTextDataMonth.getText().toString()+"."
+                    + mEditTextDataYear.getText().toString();
         }
         float cost = -1;
-        if(editTextCost.getText().length()!=0) {
-            cost = Float.parseFloat(editTextCost.getText().toString());
+        if(mEditTextCost.getText().length()!=0) {
+            cost = Float.parseFloat(mEditTextCost.getText().toString());
         }
         Service service = new Service(manipulation, patient, doctor, cost, date);
         return service;
@@ -101,19 +110,19 @@ public class ServiceDataActivity extends AppCompatActivity {
         ArrayAdapter<String> spinnerPatientAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, patientNames);
         spinnerPatientAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerPatients.setAdapter(spinnerPatientAdapter);
+        mSpinnerPatients.setAdapter(spinnerPatientAdapter);
     }
 
     public void setDoctorAdapter(ArrayList<String> doctorNames){
         ArrayAdapter<String> spinnerDoctorAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, doctorNames);
         spinnerDoctorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerDoctors.setAdapter(spinnerDoctorAdapter);
+        mSpinnerDoctors.setAdapter(spinnerDoctorAdapter);
     }
 
-
-    public void showError(String result){
-        Log.d("ERROR: ", result);
-        Toasty.error(getApplicationContext(), result, Toast.LENGTH_SHORT, true).show();
+    @Override
+    public void onStop(){
+        super.onStop();
+        mPresenter.onStop();
     }
 }

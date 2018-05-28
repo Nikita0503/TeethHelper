@@ -21,21 +21,21 @@ import butterknife.OnClick;
 import es.dmoral.toasty.Toasty;
 
 public class RequestActivity extends AppCompatActivity {
-    private int tableId;
-    Fragment fragment;
+    private int mTableId;
+    private Fragment mFragment;
     @BindView(R.id.spinnerTypeOfRequest)
-    Spinner spinnerTypeOfRequest;
+    Spinner mSpinnerTypeOfRequest;
     @BindView(R.id.spinnerTable)
-    Spinner spinnerTable;
+    Spinner mSpinnerTable;
     @BindView(R.id.buttonCommit)
-    Button buttonCommit;
+    Button mButtonCommit;
     @OnClick(R.id.buttonCommit)
     void onClickCommit(){
         Fragment fragment = getFragmentManager().findFragmentById(R.id.fragmentSlot);
         String tableName = "";
-        tableName = spinnerTable.getSelectedItem().toString();
+        tableName = mSpinnerTable.getSelectedItem().toString();
         String typeOfRequest = "";
-        typeOfRequest = spinnerTypeOfRequest.getSelectedItem().toString();
+        typeOfRequest = mSpinnerTypeOfRequest.getSelectedItem().toString();
         RequestActivityPresenter requestActivityPresenter = new RequestActivityPresenter(this);
         String request = requestActivityPresenter.getRequestText(tableName, typeOfRequest, fragment);
         Log.d("REQUEST", request);
@@ -49,13 +49,13 @@ public class RequestActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         final RequestActivityPresenter requestActivityPresenter = new RequestActivityPresenter(this);
         requestActivityPresenter.fetchData();
-        spinnerTable.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        mSpinnerTable.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                tableId = position;
+                mTableId = position;
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();;
-                fragment = requestActivityPresenter.getFragmentByTableId(tableId);
-                fragmentTransaction.replace(R.id.fragmentSlot, fragment);
+                mFragment = requestActivityPresenter.getFragmentByTableId(mTableId);
+                fragmentTransaction.replace(R.id.fragmentSlot, mFragment);
                 fragmentTransaction.commit();
             }
             @Override
@@ -68,14 +68,14 @@ public class RequestActivity extends AppCompatActivity {
         ArrayAdapter<String> spinnerTypeOfRequestAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, typesOfRequest);
         spinnerTypeOfRequestAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerTypeOfRequest.setAdapter(spinnerTypeOfRequestAdapter);
+        mSpinnerTypeOfRequest.setAdapter(spinnerTypeOfRequestAdapter);
     }
 
     private void setTableAdapter(String[] tableNames){
         ArrayAdapter<String> spinnerTableAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, tableNames);
         spinnerTableAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerTable.setAdapter(spinnerTableAdapter);
+        mSpinnerTable.setAdapter(spinnerTableAdapter);
     }
 
     public void setAdapters(String[] typesOfRequest, String[] tableNames){

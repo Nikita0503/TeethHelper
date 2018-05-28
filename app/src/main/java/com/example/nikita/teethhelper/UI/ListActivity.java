@@ -14,6 +14,7 @@ import android.widget.ExpandableListView;
 import android.widget.SimpleExpandableListAdapter;
 import android.widget.Toast;
 
+import com.example.nikita.teethhelper.Contract;
 import com.example.nikita.teethhelper.presenters.ListPresenter;
 import com.example.nikita.teethhelper.R;
 import com.example.nikita.teethhelper.UI.RecordActivities.DoctorDataActivity;
@@ -29,19 +30,27 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import es.dmoral.toasty.Toasty;
 
-public class ListActivity extends AppCompatActivity {
-    int tableId;
-
+public class ListActivity extends AppCompatActivity implements Contract.View {
+    private int mTableId;
+    private ListPresenter mPresenter;
     @BindView(R.id.elvMain)
-    ExpandableListView elvMain;
+    ExpandableListView mElvMain;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
         ButterKnife.bind(this);
         Intent intent = getIntent();
-        tableId = intent.getIntExtra("tableId", -1);
-        registerForContextMenu(elvMain);
+        mTableId = intent.getIntExtra("tableId", -1);
+        registerForContextMenu(mElvMain);
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        mPresenter = new ListPresenter(this);
+        mPresenter.onStart();
     }
 
     @Override
@@ -57,17 +66,16 @@ public class ListActivity extends AppCompatActivity {
                 .getMenuInfo();
         Integer position = (int) info.id;
         ArrayList<String> objectData = new ArrayList<String>();
-        for(int i = 0; i < elvMain.getExpandableListAdapter().getChildrenCount(position); i++) {
-            Map<String, String> m = (Map<String, String>) elvMain.getExpandableListAdapter().getChild(position, i);
+        for(int i = 0; i < mElvMain.getExpandableListAdapter().getChildrenCount(position); i++) {
+            Map<String, String> m = (Map<String, String>) mElvMain.getExpandableListAdapter().getChild(position, i);
             objectData.add(m.get("data"));
         }
-        ListPresenter listPresenter = new ListPresenter(ListActivity.this);
         switch (item.getItemId()) {
             case R.id.edit:
-                listPresenter.prepareDataForUpdate(objectData, tableId);
+                mPresenter.prepareDataForUpdate(objectData, mTableId);
                 return true;
             case R.id.delete:
-                listPresenter.prepareDataForDelete(objectData, tableId);
+                mPresenter.prepareDataForDelete(objectData, mTableId);
                 return true;
             default:
                 return super.onContextItemSelected(item);
@@ -83,7 +91,7 @@ public class ListActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
-        switch (tableId){
+        switch (mTableId){
             case 0:
                 intent = new Intent(ListActivity.this, RenderDataActivity.class);
                 startActivityForResult(intent, 1);
@@ -111,25 +119,23 @@ public class ListActivity extends AppCompatActivity {
     @Override
     public void onResume(){
         super.onResume();
-        ListPresenter presenter = new ListPresenter(this);
-        presenter.fetchData(tableId);
+        mPresenter.fetchData(mTableId);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (intent == null) {return;}
-        ListPresenter listPresenter = new ListPresenter(this);
         switch (requestCode){
             case 1:
                 ArrayList<String> data = new ArrayList<String>();
-                switch (tableId){
+                switch (mTableId){
                     case 0:
                         data.add(intent.getStringExtra("service"));
                         data.add(intent.getStringExtra("patient"));
                         data.add(intent.getStringExtra("doctor"));
                         data.add(String.valueOf(intent.getFloatExtra("sum", 0)));
                         data.add(intent.getStringExtra("date"));
-                        listPresenter.prepareDataForAddition(data, tableId);
+                        mPresenter.prepareDataForAddition(data, mTableId);
                         break;
                     case 1:
                         data.add(intent.getStringExtra("name"));
@@ -138,14 +144,14 @@ public class ListActivity extends AppCompatActivity {
                         data.add(intent.getStringExtra("specialization"));
                         data.add(String.valueOf(intent.getIntExtra("experience", 0)));
                         data.add(intent.getStringExtra("berth"));
-                        listPresenter.prepareDataForAddition(data, tableId);
+                        mPresenter.prepareDataForAddition(data, mTableId);
                         break;
                     case 2:
                         data.add(intent.getStringExtra("name"));
                         data.add(intent.getStringExtra("passport"));
                         data.add(intent.getStringExtra("address"));
                         data.add(intent.getStringExtra("disease"));
-                        listPresenter.prepareDataForAddition(data, tableId);
+                        mPresenter.prepareDataForAddition(data, mTableId);
                         break;
                     case 3:
                         data.add(intent.getStringExtra("manipulation"));
@@ -153,20 +159,20 @@ public class ListActivity extends AppCompatActivity {
                         data.add(intent.getStringExtra("doctor"));
                         data.add(String.valueOf(intent.getFloatExtra("cost", 0)));
                         data.add(intent.getStringExtra("date"));
-                        listPresenter.prepareDataForAddition(data, tableId);//убрать в конец приминение функции
+                        mPresenter.prepareDataForAddition(data, mTableId);
                         break;
                     case 4:
                         data.add(intent.getStringExtra("patient"));
                         data.add(intent.getStringExtra("date"));
                         data.add(intent.getStringExtra("service"));
-                        listPresenter.prepareDataForAddition(data, tableId);
+                        mPresenter.prepareDataForAddition(data, mTableId);
                 }
 
                 break;
             case 2:
                 ArrayList<String> oldData = new ArrayList<String>();
                 ArrayList<String> newData = new ArrayList<String>();
-                switch (tableId){
+                switch (mTableId){
                     case 0:
                         oldData.add(intent.getStringExtra("oldService"));
                         oldData.add(intent.getStringExtra("oldPatient"));
@@ -178,7 +184,7 @@ public class ListActivity extends AppCompatActivity {
                         newData.add(intent.getStringExtra("doctor"));
                         newData.add(String.valueOf(intent.getFloatExtra("sum", -1)));
                         newData.add(intent.getStringExtra("date"));
-                        listPresenter.prepareDataForUpdate(oldData, newData, tableId);
+                        mPresenter.prepareDataForUpdate(oldData, newData, mTableId);
                         break;
                     case 1:
                         oldData.add(String.valueOf(intent.getIntExtra("code", -1)));
@@ -195,7 +201,7 @@ public class ListActivity extends AppCompatActivity {
                         newData.add(intent.getStringExtra("specialization"));
                         newData.add(String.valueOf(intent.getIntExtra("experience", -1)));
                         newData.add(intent.getStringExtra("berth"));
-                        listPresenter.prepareDataForUpdate(oldData, newData, tableId);
+                        mPresenter.prepareDataForUpdate(oldData, newData, mTableId);
                         break;
                     case 2:
                         oldData.add(String.valueOf(intent.getIntExtra("code", -1)));
@@ -208,7 +214,7 @@ public class ListActivity extends AppCompatActivity {
                         newData.add(intent.getStringExtra("passport"));
                         newData.add(intent.getStringExtra("address"));
                         newData.add(intent.getStringExtra("disease"));
-                        listPresenter.prepareDataForUpdate(oldData, newData, tableId);
+                        mPresenter.prepareDataForUpdate(oldData, newData, mTableId);
                         break;
                     case 3:
                         oldData.add(intent.getStringExtra("oldManipulation"));
@@ -221,7 +227,7 @@ public class ListActivity extends AppCompatActivity {
                         newData.add(intent.getStringExtra("doctor"));
                         newData.add(String.valueOf(intent.getFloatExtra("cost", -1)));
                         newData.add(intent.getStringExtra("date"));
-                        listPresenter.prepareDataForUpdate(oldData, newData, tableId);
+                        mPresenter.prepareDataForUpdate(oldData, newData, mTableId);
                         break;
                     case 4:
                         oldData.add(intent.getStringExtra("oldPatient"));
@@ -230,15 +236,20 @@ public class ListActivity extends AppCompatActivity {
                         newData.add(intent.getStringExtra("patient"));
                         newData.add(intent.getStringExtra("date"));
                         newData.add(intent.getStringExtra("service"));
-                        listPresenter.prepareDataForUpdate(oldData, newData, tableId);
+                        mPresenter.prepareDataForUpdate(oldData, newData, mTableId);
                         break;
                 }
 
         }
     }
 
+    @Override
+    public void showMessage(String message){
+        Toasty.success(getApplicationContext(), message, Toast.LENGTH_SHORT, true).show();
+    }
+
     public void setListAdapter(SimpleExpandableListAdapter adapter){
-        elvMain.setAdapter(adapter);
+        mElvMain.setAdapter(adapter);
     }
 
     public void setColors(int titleBarColor, int statusBarColor, String tableName){
@@ -250,7 +261,9 @@ public class ListActivity extends AppCompatActivity {
         }
     }
 
-    public void showMessage(String message){
-        Toasty.success(getApplicationContext(), message, Toast.LENGTH_SHORT, true).show();
+    @Override
+    public void onStop(){
+        super.onStop();
+        mPresenter.onStop();
     }
 }

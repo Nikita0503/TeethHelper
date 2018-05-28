@@ -20,31 +20,31 @@ import es.dmoral.toasty.Toasty;
 
 public class DateActivity extends AppCompatActivity {
     @BindView(R.id.editTextDataDayAfter)
-    EditText editTextDataDayAfter;
+    EditText mEditTextDataDayAfter;
     @BindView(R.id.editTextDataMonthAfter)
-    EditText editTextDataMonthAfter;
+    EditText mEditTextDataMonthAfter;
     @BindView(R.id.editTextDataYearAfter)
-    EditText editTextDataYearAfter;
+    EditText mEditTextDataYearAfter;
     @BindView(R.id.editTextDataDayBefore)
-    EditText editTextDataDayBefore;
+    EditText mEditTextDataDayBefore;
     @BindView(R.id.editTextDataMonthBefore)
-    EditText editTextDataMonthBefore;
+    EditText mEditTextDataMonthBefore;
     @BindView(R.id.editTextDataYearBefore)
-    EditText editTextDataYearBefore;
+    EditText mEditTextDataYearBefore;
     @OnClick(R.id.buttonGetDates)
     void onClick() {
         Intent data = getIntent();
         String dateAfter = "";
-        if(editTextDataDayAfter.getText().length()!=0
-                && editTextDataMonthAfter.length()!=0
-                && editTextDataYearAfter.length()!=0){
-            if(Integer.parseInt(editTextDataMonthAfter.getText().toString()) > 0
-                    && Integer.parseInt(editTextDataMonthAfter.getText().toString()) <= 12) {
-                if(Integer.parseInt(editTextDataDayAfter.getText().toString()) > 0
-                        && Integer.parseInt(editTextDataDayAfter.getText().toString()) <= 31) {
-                    dateAfter = editTextDataDayAfter.getText().toString() + "."
-                            + editTextDataMonthAfter.getText().toString() + "."
-                            + editTextDataYearAfter.getText().toString();
+        if(mEditTextDataDayAfter.getText().length()!=0
+                && mEditTextDataMonthAfter.length()!=0
+                && mEditTextDataYearAfter.length()!=0){
+            if(Integer.parseInt(mEditTextDataMonthAfter.getText().toString()) > 0
+                    && Integer.parseInt(mEditTextDataMonthAfter.getText().toString()) <= 12) {
+                if(Integer.parseInt(mEditTextDataDayAfter.getText().toString()) > 0
+                        && Integer.parseInt(mEditTextDataDayAfter.getText().toString()) <= 31) {
+                    dateAfter = mEditTextDataDayAfter.getText().toString() + "."
+                            + mEditTextDataMonthAfter.getText().toString() + "."
+                            + mEditTextDataYearAfter.getText().toString();
                 }else{
                     Toasty.error(getApplicationContext(), getResources().getString(R.string.invalidAfterDate), Toast.LENGTH_SHORT).show();
                     return;
@@ -58,16 +58,16 @@ public class DateActivity extends AppCompatActivity {
             return;
         }
         String dateBefore = "";
-        if(editTextDataDayBefore.getText().length()!=0
-                && editTextDataMonthBefore.length()!=0
-                && editTextDataYearBefore.length()!=0){
-            if(Integer.parseInt(editTextDataMonthBefore.getText().toString()) > 0
-                    && Integer.parseInt(editTextDataMonthBefore.getText().toString()) <= 12) {
-                if(Integer.parseInt(editTextDataDayBefore.getText().toString()) > 0
-                        && Integer.parseInt(editTextDataDayBefore.getText().toString()) <= 31) {
-                            dateBefore = editTextDataDayBefore.getText().toString() + "."
-                            + editTextDataMonthBefore.getText().toString() + "."
-                            + editTextDataYearBefore.getText().toString();
+        if(mEditTextDataDayBefore.getText().length()!=0
+                && mEditTextDataMonthBefore.length()!=0
+                && mEditTextDataYearBefore.length()!=0){
+            if(Integer.parseInt(mEditTextDataMonthBefore.getText().toString()) > 0
+                    && Integer.parseInt(mEditTextDataMonthBefore.getText().toString()) <= 12) {
+                if(Integer.parseInt(mEditTextDataDayBefore.getText().toString()) > 0
+                        && Integer.parseInt(mEditTextDataDayBefore.getText().toString()) <= 31) {
+                            dateBefore = mEditTextDataDayBefore.getText().toString() + "."
+                            + mEditTextDataMonthBefore.getText().toString() + "."
+                            + mEditTextDataYearBefore.getText().toString();
                 }else{
                     Toasty.error(getApplicationContext(), getResources().getString(R.string.invalidBeforeDate), Toast.LENGTH_SHORT).show();
                     return;

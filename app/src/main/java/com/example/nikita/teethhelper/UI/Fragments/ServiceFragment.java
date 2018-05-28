@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
@@ -28,24 +29,26 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class ServiceFragment extends Fragment {
+    private CompositeDisposable mDisposables;
     @BindView(R.id.editTextDataDayOfService)
-    EditText editTextDataDay;
+    EditText mEditTextDataDay;
     @BindView(R.id.editTextDataMonthOfService)
-    EditText editTextDataMonth;
+    EditText mEditTextDataMonth;
     @BindView(R.id.editTextDataYearOfService)
-    EditText editTextDataYear;
+    EditText mEditTextDataYear;
     @BindView(R.id.spinnerPatientOfService)
-    Spinner spinnerPatients;
+    Spinner mSpinnerPatients;
     @BindView(R.id.spinnerDoctorOfService)
-    Spinner spinnerDoctors;
+    Spinner mSpinnerDoctors;
     @BindView(R.id.editTextManipulationOfService)
-    EditText editTextManipulation;
+    EditText mEditTextManipulation;
     @BindView(R.id.editTextCostOfService)
-    EditText editTextCost;
+    EditText mEditTextCost;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_service, null);
         ButterKnife.bind(this, v);
+        mDisposables = new CompositeDisposable();
         setAdapters();
         return v;
     }
@@ -59,13 +62,14 @@ public class ServiceFragment extends Fragment {
                     public void onSuccess(ArrayList<String> patientNames) {
                         ArrayAdapter<String> spinnerPatientAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, patientNames);
                         spinnerPatientAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        spinnerPatients.setAdapter(spinnerPatientAdapter);
+                        mSpinnerPatients.setAdapter(spinnerPatientAdapter);
                     }
                     @Override
                     public void onError(Throwable e) {
-                        //
+                        /*ignore*/
                     }
                 });
+        mDisposables.add(disposable);
     }
 
     private void setDoctorAdapter(){
@@ -77,13 +81,14 @@ public class ServiceFragment extends Fragment {
                     public void onSuccess(ArrayList<String> doctorNames) {
                         ArrayAdapter<String> spinnerDoctorsAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, doctorNames);
                         spinnerDoctorsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        spinnerDoctors.setAdapter(spinnerDoctorsAdapter);
+                        mSpinnerDoctors.setAdapter(spinnerDoctorsAdapter);
                     }
                     @Override
                     public void onError(Throwable e) {
-                        //
+                        /*ignore*/
                     }
                 });
+        mDisposables.add(disposable);
     }
 
     private void setAdapters(){
@@ -94,32 +99,35 @@ public class ServiceFragment extends Fragment {
     public Service getService(){
         String patient ="";
         try {
-            patient = spinnerPatients.getSelectedItem().toString();
+            patient = mSpinnerPatients.getSelectedItem().toString();
         }catch (Exception c){
             c.printStackTrace();
         }
         String doctor = "";
         try {
-            doctor = spinnerDoctors.getSelectedItem().toString();
+            doctor = mSpinnerDoctors.getSelectedItem().toString();
         }catch (Exception c){
             c.printStackTrace();
         }
-        String manipulation = editTextManipulation.getText().toString();
+        String manipulation = mEditTextManipulation.getText().toString();
         String date = "";
-        if(editTextDataDay.getText().length()!=0
-                && editTextDataMonth.length()!=0
-                && editTextDataYear.length()!=0){
-            date = editTextDataDay.getText().toString()+"."
-                    +editTextDataMonth.getText().toString()+"."
-                    +editTextDataYear.getText().toString();
+        if(mEditTextDataDay.getText().length()!=0
+                && mEditTextDataMonth.length()!=0
+                && mEditTextDataYear.length()!=0){
+            date = mEditTextDataDay.getText().toString()+"."
+                    + mEditTextDataMonth.getText().toString()+"."
+                    + mEditTextDataYear.getText().toString();
         }
         float cost = -1;
-        if(editTextCost.getText().length()!=0) {
-            cost = Float.parseFloat(editTextCost.getText().toString());
+        if(mEditTextCost.getText().length()!=0) {
+            cost = Float.parseFloat(mEditTextCost.getText().toString());
         }
         Service service = new Service(manipulation, patient, doctor, cost, date);
         return service;
     }
 
-
+    public void onStop() {
+        super.onStop();
+        mDisposables.clear();
+    }
 }

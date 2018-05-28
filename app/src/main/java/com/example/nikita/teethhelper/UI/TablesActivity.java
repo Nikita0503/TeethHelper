@@ -17,7 +17,7 @@ import butterknife.OnClick;
 
 public class TablesActivity extends AppCompatActivity {
     @BindView(R.id.circle_menu)
-    CircleMenuView menu;
+    CircleMenuView mMenu;
     @OnClick(R.id.buttonCreateRequest)
     void onClickRequest() {
         Intent intent = new Intent(getApplicationContext(), RequestActivity.class);
@@ -35,30 +35,30 @@ public class TablesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tables);
         ButterKnife.bind(this);
-        menu.setEventListener(new CircleMenuView.EventListener() {
+        mMenu.setEventListener(new CircleMenuView.EventListener() {
             @Override
             public void onMenuOpenAnimationStart(@NonNull CircleMenuView view) {
-
+                /*ignore*/
             }
 
             @Override
             public void onMenuOpenAnimationEnd(@NonNull CircleMenuView view) {
-
+                /*ignore*/
             }
 
             @Override
             public void onMenuCloseAnimationStart(@NonNull CircleMenuView view) {
-
+                /*ignore*/
             }
 
             @Override
             public void onMenuCloseAnimationEnd(@NonNull CircleMenuView view) {
-
+                /*ignore*/
             }
 
             @Override
             public void onButtonClickAnimationStart(@NonNull CircleMenuView view, int index) {
-
+                /*ignore*/
             }
 
             @Override
@@ -69,6 +69,6 @@ public class TablesActivity extends AppCompatActivity {
             }
         });
         Animation alphaAnimation = AnimationUtils.loadAnimation(this, R.anim.scale_menu);
-        menu.startAnimation(alphaAnimation);
+        mMenu.startAnimation(alphaAnimation);
     }
 }

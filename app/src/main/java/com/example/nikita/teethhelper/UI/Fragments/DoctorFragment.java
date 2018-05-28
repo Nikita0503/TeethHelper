@@ -18,19 +18,18 @@ import butterknife.ButterKnife;
  */
 
 public class DoctorFragment extends Fragment {
-
     @BindView(R.id.editTextNameOfDoctor)
-    EditText editTextName;
+    EditText mEditTextName;
     @BindView(R.id.editTextPassportOfDoctor)
-    EditText editTextPassport;
+    EditText mEditTextPassport;
     @BindView(R.id.editTextAddressOfDoctor)
-    EditText editTextAddress;
+    EditText mEditTextAddress;
     @BindView(R.id.editTextSpecializationOfDoctor)
-    EditText editTextSpecialization;
+    EditText mEditTextSpecialization;
     @BindView(R.id.editTextExperienceOfDoctor)
-    EditText editTextExperience;
+    EditText mEditTextExperience;
     @BindView(R.id.editTextBerthOfDoctor)
-    EditText editTextBerth;
+    EditText mEditTextBerth;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_doctor, null);
@@ -39,15 +38,15 @@ public class DoctorFragment extends Fragment {
     }
 
     public Doctor getDoctor(){
-        String name = editTextName.getText().toString();
-        String passport = editTextPassport.getText().toString();
-        String address = editTextAddress.getText().toString();
-        String specialization = editTextSpecialization.getText().toString();
+        String name = mEditTextName.getText().toString();
+        String passport = mEditTextPassport.getText().toString();
+        String address = mEditTextAddress.getText().toString();
+        String specialization = mEditTextSpecialization.getText().toString();
         int experience = -1;
-        if(editTextExperience.getText().length()!=0) {
-            experience = Integer.parseInt(editTextExperience.getText().toString());
+        if(mEditTextExperience.getText().length()!=0) {
+            experience = Integer.parseInt(mEditTextExperience.getText().toString());
         }
-        String berth = editTextBerth.getText().toString();
+        String berth = mEditTextBerth.getText().toString();
         Doctor doctor = new Doctor(name, passport, address, specialization, experience, berth);
         return doctor;
     }

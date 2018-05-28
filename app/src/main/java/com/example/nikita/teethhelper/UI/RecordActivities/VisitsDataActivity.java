@@ -11,6 +11,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.nikita.teethhelper.R;
+import com.example.nikita.teethhelper.TableContract;
+import com.example.nikita.teethhelper.presenters.ReportActivityPresenter;
 import com.example.nikita.teethhelper.presenters.VisitsDataActivityPresenter;
 import com.example.nikita.teethhelper.data.Visit;
 
@@ -22,25 +24,24 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import es.dmoral.toasty.Toasty;
 
-public class VisitsDataActivity extends AppCompatActivity {
+public class VisitsDataActivity extends AppCompatActivity  implements TableContract.TableView {
     public Intent data;
-
+    private VisitsDataActivityPresenter mPresenter;
     @BindView(R.id.editTextDataDayOfVisits)
-    EditText editTextDataDay;
+    EditText mEditTextDataDay;
     @BindView(R.id.editTextDataMonthOfVisits)
-    EditText editTextDataMonth;
+    EditText mEditTextDataMonth;
     @BindView(R.id.editTextDataYearOfVisits)
-    EditText editTextDataYear;
+    EditText mEditTextDataYear;
     @BindView(R.id.spinnerPatientOfVisit)
-    Spinner spinnerPatients;
+    Spinner mSpinnerPatients;
     @BindView(R.id.spinnerServiceOfVisit)
-    Spinner spinnerServices;
+    Spinner mSpinnerServices;
     @BindView(R.id.buttonAddOfVisit)
-    Button buttonAdd;
+    Button mButtonAdd;
     @OnClick(R.id.buttonAddOfVisit)
     void onClickAdd(){
-        VisitsDataActivityPresenter presenter = new VisitsDataActivityPresenter(this);
-        presenter.checkData();
+        mPresenter.checkData();
     }
 
     @Override
@@ -52,36 +53,43 @@ public class VisitsDataActivity extends AppCompatActivity {
         if(data.getStringExtra("oldDate") != null) {
             StringTokenizer date = new StringTokenizer(data.getStringExtra("oldDate"), ".");
             while(date.hasMoreTokens()) {
-                editTextDataDay.setText(date.nextToken());
-                editTextDataMonth.setText(date.nextToken());
-                editTextDataYear.setText(date.nextToken());
+                mEditTextDataDay.setText(date.nextToken());
+                mEditTextDataMonth.setText(date.nextToken());
+                mEditTextDataYear.setText(date.nextToken());
             }
-            buttonAdd.setText("edit");
+            mButtonAdd.setText(getResources().getString(R.string.edit));
         }
-        VisitsDataActivityPresenter presenter = new VisitsDataActivityPresenter(this);
-        presenter.fetchDataForAdapters();
+        mPresenter = new VisitsDataActivityPresenter(this);
+        mPresenter.onStart();
+        mPresenter.fetchDataForAdapters();
+    }
+
+    @Override
+    public void showError(String result){
+        Log.d("ERROR: ", result);
+        Toasty.error(getApplicationContext(), result, Toast.LENGTH_SHORT, true).show();
     }
 
     public Visit getVisit(){
         String patient ="";
         try {
-            patient = spinnerPatients.getSelectedItem().toString();
+            patient = mSpinnerPatients.getSelectedItem().toString();
         }catch (Exception c){
             c.printStackTrace();
         }
         String service = "";
         try {
-            service = spinnerServices.getSelectedItem().toString();
+            service = mSpinnerServices.getSelectedItem().toString();
         }catch (Exception c){
             c.printStackTrace();
         }
         String date = "";
-        if(editTextDataDay.getText().length()!=0
-                && editTextDataMonth.length()!=0
-                && editTextDataYear.length()!=0){
-            date = editTextDataDay.getText().toString()+"."
-                    +editTextDataMonth.getText().toString()+"."
-                    +editTextDataYear.getText().toString();
+        if(mEditTextDataDay.getText().length()!=0
+                && mEditTextDataMonth.length()!=0
+                && mEditTextDataYear.length()!=0){
+            date = mEditTextDataDay.getText().toString()+"."
+                    + mEditTextDataMonth.getText().toString()+"."
+                    + mEditTextDataYear.getText().toString();
         }
         Visit visit = new Visit(patient, date, service);
         return visit;
@@ -91,19 +99,19 @@ public class VisitsDataActivity extends AppCompatActivity {
         ArrayAdapter<String> spinnerPatientAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, patientNames);
         spinnerPatientAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerPatients.setAdapter(spinnerPatientAdapter);
+        mSpinnerPatients.setAdapter(spinnerPatientAdapter);
     }
 
     public void setServiceAdapter(ArrayList<String> serviceNames){
         ArrayAdapter<String> spinnerServicesAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, serviceNames);
         spinnerServicesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerServices.setAdapter(spinnerServicesAdapter);
+        mSpinnerServices.setAdapter(spinnerServicesAdapter);
     }
 
-
-    public void showError(String result){
-        Log.d("ERROR: ", result);
-        Toasty.error(getApplicationContext(), result, Toast.LENGTH_SHORT, true).show();
+    @Override
+    public void onStop(){
+        super.onStop();
+        mPresenter.onStop();
     }
 }

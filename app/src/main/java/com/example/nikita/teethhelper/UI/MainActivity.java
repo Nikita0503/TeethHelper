@@ -1,9 +1,7 @@
 package com.example.nikita.teethhelper.UI;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -15,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 
-import com.example.nikita.teethhelper.DBHepler;
 import com.example.nikita.teethhelper.R;
 
 import butterknife.BindView;
@@ -24,36 +21,27 @@ import butterknife.OnClick;
 import es.dmoral.toasty.Toasty;
 
 public class MainActivity extends AppCompatActivity {
-
     @BindView(R.id.editTextName)
-    EditText editTextName;
+    EditText mEditTextName;
     @BindView(R.id.editTextPassword)
-    EditText editTextPassword;
+    EditText mEditTextPassword;
     @BindView(R.id.imageViewTeeth)
-    ImageView imageViewTeeth;
+    ImageView mImageViewTeeth;
     @BindView(R.id.imageViewTeethCloud)
-    ImageView imageViewTeethCloud;
+    ImageView mImageViewTeethCloud;
     @OnClick(R.id.imageViewTeeth)
     void onClick(){
-        if(editTextName.getText().length()==0) {
-            Toasty.error(getApplicationContext(), getResources().getString(R.string.accessDenied), Toast.LENGTH_SHORT, true).show();
-            Animation translateAnimation = AnimationUtils.loadAnimation(this, R.anim.translate_shake_teeth);
-            imageViewTeeth.startAnimation(translateAnimation);
-            Animation scaleAnimation = AnimationUtils.loadAnimation(this, R.anim.scale_cloud);
-            imageViewTeeth.startAnimation(translateAnimation);
-            imageViewTeethCloud.setVisibility(View.VISIBLE);
-            imageViewTeethCloud.startAnimation(scaleAnimation);
-        }else {
+        if(mEditTextName.getText().toString().equals("admin") && mEditTextPassword.getText().toString().equals("admin")) {
             Toasty.success(getApplicationContext(), getResources().getString(R.string.welcome), Toast.LENGTH_SHORT, true).show();
             final Animation translateEditTextName = AnimationUtils.loadAnimation(this, R.anim.translate_edittext_name);
-            editTextName.startAnimation(translateEditTextName);
+            mEditTextName.startAnimation(translateEditTextName);
             Animation translateEditTextPassword =  AnimationUtils.loadAnimation(this, R.anim.translate_edittext_password);
-            editTextPassword.startAnimation(translateEditTextPassword);
+            mEditTextPassword.startAnimation(translateEditTextPassword);
             Animation translateImageViewTeethToDown =  AnimationUtils.loadAnimation(this, R.anim.translate_to_down_teeth);
             translateImageViewTeethToDown.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
-
+                    /*ignore*/
                 }
                 @Override
                 public void onAnimationEnd(Animation animation) {
@@ -62,10 +50,18 @@ public class MainActivity extends AppCompatActivity {
                 }
                 @Override
                 public void onAnimationRepeat(Animation animation) {
-
+                    /*ignore*/
                 }
             });
-            imageViewTeeth.startAnimation(translateImageViewTeethToDown);
+            mImageViewTeeth.startAnimation(translateImageViewTeethToDown);
+        }else{
+            Toasty.error(getApplicationContext(), getResources().getString(R.string.accessDenied), Toast.LENGTH_SHORT, true).show();
+            Animation translateAnimation = AnimationUtils.loadAnimation(this, R.anim.translate_shake_teeth);
+            mImageViewTeeth.startAnimation(translateAnimation);
+            Animation scaleAnimation = AnimationUtils.loadAnimation(this, R.anim.scale_cloud);
+            mImageViewTeeth.startAnimation(translateAnimation);
+            mImageViewTeethCloud.setVisibility(View.VISIBLE);
+            mImageViewTeethCloud.startAnimation(scaleAnimation);
         }
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
@@ -76,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        imageViewTeethCloud.setVisibility(View.INVISIBLE);
+        mImageViewTeethCloud.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -84,6 +80,6 @@ public class MainActivity extends AppCompatActivity {
         super.onRestart();
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        imageViewTeethCloud.setVisibility(View.INVISIBLE);
+        mImageViewTeethCloud.setVisibility(View.INVISIBLE);
     }
 }

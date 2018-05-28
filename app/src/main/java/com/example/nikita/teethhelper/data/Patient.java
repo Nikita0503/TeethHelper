@@ -5,7 +5,6 @@ package com.example.nikita.teethhelper.data;
  */
 
 public class Patient implements defaultObject {
-
     public int code;
     public String name;
     public String passport;

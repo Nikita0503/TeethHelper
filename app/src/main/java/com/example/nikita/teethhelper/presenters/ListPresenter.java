@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.SimpleExpandableListAdapter;
 
+import com.example.nikita.teethhelper.Contract;
 import com.example.nikita.teethhelper.R;
 import com.example.nikita.teethhelper.UI.ListActivity;
 import com.example.nikita.teethhelper.UI.RecordActivities.DoctorDataActivity;
@@ -28,47 +29,60 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+
 /**
  * Created by Nikita on 15.04.2018.
  */
 
-public class ListPresenter {
-
-    ListActivity listActivity;
+public class ListPresenter implements Contract.Presenter{
+    public CompositeDisposable disposables;
+    private ListActivity mListActivity;
 
     public ListPresenter(ListActivity listActivity){
-        this.listActivity = listActivity;
+        this.mListActivity = listActivity;
+    }
+
+    @Override
+    public void onStart(){
+        disposables = new CompositeDisposable();
     }
 
     public void fetchData(int tableId){
         switch (tableId){
             case 0:
-                RendersTable rendersTable = new RendersTable(listActivity, this);
+                RendersTable rendersTable = new RendersTable(mListActivity, this);
                 rendersTable.fetchData();
-                listActivity.setColors(listActivity.getResources().getColor(R.color.colorDarkAqua), listActivity.getResources().getColor(R.color.colorAqua), listActivity.getResources().getString(R.string.renders));
+                mListActivity.setColors(mListActivity.getResources().getColor(R.color.colorDarkAqua), mListActivity.getResources().getColor(R.color.colorAqua), mListActivity.getResources().getString(R.string.renders));
                 break;
             case 1:
-                DoctorsTable doctorsTable = new DoctorsTable(listActivity, this);
+                DoctorsTable doctorsTable = new DoctorsTable(mListActivity, this);
                 doctorsTable.fetchData();
-                listActivity.setColors(listActivity.getResources().getColor(R.color.colorDarkRed), listActivity.getResources().getColor(R.color.colorRed), listActivity.getResources().getString(R.string.doctors));
+                mListActivity.setColors(mListActivity.getResources().getColor(R.color.colorDarkRed), mListActivity.getResources().getColor(R.color.colorRed), mListActivity.getResources().getString(R.string.doctors));
                 break;
             case 2:
-                PatientsTable patientsTable = new PatientsTable(listActivity, this);
+                PatientsTable patientsTable = new PatientsTable(mListActivity, this);
                 patientsTable.fetchData();
-                listActivity.setColors(listActivity.getResources().getColor(R.color.colorDarkPurple), listActivity.getResources().getColor(R.color.colorPurple), listActivity.getResources().getString(R.string.patients));
+                mListActivity.setColors(mListActivity.getResources().getColor(R.color.colorDarkPurple), mListActivity.getResources().getColor(R.color.colorPurple), mListActivity.getResources().getString(R.string.patients));
                 break;
             case 3:
-                ServicesTable servicesTable = new ServicesTable(listActivity, this);
+                ServicesTable servicesTable = new ServicesTable(mListActivity, this);
                 servicesTable.fetchData();
-                listActivity.setColors(listActivity.getResources().getColor(R.color.colorDarkOrange), listActivity.getResources().getColor(R.color.colorOrange), listActivity.getResources().getString(R.string.services));
+                mListActivity.setColors(mListActivity.getResources().getColor(R.color.colorDarkOrange), mListActivity.getResources().getColor(R.color.colorOrange), mListActivity.getResources().getString(R.string.services));
                 break;
             case 4:
-                VisitsTable visitsTable = new VisitsTable(listActivity, this);
+                VisitsTable visitsTable = new VisitsTable(mListActivity, this);
                 visitsTable.fetchData();
-                listActivity.setColors(listActivity.getResources().getColor(R.color.colorDarkGreen), listActivity.getResources().getColor(R.color.colorGreen), listActivity.getResources().getString(R.string.visits));
+                mListActivity.setColors(mListActivity.getResources().getColor(R.color.colorDarkGreen), mListActivity.getResources().getColor(R.color.colorGreen), mListActivity.getResources().getString(R.string.visits));
                 break;
         }
-
     }
 
     public void prepareDataByRenders(ArrayList<Render> renders, String[] tagNames) {
@@ -76,14 +90,12 @@ public class ListPresenter {
         ArrayList<Map<String, String>> groupData;
         ArrayList<Map<String, String>> childDataItem;
         ArrayList<ArrayList<Map<String, String>>> childData;
-
         groupData = new ArrayList<Map<String, String>>();
         for (Render render : renders) {
             m = new HashMap<String, String>();
             m.put("groupName", render.patient);
             groupData.add(m);
         }
-
         childData = new ArrayList<ArrayList<Map<String, String>>>();
         for(Render render : renders) {
             childDataItem = new ArrayList<Map<String, String>>();
@@ -109,7 +121,6 @@ public class ListPresenter {
             childDataItem.add(m);
             childData.add(childDataItem);
         }
-
         makeListAdapter(groupData, childData);
     }
 
@@ -118,7 +129,6 @@ public class ListPresenter {
         ArrayList<Map<String, String>> groupData;
         ArrayList<Map<String, String>> childDataItem;
         ArrayList<ArrayList<Map<String, String>>> childData;
-
         groupData = new ArrayList<Map<String, String>>();
         for (Patient patient : patients) {
             m = new HashMap<String, String>();
@@ -158,14 +168,12 @@ public class ListPresenter {
         ArrayList<Map<String, String>> groupData;
         ArrayList<Map<String, String>> childDataItem;
         ArrayList<ArrayList<Map<String, String>>> childData;
-
         groupData = new ArrayList<Map<String, String>>();
         for (Doctor doctor : doctors) {
             m = new HashMap<String, String>();
             m.put("groupName", doctor.name);
             groupData.add(m);
         }
-
         childData = new ArrayList<ArrayList<Map<String, String>>>();
         for(Doctor doctor : doctors) {
             childDataItem = new ArrayList<Map<String, String>>();
@@ -199,7 +207,6 @@ public class ListPresenter {
             childDataItem.add(m);
             childData.add(childDataItem);
         }
-
         makeListAdapter(groupData, childData);
     }
 
@@ -208,14 +215,12 @@ public class ListPresenter {
         ArrayList<Map<String, String>> groupData;
         ArrayList<Map<String, String>> childDataItem;
         ArrayList<ArrayList<Map<String, String>>> childData;
-
         groupData = new ArrayList<Map<String, String>>();
         for (Service service : services) {
             m = new HashMap<String, String>();
             m.put("groupName", service.manipulation);
             groupData.add(m);
         }
-
         childData = new ArrayList<ArrayList<Map<String, String>>>();
         for(Service service : services) {
             childDataItem = new ArrayList<Map<String, String>>();
@@ -241,7 +246,6 @@ public class ListPresenter {
             childDataItem.add(m);
             childData.add(childDataItem);
         }
-
         makeListAdapter(groupData, childData);
     }
 
@@ -250,14 +254,12 @@ public class ListPresenter {
         ArrayList<Map<String, String>> groupData;
         ArrayList<Map<String, String>> childDataItem;
         ArrayList<ArrayList<Map<String, String>>> childData;
-
         groupData = new ArrayList<Map<String, String>>();
         for (Visit visit : visits) {
             m = new HashMap<String, String>();
             m.put("groupName", visit.patient);
             groupData.add(m);
         }
-
         childData = new ArrayList<ArrayList<Map<String, String>>>();
         for(Visit visit : visits) {
             childDataItem = new ArrayList<Map<String, String>>();
@@ -275,74 +277,85 @@ public class ListPresenter {
             childDataItem.add(m);
             childData.add(childDataItem);
         }
-
         makeListAdapter(groupData, childData);
     }
 
     public void prepareDataForAddition(ArrayList<String> objectData, int tableId){
-        defaultObject object;
+        final defaultObject object;
+        defaultTable table = null;
         switch (tableId) {
             case 0:
                 object = getRenderByObjectData(objectData);
-                RendersTable rendersTable = new RendersTable(listActivity.getApplicationContext(), this);
-                rendersTable.addRow(object);
+                table = new RendersTable(mListActivity.getApplicationContext(), this);
                 break;
             case 1:
                 object = getDoctorByObjectData(objectData);
-                DoctorsTable doctorsTable = new DoctorsTable(listActivity.getApplicationContext(), this);
-                doctorsTable.addRow(object);
+                table = new DoctorsTable(mListActivity.getApplicationContext(), this);
                 break;
             case 2:
                 object = getPatientByObjectData(objectData);
-                PatientsTable patientsTable = new PatientsTable(listActivity.getApplicationContext(), this);
-                patientsTable.addRow(object);
+                table = new PatientsTable(mListActivity.getApplicationContext(), this);
                 break;
             case 3:
                 object = getServiceByObjectData(objectData);
-                Service service = (Service) object;
-                Log.d("NEWSERVICE", service.manipulation + service.patient + service.doctor + service.cost + service.date);
-                ServicesTable servicesTable = new ServicesTable(listActivity.getApplicationContext(), this);
-                servicesTable.addRow(object);
+                table = new ServicesTable(mListActivity.getApplicationContext(), this);
                 break;
             case 4:
                 object = getVisitByObjectData(objectData);
-                VisitsTable visitsTable = new VisitsTable(listActivity.getApplicationContext(), this);
-                visitsTable.addRow(object);
-                break;
-        }
-    }
-
-    public void prepareDataForDelete(ArrayList<String> objectData, int tableId){
-        defaultObject object;
-        switch (tableId){
-            case 0:
-                object = getRenderByObjectData(objectData);
-                RendersTable rendersTable = new RendersTable(listActivity.getApplicationContext(), this);
-                rendersTable.deleteRow(object);
-                break;
-            case 1:
-                object = getDoctorByObjectData(objectData);
-                DoctorsTable doctorsTable = new DoctorsTable(listActivity.getApplicationContext(), this);
-                doctorsTable.deleteRow(object);
-                break;
-            case 2:
-                object = getPatientByObjectData(objectData);
-                PatientsTable patientsTable = new PatientsTable(listActivity.getApplicationContext(), this);
-                patientsTable.deleteRow(object);
-                break;
-            case 3:
-                object = getServiceByObjectData(objectData);
-                ServicesTable servicesTable = new ServicesTable(listActivity.getApplicationContext(), this);
-                servicesTable.deleteRow(object);
-                break;
-            case 4:
-                object = getVisitByObjectData(objectData);
-                VisitsTable visitsTable = new VisitsTable(listActivity.getApplicationContext(), this);
-                visitsTable.deleteRow(object);
+                table = new VisitsTable(mListActivity.getApplicationContext(), this);
                 break;
             default:
                 object = null;
         }
+        Observable<defaultObject> observable = Observable.create(new ObservableOnSubscribe<defaultObject>() {
+            @Override
+            public void subscribe(ObservableEmitter<defaultObject> e) throws Exception {
+                e.onNext(object);
+                e.onComplete();
+            }
+        });
+        disposables.add(observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(table.addRow()));
+    }
+
+    public void prepareDataForDelete(ArrayList<String> objectData, int tableId){
+        final defaultObject object;
+        defaultTable table = null;
+        switch (tableId){
+            case 0:
+                object = getRenderByObjectData(objectData);
+                table = new RendersTable(mListActivity.getApplicationContext(), this);
+                break;
+            case 1:
+                object = getDoctorByObjectData(objectData);
+                table = new DoctorsTable(mListActivity.getApplicationContext(), this);
+                break;
+            case 2:
+                object = getPatientByObjectData(objectData);
+                table = new PatientsTable(mListActivity.getApplicationContext(), this);
+                break;
+            case 3:
+                object = getServiceByObjectData(objectData);
+                table = new ServicesTable(mListActivity.getApplicationContext(), this);
+                break;
+            case 4:
+                object = getVisitByObjectData(objectData);
+                table = new VisitsTable(mListActivity.getApplicationContext(), this);
+                break;
+            default:
+                object = null;
+        }
+        Observable<defaultObject> observable = Observable.create(new ObservableOnSubscribe<defaultObject>() {
+            @Override
+            public void subscribe(ObservableEmitter<defaultObject> e) throws Exception {
+                e.onNext(object);
+                e.onComplete();
+            }
+        });
+        disposables.add(observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(table.deleteRow()));
     }
 
     public void prepareDataForUpdate(ArrayList<String> oldObjectData, int tableId){// изменить название метода на более логичное
@@ -351,18 +364,18 @@ public class ListPresenter {
             case 0:
                 Render render = getRenderByObjectData(oldObjectData);
                 Log.d("123", render.service + " " + render.patient + " " + render.doctor + " " + render.sum + " " + render.doctor);
-                data = new Intent(listActivity, RenderDataActivity.class);
+                data = new Intent(mListActivity, RenderDataActivity.class);
                 data.putExtra("oldService", render.service);
                 data.putExtra("oldPatient", render.patient);
                 data.putExtra("oldDoctor", render.doctor);
                 data.putExtra("oldSum", render.sum);
                 data.putExtra("oldDate", render.date);
-                listActivity.startActivityForResult(data, 2);
+                mListActivity.startActivityForResult(data, 2);
                 break;
             case 1:
                 Doctor doctor = getDoctorByObjectData(oldObjectData);
                 Log.d("123", doctor.code + " " + doctor.name + " " + doctor.passport + " " + doctor.address + " " + doctor.specialization + " " + doctor.experience + " " + doctor.berth);
-                data = new Intent(listActivity, DoctorDataActivity.class);
+                data = new Intent(mListActivity, DoctorDataActivity.class);
                 data.putExtra("code", doctor.code);
                 data.putExtra("oldName", doctor.name);
                 data.putExtra("oldPassport", doctor.passport);
@@ -370,77 +383,86 @@ public class ListPresenter {
                 data.putExtra("oldSpecialization", doctor.specialization);
                 data.putExtra("oldExperience", doctor.experience);
                 data.putExtra("oldBerth", doctor.berth);
-                listActivity.startActivityForResult(data, 2);
+                mListActivity.startActivityForResult(data, 2);
                 break;
             case 2:
                 Patient patient = getPatientByObjectData(oldObjectData);
                 Log.d("123", patient.code + " " + patient.name + " " + patient.passport + " " + patient.address + " " + patient.disease);
-                data = new Intent(listActivity, PatientDataActivity.class);
+                data = new Intent(mListActivity, PatientDataActivity.class);
                 data.putExtra("code", patient.code);
                 data.putExtra("oldName", patient.name);
                 data.putExtra("oldPassport", patient.passport);
                 data.putExtra("oldAddress", patient.address);
                 data.putExtra("oldDisease", patient.disease);
-                listActivity.startActivityForResult(data, 2);
+                mListActivity.startActivityForResult(data, 2);
                 break;
             case 3:
                 Service service = getServiceByObjectData(oldObjectData);
                 Log.d("OLDPREPARE", service.patient + " " + service.doctor + " " + service.date + " " + service.cost + " " + service.manipulation);
-                data = new Intent(listActivity, ServiceDataActivity.class);
+                data = new Intent(mListActivity, ServiceDataActivity.class);
                 data.putExtra("oldManipulation", service.manipulation);
                 data.putExtra("oldPatient", service.patient);
                 data.putExtra("oldDoctor", service.doctor);
                 data.putExtra("oldCost", service.cost);
                 data.putExtra("oldDate", service.date);
-                listActivity.startActivityForResult(data, 2);
+                mListActivity.startActivityForResult(data, 2);
                 break;
             case 4:
                 Visit visit = getVisitByObjectData(oldObjectData);
                 Log.d("123", visit.patient + " " + visit.date + " " + visit.service);
-                data = new Intent(listActivity, VisitsDataActivity.class);
+                data = new Intent(mListActivity, VisitsDataActivity.class);
                 data.putExtra("oldPatient", visit.patient);
                 data.putExtra("oldDate", visit.date);
                 data.putExtra("oldService", visit.service);
-                listActivity.startActivityForResult(data, 2);
+                mListActivity.startActivityForResult(data, 2);
                 break;
         }
     }
 
     public void prepareDataForUpdate(ArrayList<String> oldObjectData, ArrayList<String> newObjectData, int tableId){
-        defaultObject oldObject;
-        defaultObject newObject;
+        final defaultObject oldObject;
+        final defaultObject newObject;
+        defaultTable table = null;
         switch (tableId){
             case 0:
                 oldObject = getRenderByObjectData(oldObjectData);
                 newObject = getRenderByObjectData(newObjectData);
-                RendersTable rendersTable = new RendersTable(listActivity.getApplicationContext(), this);
-                rendersTable.updateRow(oldObject, newObject);
+                table = new RendersTable(mListActivity.getApplicationContext(), this);
                 break;
             case 1:
                 oldObject = getDoctorByObjectData(oldObjectData);
                 newObject = getDoctorByObjectData(newObjectData);
-                DoctorsTable doctorsTable = new DoctorsTable(listActivity.getApplicationContext(), this);
-                doctorsTable.updateRow(oldObject, newObject);
+                table = new DoctorsTable(mListActivity.getApplicationContext(), this);
                 break;
             case 2:
                 oldObject = getPatientByObjectData(oldObjectData);
                 newObject = getPatientByObjectData(newObjectData);
-                PatientsTable patientsTable = new PatientsTable(listActivity.getApplicationContext(), this);
-                patientsTable.updateRow(oldObject, newObject);
+                table = new PatientsTable(mListActivity.getApplicationContext(), this);
                 break;
             case 3:
                 oldObject = getServiceByObjectData(oldObjectData);
                 newObject = getServiceByObjectData(newObjectData);
-                ServicesTable servicesTable = new ServicesTable(listActivity.getApplicationContext(), this);
-                servicesTable.updateRow(oldObject, newObject);
+                table = new ServicesTable(mListActivity.getApplicationContext(), this);
                 break;
             case 4:
                 oldObject = getVisitByObjectData(oldObjectData);
                 newObject = getVisitByObjectData(newObjectData);
-                VisitsTable visitsTable = new VisitsTable(listActivity.getApplicationContext(), this);
-                visitsTable.updateRow(oldObject, newObject);
+                table = new VisitsTable(mListActivity.getApplicationContext(), this);
                 break;
+            default:
+                oldObject = null;
+                newObject = null;
         }
+        Observable<defaultObject[]> observable = Observable.create(new ObservableOnSubscribe<defaultObject[]>() {
+            @Override
+            public void subscribe(ObservableEmitter<defaultObject[]> e) throws Exception {
+                e.onNext(new defaultObject[]{oldObject, newObject});
+                e.onComplete();
+            }
+        });
+        disposables.add(observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(table.updateRow()));
     }
 
     private Render getRenderByObjectData(ArrayList<String> objectData){
@@ -516,7 +538,7 @@ public class ListPresenter {
         String childFrom[] = new String[] {"data", "tagName"};
         int childTo[] = new int[] {R.id.list_item_child, R.id.list_item_child_tag};
         SimpleExpandableListAdapter adapter = new SimpleExpandableListAdapter(
-                listActivity,
+                mListActivity,
                 groupData,
                 R.layout.list_item_group,
                 groupFrom,
@@ -525,26 +547,26 @@ public class ListPresenter {
                 R.layout.list_item_child,
                 childFrom,
                 childTo);
-        listActivity.setListAdapter(adapter);
+        mListActivity.setListAdapter(adapter);
     }
 
     public void updateDataByTableId(int tableId){
         defaultTable presenter;
         switch (tableId){
             case 0:
-                presenter = new RendersTable(listActivity.getApplicationContext(), this);
+                presenter = new RendersTable(mListActivity.getApplicationContext(), this);
                 break;
             case 1:
-                presenter = new DoctorsTable(listActivity.getApplicationContext(), this);
+                presenter = new DoctorsTable(mListActivity.getApplicationContext(), this);
                 break;
             case 2:
-                presenter = new PatientsTable(listActivity.getApplicationContext(), this);
+                presenter = new PatientsTable(mListActivity.getApplicationContext(), this);
                 break;
             case 3:
-                presenter = new ServicesTable(listActivity.getApplicationContext(), this);
+                presenter = new ServicesTable(mListActivity.getApplicationContext(), this);
                 break;
             case 4:
-                presenter = new VisitsTable(listActivity.getApplicationContext(), this);
+                presenter = new VisitsTable(mListActivity.getApplicationContext(), this);
                 break;
             default:
                 presenter = null;
@@ -553,6 +575,11 @@ public class ListPresenter {
     }
 
     public void sendMessage(String result){
-        listActivity.showMessage(result);
+        mListActivity.showMessage(result);
+    }
+
+    @Override
+    public void onStop(){
+        disposables.clear();
     }
 }

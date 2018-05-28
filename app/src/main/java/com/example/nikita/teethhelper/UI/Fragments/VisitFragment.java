@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
@@ -28,20 +29,22 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class VisitFragment extends Fragment {
+    private CompositeDisposable mDisposables;
     @BindView(R.id.editTextDataDayOfVisits)
-    EditText editTextDataDay;
+    EditText mEditTextDataDay;
     @BindView(R.id.editTextDataMonthOfVisits)
-    EditText editTextDataMonth;
+    EditText mEditTextDataMonth;
     @BindView(R.id.editTextDataYearOfVisits)
-    EditText editTextDataYear;
+    EditText mEditTextDataYear;
     @BindView(R.id.spinnerPatientOfVisit)
-    Spinner spinnerPatients;
+    Spinner mSpinnerPatients;
     @BindView(R.id.spinnerServiceOfVisit)
-    Spinner spinnerServices;
+    Spinner mSpinnerServices;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_visit, null);
         ButterKnife.bind(this, v);
+        mDisposables = new CompositeDisposable();
         setAdapters();
         return v;
     }
@@ -55,13 +58,14 @@ public class VisitFragment extends Fragment {
                     public void onSuccess(ArrayList<String> serviceManipulations) {
                         ArrayAdapter<String> spinnerServicesAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, serviceManipulations);
                         spinnerServicesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        spinnerServices.setAdapter(spinnerServicesAdapter);
+                        mSpinnerServices.setAdapter(spinnerServicesAdapter);
                     }
                     @Override
                     public void onError(Throwable e) {
-                        //
+                        /*ignore*/
                     }
                 });
+        mDisposables.add(disposable);
     }
 
     private void setPatientAdapter(){
@@ -73,13 +77,14 @@ public class VisitFragment extends Fragment {
                     public void onSuccess(ArrayList<String> patientNames) {
                         ArrayAdapter<String> spinnerPatientAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, patientNames);
                         spinnerPatientAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        spinnerPatients.setAdapter(spinnerPatientAdapter);
+                        mSpinnerPatients.setAdapter(spinnerPatientAdapter);
                     }
                     @Override
                     public void onError(Throwable e) {
-                        //
+                        /*ignore*/
                     }
                 });
+        mDisposables.add(disposable);
     }
 
     private void setAdapters(){
@@ -90,25 +95,30 @@ public class VisitFragment extends Fragment {
     public Visit getVisit(){
         String patient ="";
         try {
-            patient = spinnerPatients.getSelectedItem().toString();
+            patient = mSpinnerPatients.getSelectedItem().toString();
         }catch (Exception c){
             c.printStackTrace();
         }
         String service = "";
         try {
-            service = spinnerServices.getSelectedItem().toString();
+            service = mSpinnerServices.getSelectedItem().toString();
         }catch (Exception c){
             c.printStackTrace();
         }
         String date = "";
-        if(editTextDataDay.getText().length()!=0
-                && editTextDataMonth.length()!=0
-                && editTextDataYear.length()!=0){
-            date = editTextDataDay.getText().toString()+"."
-                    +editTextDataMonth.getText().toString()+"."
-                    +editTextDataYear.getText().toString();
+        if(mEditTextDataDay.getText().length()!=0
+                && mEditTextDataMonth.length()!=0
+                && mEditTextDataYear.length()!=0){
+            date = mEditTextDataDay.getText().toString()+"."
+                    + mEditTextDataMonth.getText().toString()+"."
+                    + mEditTextDataYear.getText().toString();
         }
         Visit visit = new Visit(patient, date, service);
         return visit;
+    }
+
+    public void onStop() {
+        super.onStop();
+        mDisposables.clear();
     }
 }

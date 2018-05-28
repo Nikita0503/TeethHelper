@@ -6,8 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.example.nikita.teethhelper.DBHepler;
-import com.example.nikita.teethhelper.data.Patient;
+import com.example.nikita.teethhelper.DBHelper;
 import com.example.nikita.teethhelper.presenters.ListPresenter;
 import com.example.nikita.teethhelper.R;
 import com.example.nikita.teethhelper.data.Service;
@@ -20,6 +19,7 @@ import io.reactivex.SingleEmitter;
 import io.reactivex.SingleOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
@@ -28,24 +28,51 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class ServicesTable implements defaultTable {
-    String[] tagNames;
-    DBHepler dbHepler;
-    SQLiteDatabase db;
-    Context context;
-    ListPresenter listPresenter;
+    private String[] mTagNames;
+    private DBHelper mDbHepler;
+    private SQLiteDatabase mDb;
+    private Context mContext;
+    private ListPresenter mListPresenter;
 
     public ServicesTable(Context context){
-        dbHepler = new DBHepler(context);
-        db = dbHepler.getWritableDatabase();
+        mDbHepler = new DBHelper(context);
+        mDb = mDbHepler.getWritableDatabase();
     }
 
     public ServicesTable(Context context, ListPresenter listPresenter){
-        this.listPresenter = listPresenter;
-        this.context = context;
-        dbHepler = new DBHepler(context);
-        db = dbHepler.getWritableDatabase();
+        this.mListPresenter = listPresenter;
+        this.mContext = context;
+        mDbHepler = new DBHelper(context);
+        mDb = mDbHepler.getWritableDatabase();
     }
+    public DisposableObserver<defaultObject> addRow() {
+        return new DisposableObserver<defaultObject>() {
+            @Override
+            public void onNext(defaultObject defaultObject) {
+                Service service = (Service) defaultObject;
+                Log.d("Добавление", service.manipulation + service.patient + service.doctor + service.cost + service.date);
+                ContentValues cv = new ContentValues();
+                cv.put("manipulation", service.manipulation);
+                cv.put("patient", service.patient);
+                cv.put("doctor", service.doctor);
+                cv.put("cost", service.cost);
+                cv.put("date", service.date);
+                long rowID = mDb.insert("service", null, cv);
+                Log.d("ADDED: ", "id = " + rowID);
+            }
 
+            @Override
+            public void onError(Throwable e) {
+                mListPresenter.sendMessage(mContext.getResources().getString(R.string.error));
+            }
+
+            @Override
+            public void onComplete() {
+                mListPresenter.sendMessage(mContext.getResources().getString(R.string.addedService));
+                mListPresenter.updateDataByTableId(3);
+            }
+        };
+    }
     @Override
     public void fetchData() {
         Disposable disposable = getServices.subscribeOn(Schedulers.io())
@@ -53,76 +80,90 @@ public class ServicesTable implements defaultTable {
                 .subscribeWith(new DisposableSingleObserver<ArrayList<Service>>() {
                     @Override
                     public void onSuccess(ArrayList<Service> services) {
-                        tagNames = context.getResources().getStringArray(R.array.serviceTagNames);
-                        listPresenter.prepareDataByServices(services, tagNames);
+                        mTagNames = mContext.getResources().getStringArray(R.array.serviceTagNames);
+                        mListPresenter.prepareDataByServices(services, mTagNames);
                     }
                     @Override
                     public void onError(Throwable e) {
-                        listPresenter.sendMessage(context.getResources().getString(R.string.error));
+                        mListPresenter.sendMessage(mContext.getResources().getString(R.string.error));
                     }
                 });
+        mListPresenter.disposables.add(disposable);
     }
 
     @Override
-    public void addRow(defaultObject defaultObject) {
-        Service service = (Service) defaultObject;
-        Log.d("Добавление", service.manipulation + service.patient + service.doctor + service.cost + service.date);
-        ContentValues cv = new ContentValues();
-        cv.put("manipulation", service.manipulation);
-        cv.put("patient", service.patient);
-        cv.put("doctor", service.doctor);
-        cv.put("cost", service.cost);
-        cv.put("date", service.date);
-        long rowID = db.insert("service", null, cv);
-        Log.d("ADDED: ", "id = " + rowID);
-        listPresenter.sendMessage("new service was added successful!");
-    }
+    public DisposableObserver<defaultObject> deleteRow() {
+        return new DisposableObserver<defaultObject>() {
+            @Override
+            public void onNext(defaultObject defaultObject) {
+                Service service = (Service) defaultObject;
+                String manipulation = service.manipulation;
+                String patient = service.patient;
+                String doctor = service.doctor;
+                String cost = String.valueOf(service.cost);
+                String date = service.date;
+                String[] values = new String[]{manipulation, patient, doctor, date};
+                long dltCount = mDb.delete("service","manipulation=? and patient=? and doctor=? and date=?", values);
+                Log.d("DELETED: ", "deleted " + dltCount + " rows");
+            }
 
+            @Override
+            public void onError(Throwable e) {
+                mListPresenter.sendMessage(mContext.getResources().getString(R.string.error));
+            }
 
-    @Override
-    public void deleteRow(defaultObject defaultObject) {
-        Service service = (Service) defaultObject;
-        String manipulation = service.manipulation;
-        String patient = service.patient;
-        String doctor = service.doctor;
-        String cost = String.valueOf(service.cost);
-        String date = service.date;
-        String[] values = new String[]{manipulation, patient, doctor, date};
-        long dltCount = db.delete("service","manipulation=? and patient=? and doctor=? and date=?", values);
-        Log.d("DELETED: ", "deleted " + dltCount + " rows");
-        listPresenter.updateDataByTableId(3);
-        listPresenter.sendMessage("service was deleted successfully!");//ЗАСУНУТЬ ЭТО К ПРЕЗЕНТЕРУ!!!!
+            @Override
+            public void onComplete() {
+                mListPresenter.sendMessage(mContext.getResources().getString(R.string.deletedService));
+                mListPresenter.updateDataByTableId(3);
+            }
+        };
     }
 
     @Override
-    public void updateRow(defaultObject oldDefaultObject, defaultObject newDefaultObject) {
-        Service oldService = (Service) oldDefaultObject;
-        Service newService = (Service) newDefaultObject;
-        ContentValues cv = new ContentValues();
-        cv.put("manipulation", newService.manipulation);
-        cv.put("patient", newService.patient);
-        cv.put("doctor", newService.doctor);
-        cv.put("cost", newService.cost);
-        cv.put("date", newService.date);
-        String patient = oldService.patient;
-        String doctor = oldService.doctor;
-        String date = oldService.date;
-        String cost = String .valueOf(oldService.cost);
-        String manipulation = oldService.manipulation;
-        Log.d("OLD DATA: ", newService.patient + " " + newService.doctor + " " + newService.date + " " + newService.cost + " " + newService.manipulation);
-        Log.d("NEW DATA: ", oldService.patient + " " + oldService.doctor + " " + oldService.date + " " + oldService.cost + " " + oldService.manipulation);
-        String[] values = new String[]{manipulation, patient, doctor, date};
-        int updCount = db.update("service", cv, "manipulation=? and patient=? and doctor=? and date=?", values);
-        Log.d("UPDATED: ", "updated " + updCount + " rows ");
-        listPresenter.updateDataByTableId(3);
-        listPresenter.sendMessage("service was updated successful!");
+    public DisposableObserver<defaultObject[]> updateRow() {
+        return new DisposableObserver<defaultObject[]>() {
+            @Override
+            public void onNext(defaultObject[] defaultObject) {
+                Service oldService = (Service) defaultObject[0];
+                Service newService = (Service) defaultObject[1];
+                ContentValues cv = new ContentValues();
+                cv.put("manipulation", newService.manipulation);
+                cv.put("patient", newService.patient);
+                cv.put("doctor", newService.doctor);
+                cv.put("cost", newService.cost);
+                cv.put("date", newService.date);
+                String patient = oldService.patient;
+                String doctor = oldService.doctor;
+                String date = oldService.date;
+                String cost = String .valueOf(oldService.cost);
+                String manipulation = oldService.manipulation;
+                Log.d("OLD DATA: ", newService.patient + " " + newService.doctor + " " + newService.date + " " + newService.cost + " " + newService.manipulation);
+                Log.d("NEW DATA: ", oldService.patient + " " + oldService.doctor + " " + oldService.date + " " + oldService.cost + " " + oldService.manipulation);
+                String[] values = new String[]{manipulation, patient, doctor, date};
+                int updCount = mDb.update("service", cv, "manipulation=? and patient=? and doctor=? and date=?", values);
+                Log.d("UPDATED: ", "updated " + updCount + " rows ");
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                mListPresenter.sendMessage(mContext.getResources().getString(R.string.error));
+            }
+
+            @Override
+            public void onComplete() {
+                mListPresenter.sendMessage(mContext.getResources().getString(R.string.updatedService));
+                mListPresenter.updateDataByTableId(3);
+            }
+        };
     }
+
 
     public Single<ArrayList<Service>> getServices = Single.create(new SingleOnSubscribe<ArrayList<Service>>() {
         @Override
         public void subscribe(SingleEmitter<ArrayList<Service>> e) throws Exception {
             ArrayList<Service> services = new ArrayList<Service>();
-            Cursor c = db.query("service", null, null, null, null, null, null);
+            Cursor c = mDb.query("service", null, null, null, null, null, null);
             if (c.moveToFirst()) {
                 int patientColIndex = c.getColumnIndex("patient");
                 int doctorColIndex = c.getColumnIndex("doctor");
@@ -150,7 +191,7 @@ public class ServicesTable implements defaultTable {
         @Override
         public void subscribe(SingleEmitter<ArrayList<String>> e) throws Exception {
             ArrayList<String> manipulations = new ArrayList<String>();
-            Cursor c = db.query("service", null, null, null, null, null, null);
+            Cursor c = mDb.query("service", null, null, null, null, null, null);
             if (c.moveToFirst()) {
                 int nameColIndex = c.getColumnIndex("manipulation");
                 do {

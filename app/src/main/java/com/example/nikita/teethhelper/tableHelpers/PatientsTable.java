@@ -6,8 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.example.nikita.teethhelper.DBHepler;
-import com.example.nikita.teethhelper.data.Doctor;
+import com.example.nikita.teethhelper.DBHelper;
 import com.example.nikita.teethhelper.presenters.ListPresenter;
 import com.example.nikita.teethhelper.R;
 import com.example.nikita.teethhelper.data.Patient;
@@ -20,6 +19,7 @@ import io.reactivex.SingleEmitter;
 import io.reactivex.SingleOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
@@ -28,22 +28,22 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class PatientsTable implements defaultTable {
-    String[] tagNames;
-    DBHepler dbHepler;
-    SQLiteDatabase db;
-    Context context;
-    ListPresenter listPresenter;
+    private String[] mTagNames;
+    private Context mContext;
+    private DBHelper dbHepler;
+    private SQLiteDatabase mDb;
+    private ListPresenter mListPresenter;
 
     public PatientsTable(Context context){
-        dbHepler = new DBHepler(context);
-        db = dbHepler.getWritableDatabase();
+        dbHepler = new DBHelper(context);
+        mDb = dbHepler.getWritableDatabase();
     }
 
     public PatientsTable(Context context, ListPresenter listPresenter){
-        this.listPresenter = listPresenter;
-        this.context = context;
-        dbHepler = new DBHepler(context);
-        db = dbHepler.getWritableDatabase();
+        this.mListPresenter = listPresenter;
+        this.mContext = context;
+        dbHepler = new DBHelper(context);
+        mDb = dbHepler.getWritableDatabase();
     }
 
     @Override
@@ -53,74 +53,118 @@ public class PatientsTable implements defaultTable {
                 .subscribeWith(new DisposableSingleObserver<ArrayList<Patient>>() {
                     @Override
                     public void onSuccess(ArrayList<Patient> patients) {
-                        tagNames = context.getResources().getStringArray(R.array.patientTagNames);
-                        listPresenter.prepareDataByPatients(patients, tagNames);
+                        mTagNames = mContext.getResources().getStringArray(R.array.patientTagNames);
+                        mListPresenter.prepareDataByPatients(patients, mTagNames);
                     }
                     @Override
                     public void onError(Throwable e) {
-                        listPresenter.sendMessage(context.getResources().getString(R.string.error));
+                        mListPresenter.sendMessage(mContext.getResources().getString(R.string.error));
                     }
                 });
+        mListPresenter.disposables.add(disposable);
+    }
 
+
+    public DisposableObserver<defaultObject> addRow() {
+        return new DisposableObserver<defaultObject>() {
+            @Override
+            public void onNext(defaultObject defaultObject) {
+                Patient patient = (Patient) defaultObject;
+                ContentValues cv = new ContentValues();
+                cv.put("name", patient.name);
+                cv.put("passport", patient.passport);
+                cv.put("address", patient.address);
+                cv.put("disease", patient.disease);
+                long rowID = mDb.insert("patients", null, cv);
+                Log.d("ADDED: ", "id = " + rowID);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                mListPresenter.sendMessage(mContext.getResources().getString(R.string.error));
+            }
+
+            @Override
+            public void onComplete() {
+                mListPresenter.sendMessage(mContext.getResources().getString(R.string.addedPatient));
+                mListPresenter.updateDataByTableId(2);
+            }
+        };
     }
 
     @Override
-    public void addRow(defaultObject defaultObject) {
-        Patient patient = (Patient) defaultObject;
-        ContentValues cv = new ContentValues();
-        cv.put("name", patient.name);
-        cv.put("passport", patient.passport);
-        cv.put("address", patient.address);
-        cv.put("disease", patient.disease);
-        long rowID = db.insert("patients", null, cv);
-        Log.d("ADDED: ", "id = " + rowID);
-        listPresenter.sendMessage("new patient was added successful!");
+    public DisposableObserver<defaultObject> deleteRow() {
+        return new DisposableObserver<defaultObject>() {
+            @Override
+            public void onNext(defaultObject defaultObject) {
+                Patient patient = (Patient) defaultObject;
+                String code = String.valueOf(patient.code);
+                String name = patient.name;
+                String passport = patient.passport;
+                String address = patient.address;
+                String disease = patient.disease;
+                String[] values = new String[]{code, name, passport, address, disease};
+                long dltCount = mDb.delete("patients","code=? and name=? and passport=? and address=? and disease=?", values);
+                Log.d("DELETED: ", "deleted " + dltCount + " rows");
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                mListPresenter.sendMessage(mContext.getResources().getString(R.string.error));
+            }
+
+            @Override
+            public void onComplete() {
+                mListPresenter.sendMessage(mContext.getResources().getString(R.string.deletedPatient));
+                mListPresenter.updateDataByTableId(2);
+            }
+        };
     }
 
     @Override
-    public void deleteRow(defaultObject defaultObject) {
-        Patient patient = (Patient) defaultObject;
-        String code = String.valueOf(patient.code);
-        String name = patient.name;
-        String passport = patient.passport;
-        String address = patient.address;
-        String disease = patient.disease;
-        String[] values = new String[]{code, name, passport, address, disease};
-        long dltCount = db.delete("patients","code=? and name=? and passport=? and address=? and disease=?", values);
-        Log.d("DELETED: ", "deleted " + dltCount + " rows");
-        listPresenter.updateDataByTableId(2);
-        listPresenter.sendMessage("patient was deleted successfully!");
+    public DisposableObserver<defaultObject[]> updateRow() {
+        return new DisposableObserver<defaultObject[]>() {
+            @Override
+            public void onNext(defaultObject[] defaultObject) {
+                Patient oldPatient = (Patient) defaultObject[0];
+                Patient newPatient = (Patient) defaultObject[1];
+                ContentValues cv = new ContentValues();
+                cv.put("code", oldPatient.code);
+                cv.put("name", newPatient.name);
+                cv.put("passport", newPatient.passport);
+                cv.put("address", newPatient.address);
+                cv.put("disease", newPatient.disease);
+                String code = String.valueOf(oldPatient.code);
+                String name = oldPatient.name;
+                String passport = oldPatient.passport;
+                String address = oldPatient.address;
+                String disease = oldPatient.disease;
+                Log.d("OLD DATA: ", oldPatient.code + " " + oldPatient.name + " " + oldPatient.passport + " " + oldPatient.address + " " + oldPatient.disease);
+                Log.d("NEW DATA: ", newPatient.code + " " + newPatient.name + " " + newPatient.passport + " " + newPatient.address + " " + newPatient.disease);
+                String[] values = new String[]{code, name, passport, address, disease};
+                int updCount = mDb.update("patients", cv, "code=? and name=? and passport=? and address=? and disease=?", values);
+                Log.d("UPDATE: ", "updated " + updCount+" rows ");
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                mListPresenter.sendMessage(mContext.getResources().getString(R.string.error));
+            }
+
+            @Override
+            public void onComplete() {
+                mListPresenter.sendMessage(mContext.getResources().getString(R.string.updatedPatient));
+                mListPresenter.updateDataByTableId(2);
+            }
+        };
     }
 
-    @Override
-    public void updateRow(defaultObject oldDefaultObject, defaultObject newDefaultObject) {
-        Patient oldPatient = (Patient) oldDefaultObject;
-        Patient newPatient = (Patient) newDefaultObject;
-        ContentValues cv = new ContentValues();
-        cv.put("code", oldPatient.code);
-        cv.put("name", newPatient.name);
-        cv.put("passport", newPatient.passport);
-        cv.put("address", newPatient.address);
-        cv.put("disease", newPatient.disease);
-        String code = String.valueOf(oldPatient.code);
-        String name = oldPatient.name;
-        String passport = oldPatient.passport;
-        String address = oldPatient.address;
-        String disease = oldPatient.disease;
-        Log.d("OLD DATA: ", oldPatient.code + " " + oldPatient.name + " " + oldPatient.passport + " " + oldPatient.address + " " + oldPatient.disease);
-        Log.d("NEW DATA: ", newPatient.code + " " + newPatient.name + " " + newPatient.passport + " " + newPatient.address + " " + newPatient.disease);
-        String[] values = new String[]{code, name, passport, address, disease};
-        int updCount = db.update("patients", cv, "code=? and name=? and passport=? and address=? and disease=?", values);
-        Log.d("UPDATE: ", "updated " + updCount+" rows ");
-        listPresenter.updateDataByTableId(2);
-        listPresenter.sendMessage("patient was updated!");
-    }
 
     public Single<ArrayList<String>> getNames = Single.create(new SingleOnSubscribe<ArrayList<String>>() {
         @Override
         public void subscribe(SingleEmitter<ArrayList<String>> e) throws Exception {
             ArrayList<String> names = new ArrayList<String>();
-            Cursor c = db.query("patients", null, null, null, null, null, null);
+            Cursor c = mDb.query("patients", null, null, null, null, null, null);
             if (c.moveToFirst()) {
                 int nameColIndex = c.getColumnIndex("name");
                 do {
@@ -137,7 +181,7 @@ public class PatientsTable implements defaultTable {
         @Override
         public void subscribe(SingleEmitter<ArrayList<Patient>> e) throws Exception {
             ArrayList<Patient> patients = new ArrayList<Patient>();
-            Cursor c = db.query("patients", null, null, null, null, null, null);
+            Cursor c = mDb.query("patients", null, null, null, null, null, null);
             if (c.moveToFirst()) {
                 int idColIndex = c.getColumnIndex("code");
                 int nameColIndex = c.getColumnIndex("name");

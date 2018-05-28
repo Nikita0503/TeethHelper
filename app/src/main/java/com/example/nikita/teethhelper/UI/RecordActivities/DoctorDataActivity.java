@@ -9,69 +9,75 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.nikita.teethhelper.R;
+import com.example.nikita.teethhelper.TableContract;
 import com.example.nikita.teethhelper.presenters.DoctorDataActivityPresenter;
 import com.example.nikita.teethhelper.data.Doctor;
+import com.example.nikita.teethhelper.presenters.RenderDataActivityPresenter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import es.dmoral.toasty.Toasty;
 
-public class DoctorDataActivity extends AppCompatActivity {
+public class DoctorDataActivity extends AppCompatActivity implements TableContract.TableView{
+    private DoctorDataActivityPresenter mPresenter;
     public Intent data;
-
     @BindView(R.id.editTextNameOfDoctor)
-    EditText editTextName;
+    EditText mEditTextName;
     @BindView(R.id.editTextPassportOfDoctor)
-    EditText editTextPassport;
+    EditText mEditTextPassport;
     @BindView(R.id.editTextAddressOfDoctor)
-    EditText editTextAddress;
+    EditText mEditTextAddress;
     @BindView(R.id.editTextSpecializationOfDoctor)
-    EditText editTextSpecialization;
+    EditText mEditTextSpecialization;
     @BindView(R.id.editTextExperienceOfDoctor)
-    EditText editTextExperience;
+    EditText mEditTextExperience;
     @BindView(R.id.editTextBerthOfDoctor)
-    EditText editTextBerth;
+    EditText mEditTextBerth;
     @BindView(R.id.buttonAddOfDoctor)
-    Button buttonAdd;
+    Button mButtonAdd;
     @OnClick(R.id.buttonAddOfDoctor)
     void onClickAdd(){
-        DoctorDataActivityPresenter presenter = new DoctorDataActivityPresenter(this);
-        presenter.checkData();
+        mPresenter.checkData();
     }
 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctor_data);
         ButterKnife.bind(this);
         data = getIntent();
         if(data.getIntExtra("code", -1) != -1){
-            editTextName.setText(data.getStringExtra("oldName"));
-            editTextPassport.setText(data.getStringExtra("oldPassport"));
-            editTextAddress.setText(data.getStringExtra("oldAddress"));
-            editTextSpecialization.setText(data.getStringExtra("oldSpecialization"));
-            editTextExperience.setText(String.valueOf(data.getIntExtra("oldExperience", -1)));
-            editTextBerth.setText(data.getStringExtra("oldBerth"));
-            buttonAdd.setText("edit");
+            mEditTextName.setText(data.getStringExtra("oldName"));
+            mEditTextPassport.setText(data.getStringExtra("oldPassport"));
+            mEditTextAddress.setText(data.getStringExtra("oldAddress"));
+            mEditTextSpecialization.setText(data.getStringExtra("oldSpecialization"));
+            mEditTextExperience.setText(String.valueOf(data.getIntExtra("oldExperience", -1)));
+            mEditTextBerth.setText(data.getStringExtra("oldBerth"));
+            mButtonAdd.setText(getResources().getString(R.string.edit));
         }
+        mPresenter = new DoctorDataActivityPresenter(this);
     }
 
-    public Doctor getDoctor(){
-        String name = editTextName.getText().toString();
-        String passport = editTextPassport.getText().toString();
-        String address = editTextAddress.getText().toString();
-        String specialization = editTextSpecialization.getText().toString();
-        int experience = -1;
-        if(editTextExperience.getText().length()!=0) {
-            experience = Integer.parseInt(editTextExperience.getText().toString());
-        }
-        String berth = editTextBerth.getText().toString();
-        Doctor doctor = new Doctor(name, passport, address, specialization, experience, berth);
-        return doctor;
-    }
-
+    @Override
     public void showError(String result){
         Log.d("ERROR: ", result);
         Toasty.error(getApplicationContext(), result, Toast.LENGTH_SHORT, true).show();
     }
+
+    public Doctor getDoctor(){
+        String name = mEditTextName.getText().toString();
+        String passport = mEditTextPassport.getText().toString();
+        String address = mEditTextAddress.getText().toString();
+        String specialization = mEditTextSpecialization.getText().toString();
+        int experience = -1;
+        if(mEditTextExperience.getText().length()!=0) {
+            experience = Integer.parseInt(mEditTextExperience.getText().toString());
+        }
+        String berth = mEditTextBerth.getText().toString();
+        Doctor doctor = new Doctor(name, passport, address, specialization, experience, berth);
+        return doctor;
+    }
+
+
 }

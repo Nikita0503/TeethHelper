@@ -5,7 +5,6 @@ package com.example.nikita.teethhelper.data;
  */
 
 public class Visit implements defaultObject{
-
     public String patient;
     public String date;
     public String service;

@@ -40,6 +40,7 @@
     <string name="invalidAfterDate">Некоректна дата "Після"!</string>
     <string name="invalidBeforeDate">Некоректна дата "До"!</string>
     <string name="OK">OK</string>
+    <string name="edit">Змінити</string>
     <string name="invalidName">Некоректне і`мя</string>
     <string name="invalidPassport">Некоректний паспорт</string>
     <string name="invalidAddress">Некоректний адрес</string>
@@ -57,7 +58,22 @@
     <string name="invalidYear">Некоректний рік</string>
     <string name="invalidMonth">Некоректний місяць</string>
     <string name="invalidDay">Некоректний день</string>
-    <string name="welcome">Ласкаво просимо!</string>
+    <string name="addedDoctor">Нового доктора було успішно добавлено!</string>
+    <string name="deletedDoctor">Обраного доктора було видалено!</string>
+    <string name="updatedDoctor">Доктора було оновлено!</string>
+    <string name="addedPatient">Нового пацієнта було успішно добавлено!</string>
+    <string name="deletedPatient">Обраного пацієнта було видалено!</string>
+    <string name="updatedPatient">Пацієнта було оновлено!</string>
+    <string name="addedService">Нову послугу було успішно добалвено!</string>
+    <string name="deletedService">Обрану послугу було видалено!</string>
+    <string name="updatedService">Послугу було оновлено!</string>
+    <string name="addedVisit">Нове відвідування було успішно добавлено!</string>
+    <string name="deletedVisit">Обране відвідування було видалено!</string>
+    <string name="updatedVisit">Відвідування було оновлено</string>
+    <string name="addedRender">Нова сплата була успішно добавлена!</string>
+    <string name="deletedRender">Обрану сплату було видалено!</string>
+    <string name="updatedRender">Сплату було оновлено!</string>
+    <string name="welcome">Вітаємо!</string>
     <string name="accessDenied">Користувача не знайдено!</string>
     <string-array name="patientTagNames">
         <item>код</item>

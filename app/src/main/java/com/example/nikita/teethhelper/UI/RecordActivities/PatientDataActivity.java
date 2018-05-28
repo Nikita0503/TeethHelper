@@ -9,6 +9,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.nikita.teethhelper.R;
+import com.example.nikita.teethhelper.TableContract;
+import com.example.nikita.teethhelper.presenters.DoctorDataActivityPresenter;
 import com.example.nikita.teethhelper.presenters.PatientDataActivityPresenter;
 import com.example.nikita.teethhelper.data.Patient;
 
@@ -17,23 +19,22 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import es.dmoral.toasty.Toasty;
 
-public class PatientDataActivity extends AppCompatActivity {
+public class PatientDataActivity extends AppCompatActivity implements TableContract.TableView{
+    private PatientDataActivityPresenter mPresenter;
     public Intent data;
-
     @BindView(R.id.editTextNameOfPatient)
-    EditText editTextName;
+    EditText mEditTextName;
     @BindView(R.id.editTextPassportOfPatient)
-    EditText editTextPassport;
+    EditText mEditTextPassport;
     @BindView(R.id.editTextAddressOfPatient)
-    EditText editTextAddress;
+    EditText mEditTextAddress;
     @BindView(R.id.editTextDiseaseOfPatient)
-    EditText editTextDisease;
+    EditText mEditTextDisease;
     @BindView(R.id.buttonAddOfPatient)
-    Button buttonAdd;
+    Button mButtonAdd;
     @OnClick(R.id.buttonAddOfPatient)
     void onClickAdd(){
-        PatientDataActivityPresenter presenter = new PatientDataActivityPresenter(this);
-        presenter.checkData();
+        mPresenter.checkData();
     }
 
     @Override
@@ -43,25 +44,27 @@ public class PatientDataActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         data = getIntent();
         if(data.getIntExtra("code", -1) != -1) {
-            editTextName.setText(data.getStringExtra("oldName"));
-            editTextPassport.setText(data.getStringExtra("oldPassport"));
-            editTextAddress.setText(data.getStringExtra("oldAddress"));
-            editTextDisease.setText(data.getStringExtra("oldDisease"));
-            buttonAdd.setText("edit");
+            mEditTextName.setText(data.getStringExtra("oldName"));
+            mEditTextPassport.setText(data.getStringExtra("oldPassport"));
+            mEditTextAddress.setText(data.getStringExtra("oldAddress"));
+            mEditTextDisease.setText(data.getStringExtra("oldDisease"));
+            mButtonAdd.setText(getResources().getString(R.string.edit));
         }
+        mPresenter = new PatientDataActivityPresenter(this);
     }
 
-    public Patient getPatient(){
-        String name = editTextName.getText().toString();
-        String passport = editTextPassport.getText().toString();
-        String address = editTextAddress.getText().toString();
-        String disease = editTextDisease.getText().toString();
-        Patient patient = new Patient(name, passport, address, disease);
-        return patient;
-    }
-
+    @Override
     public void showError(String result){
         Log.d("ERROR: ", result);
         Toasty.error(getApplicationContext(), result, Toast.LENGTH_SHORT, true).show();
+    }
+
+    public Patient getPatient(){
+        String name = mEditTextName.getText().toString();
+        String passport = mEditTextPassport.getText().toString();
+        String address = mEditTextAddress.getText().toString();
+        String disease = mEditTextDisease.getText().toString();
+        Patient patient = new Patient(name, passport, address, disease);
+        return patient;
     }
 }

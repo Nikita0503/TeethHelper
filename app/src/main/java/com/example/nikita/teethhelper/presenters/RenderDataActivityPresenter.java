@@ -2,7 +2,9 @@ package com.example.nikita.teethhelper.presenters;
 
 import android.app.Activity;
 
+import com.example.nikita.teethhelper.Contract;
 import com.example.nikita.teethhelper.R;
+import com.example.nikita.teethhelper.TableContract;
 import com.example.nikita.teethhelper.UI.RecordActivities.RenderDataActivity;
 import com.example.nikita.teethhelper.data.Doctor;
 import com.example.nikita.teethhelper.data.Render;
@@ -14,6 +16,7 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
@@ -22,91 +25,103 @@ import io.reactivex.schedulers.Schedulers;
  * Created by Nikita on 14.05.2018.
  */
 
-public class RenderDataActivityPresenter implements defaultPresenter {
-    RenderDataActivity dataActivity;
+public class RenderDataActivityPresenter implements TableContract.TablePresenter, Contract.Presenter {
+    private CompositeDisposable mDisposables;
+    private RenderDataActivity mDataActivity;
 
     public RenderDataActivityPresenter(RenderDataActivity dataActivity){
-        this.dataActivity = dataActivity;
+        this.mDataActivity = dataActivity;
+    }
+
+    @Override
+    public void onStart() {
+        mDisposables = new CompositeDisposable();
     }
 
     @Override
     public void checkData() {
-        Render render = dataActivity.getRender();
+        Render render = mDataActivity.getRender();
         if (render.service.trim().length() <= 0){
-            sendResult(dataActivity.getResources().getString(R.string.invalidService));
+            sendError(mDataActivity.getResources().getString(R.string.invalidService));
             return;
         }
         if (render.patient.trim().length() <= 0){
-            sendResult(dataActivity.getResources().getString(R.string.invalidPatient));
+            sendError(mDataActivity.getResources().getString(R.string.invalidPatient));
             return;
         }
         if (render.doctor.trim().length() <= 0){
-            sendResult(dataActivity.getResources().getString(R.string.invalidDoctor));
+            sendError(mDataActivity.getResources().getString(R.string.invalidDoctor));
             return;
         }
         if (render.sum < 0){
-            sendResult(dataActivity.getResources().getString(R.string.invalidSum));
+            sendError(mDataActivity.getResources().getString(R.string.invalidSum));
             return;
         }
         if (render.date.trim().length() <= 0) {
-            sendResult(dataActivity.getResources().getString(R.string.invalidDate));
+            sendError(mDataActivity.getResources().getString(R.string.invalidDate));
             return;
         }
         if(!checkCorrectDate(render.date)){
             return;
         }
-        dataActivity.data.putExtra("service", render.service);
-        dataActivity.data.putExtra("patient", render.patient);
-        dataActivity.data.putExtra("doctor", render.doctor);
-        dataActivity.data.putExtra("sum", render.sum);
-        dataActivity.data.putExtra("date", render.date);
-        dataActivity.setResult(Activity.RESULT_OK, dataActivity.data);
-        dataActivity.finish();
+        mDataActivity.data.putExtra("service", render.service);
+        mDataActivity.data.putExtra("patient", render.patient);
+        mDataActivity.data.putExtra("doctor", render.doctor);
+        mDataActivity.data.putExtra("sum", render.sum);
+        mDataActivity.data.putExtra("date", render.date);
+        mDataActivity.setResult(Activity.RESULT_OK, mDataActivity.data);
+        mDataActivity.finish();
+    }
+
+    @Override
+    public void sendError(String result) {
+        mDataActivity.showError(result);
     }
 
     public void fetchDataForAdapters(){
-        ServicesTable servicesTable = new ServicesTable(dataActivity.getApplicationContext());
+        ServicesTable servicesTable = new ServicesTable(mDataActivity.getApplicationContext());
         Disposable serviceDisposable =  servicesTable.getManipulations.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableSingleObserver<ArrayList<String>>() {
                     @Override
                     public void onSuccess(ArrayList<String> serviceManipulations) {
-                        dataActivity.setServiceAdapter(serviceManipulations);
+                        mDataActivity.setServiceAdapter(serviceManipulations);
                     }
                     @Override
                     public void onError(Throwable e) {
-                        //
+                        /*ignore*/
                     }
                 });
-        PatientsTable patientsTable = new PatientsTable(dataActivity.getApplicationContext());
+        mDisposables.add(serviceDisposable);
+        PatientsTable patientsTable = new PatientsTable(mDataActivity.getApplicationContext());
         Disposable patientsDisposable =  patientsTable.getNames.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableSingleObserver<ArrayList<String>>() {
                     @Override
                     public void onSuccess(ArrayList<String> patientNames) {
-                        dataActivity.setPatientAdapter(patientNames);
+                        mDataActivity.setPatientAdapter(patientNames);
                     }
                     @Override
                     public void onError(Throwable e) {
-                        //
+                        /*ignore*/
                     }
                 });
-        DoctorsTable doctorsTable = new DoctorsTable(dataActivity.getApplicationContext());
-        Disposable disposable =  doctorsTable.getNames.subscribeOn(Schedulers.io())
+        mDisposables.add(patientsDisposable);
+        DoctorsTable doctorsTable = new DoctorsTable(mDataActivity.getApplicationContext());
+        Disposable doctorsDisposable =  doctorsTable.getNames.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableSingleObserver<ArrayList<String>>() {
                     @Override
                     public void onSuccess(ArrayList<String> doctorNames) {
-                        dataActivity.setDoctorAdapter(doctorNames);
+                        mDataActivity.setDoctorAdapter(doctorNames);
                     }
                     @Override
                     public void onError(Throwable e) {
-                        //
+                        /*ignore*/
                     }
                 });
-
+        mDisposables.add(doctorsDisposable);
     }
-
 
     private boolean checkCorrectDate(String str){
         StringTokenizer date = new StringTokenizer(str, ".");
@@ -119,23 +134,23 @@ public class RenderDataActivityPresenter implements defaultPresenter {
             year = Integer.parseInt(date.nextToken());
         }
         if(year < 2018){
-            sendResult(dataActivity.getResources().getString(R.string.invalidYear));
+            sendError(mDataActivity.getResources().getString(R.string.invalidYear));
             return false;
         }
         if(month <= 0 || month >12){
-            sendResult(dataActivity.getResources().getString(R.string.invalidMonth));
+            sendError(mDataActivity.getResources().getString(R.string.invalidMonth));
             return false;
         }
         int [] daysInMonths = {31,28,31,30,31,30,31,31,30,31,30,31};
         if(day <= 0 || day > daysInMonths[month-1]){
-            sendResult(dataActivity.getResources().getString(R.string.invalidDay));
+            sendError(mDataActivity.getResources().getString(R.string.invalidDay));
             return false;
         }
         return true;
     }
 
     @Override
-    public void sendResult(String result) {
-        dataActivity.showError(result);
+    public void onStop() {
+        mDisposables.clear();
     }
 }

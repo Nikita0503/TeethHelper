@@ -5,11 +5,10 @@ package com.example.nikita.teethhelper.data;
  */
 
 public class Service implements defaultObject{
-
+    public float cost;
     public String manipulation;
     public String patient;
     public String doctor;
-    public float cost;
     public String date;
 
     public Service(String manipulation, String patient, String doctor, float cost, String date) {

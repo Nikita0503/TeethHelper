@@ -5,13 +5,11 @@ package com.example.nikita.teethhelper.data;
  */
 
 public class Render implements defaultObject{
-
+    public float sum;
     public String service;
     public String patient;
     public String doctor;
-    public float sum;
     public String date;
-
 
     public Render(String service, String patient, String doctor, float sum, String date) {
         this.service = service;

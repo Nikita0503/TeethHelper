@@ -21,9 +21,10 @@ import com.example.nikita.teethhelper.data.Visit;
  */
 
 public class RequestActivityPresenter {
-    private RequestActivity requestActivity;
+    private RequestActivity mRequestActivity;
+
     public RequestActivityPresenter(RequestActivity requestActivity){
-        this.requestActivity = requestActivity;
+        this.mRequestActivity = requestActivity;
     }
 
     public String getRequestText(String tableName, String typeOfRequest, Fragment fragment){
@@ -154,9 +155,9 @@ public class RequestActivityPresenter {
     }
 
     public void fetchData(){
-        String[] typesOfRequest = requestActivity.getResources().getStringArray(R.array.typesOfRequest);
-        String[] tableNames = requestActivity.getResources().getStringArray(R.array.tableNames);
-        requestActivity.setAdapters(typesOfRequest, tableNames);
+        String[] typesOfRequest = mRequestActivity.getResources().getStringArray(R.array.typesOfRequest);
+        String[] tableNames = mRequestActivity.getResources().getStringArray(R.array.tableNames);
+        mRequestActivity.setAdapters(typesOfRequest, tableNames);
     }
 
     public Fragment getFragmentByTableId(int tableId){

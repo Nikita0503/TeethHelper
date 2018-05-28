@@ -11,8 +11,10 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.nikita.teethhelper.R;
+import com.example.nikita.teethhelper.TableContract;
 import com.example.nikita.teethhelper.presenters.RenderDataActivityPresenter;
 import com.example.nikita.teethhelper.data.Render;
+import com.example.nikita.teethhelper.presenters.ServiceDataActivityPresenter;
 
 import java.util.ArrayList;
 import java.util.StringTokenizer;
@@ -22,29 +24,28 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import es.dmoral.toasty.Toasty;
 
-public class RenderDataActivity extends AppCompatActivity {
+public class RenderDataActivity extends AppCompatActivity implements TableContract.TableView{
+    private RenderDataActivityPresenter mPresenter;
     public Intent data;
-
     @BindView(R.id.editTextDataDayOfRender)
-    EditText editTextDataDay;
+    EditText mEditTextDataDay;
     @BindView(R.id.editTextDataMonthOfRender)
-    EditText editTextDataMonth;
+    EditText mEditTextDataMonth;
     @BindView(R.id.editTextDataYearOfRender)
-    EditText editTextDataYear;
+    EditText mEditTextDataYear;
     @BindView(R.id.editTextSumOfRendrer)
-    EditText editTextSum;
+    EditText mEditTextSum;
     @BindView(R.id.spinnerServiceOfRender)
-    Spinner spinnerServices;
+    Spinner mSpinnerServices;
     @BindView(R.id.spinnerPatientOfRender)
-    Spinner spinnerPatients;
+    Spinner mSpinnerPatients;
     @BindView(R.id.spinnerDoctorOfRender)
-    Spinner spinnerDoctors;
+    Spinner mSpinnerDoctors;
     @BindView(R.id.buttonAddOfRender)
-    Button buttonAdd;
+    Button mButtonAdd;
     @OnClick(R.id.buttonAddOfRender)
     void onClickAdd(){
-        RenderDataActivityPresenter presenter = new RenderDataActivityPresenter(this);
-        presenter.checkData();
+        mPresenter.checkData();
     }
 
     @Override
@@ -53,51 +54,58 @@ public class RenderDataActivity extends AppCompatActivity {
         setContentView(R.layout.activity_render_data);
         ButterKnife.bind(this);
         data = getIntent();
-        RenderDataActivityPresenter presenter = new RenderDataActivityPresenter(this);
-        presenter.fetchDataForAdapters();
         if(data.getFloatExtra("oldSum", -1) != -1) {
-            editTextSum.setText(String.valueOf(data.getFloatExtra("oldSum", -1)));
+            mEditTextSum.setText(String.valueOf(data.getFloatExtra("oldSum", -1)));
             StringTokenizer date = new StringTokenizer(data.getStringExtra("oldDate"), ".");
             while(date.hasMoreTokens()) {
-                editTextDataDay.setText(date.nextToken());
-                editTextDataMonth.setText(date.nextToken());
-                editTextDataYear.setText(date.nextToken());
+                mEditTextDataDay.setText(date.nextToken());
+                mEditTextDataMonth.setText(date.nextToken());
+                mEditTextDataYear.setText(date.nextToken());
             }
-            buttonAdd.setText("edit");
-
+            mButtonAdd.setText(getResources().getString(R.string.edit));
         }
+        mPresenter = new RenderDataActivityPresenter(this);
+        mPresenter.onStart();
+        mPresenter.fetchDataForAdapters();
+    }
+
+
+    @Override
+    public void showError(String result){
+        Log.d("ERROR: ", result);
+        Toasty.error(getApplicationContext(), result, Toast.LENGTH_SHORT, true).show();
     }
 
     public Render getRender(){
         String service = "";
         try {
-            service = spinnerServices.getSelectedItem().toString();
+            service = mSpinnerServices.getSelectedItem().toString();
         }catch (Exception c){
             c.printStackTrace();
         }
         String patient ="";
         try {
-            patient = spinnerPatients.getSelectedItem().toString();
+            patient = mSpinnerPatients.getSelectedItem().toString();
         }catch (Exception c){
             c.printStackTrace();
         }
         String doctor = "";
         try {
-            doctor = spinnerDoctors.getSelectedItem().toString();
+            doctor = mSpinnerDoctors.getSelectedItem().toString();
         }catch (Exception c){
             c.printStackTrace();
         }
         float sum = -1;
-        if(editTextSum.getText().length()!=0) {
-            sum = Float.parseFloat(editTextSum.getText().toString());
+        if(mEditTextSum.getText().length()!=0) {
+            sum = Float.parseFloat(mEditTextSum.getText().toString());
         }
         String date = "";
-        if(editTextDataDay.getText().length()!=0
-                && editTextDataMonth.length()!=0
-                && editTextDataYear.length()!=0){
-            date = editTextDataDay.getText().toString()+"."
-                    +editTextDataMonth.getText().toString()+"."
-                    +editTextDataYear.getText().toString();
+        if(mEditTextDataDay.getText().length()!=0
+                && mEditTextDataMonth.length()!=0
+                && mEditTextDataYear.length()!=0){
+            date = mEditTextDataDay.getText().toString()+"."
+                    + mEditTextDataMonth.getText().toString()+"."
+                    + mEditTextDataYear.getText().toString();
         }
         Render render = new Render(service, patient, doctor, sum, date);
         return render;
@@ -107,25 +115,26 @@ public class RenderDataActivity extends AppCompatActivity {
         ArrayAdapter<String> spinnerServicesAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, serviceNames);
         spinnerServicesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerServices.setAdapter(spinnerServicesAdapter);
+        mSpinnerServices.setAdapter(spinnerServicesAdapter);
     }
 
     public void setPatientAdapter(ArrayList<String> patientNames){
         ArrayAdapter<String> spinnerPatientAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, patientNames);
         spinnerPatientAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerPatients.setAdapter(spinnerPatientAdapter);
+        mSpinnerPatients.setAdapter(spinnerPatientAdapter);
     }
 
     public void setDoctorAdapter(ArrayList<String> doctorNames){
         ArrayAdapter<String> spinnerDoctorAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, doctorNames);
         spinnerDoctorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerDoctors.setAdapter(spinnerDoctorAdapter);
+        mSpinnerDoctors.setAdapter(spinnerDoctorAdapter);
     }
 
-    public void showError(String result){
-        Log.d("ERROR: ", result);
-        Toasty.error(getApplicationContext(), result, Toast.LENGTH_SHORT, true).show();
+    @Override
+    public void onStop(){
+        super.onStop();
+        mPresenter.onStop();
     }
 }

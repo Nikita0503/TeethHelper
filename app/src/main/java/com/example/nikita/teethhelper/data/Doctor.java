@@ -5,13 +5,12 @@ package com.example.nikita.teethhelper.data;
  */
 
 public class Doctor implements defaultObject{
-
     public int code;
+    public int experience;
     public String name;
     public String passport;
     public String address;
     public String specialization;
-    public int experience;
     public String berth;
 
     public Doctor(int code, String name, String passport, String address, String specialization, int experience, String berth) {

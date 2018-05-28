@@ -20,15 +20,14 @@ import butterknife.OnClick;
  */
 
 public class PatientFragment extends Fragment {
-
     @BindView(R.id.editTextNameOfPatient)
-    EditText editTextName;
+    EditText mEditTextName;
     @BindView(R.id.editTextPassportOfPatient)
-    EditText editTextPassport;
+    EditText mEditTextPassport;
     @BindView(R.id.editTextAddressOfPatient)
-    EditText editTextAddress;
+    EditText mEditTextAddress;
     @BindView(R.id.editTextDiseaseOfPatient)
-    EditText editTextDisease;
+    EditText mEditTextDisease;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_patient, null);
@@ -37,10 +36,10 @@ public class PatientFragment extends Fragment {
     }
 
     public Patient getPatient(){
-        String name = editTextName.getText().toString();
-        String passport = editTextPassport.getText().toString();
-        String address = editTextAddress.getText().toString();
-        String disease = editTextDisease.getText().toString();
+        String name = mEditTextName.getText().toString();
+        String passport = mEditTextPassport.getText().toString();
+        String address = mEditTextAddress.getText().toString();
+        String disease = mEditTextDisease.getText().toString();
         Patient patient = new Patient(name, passport, address, disease);
         return patient;
     }

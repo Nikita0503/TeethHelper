@@ -6,41 +6,39 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.nikita.teethhelper.Contract;
 import com.example.nikita.teethhelper.R;
 import com.example.nikita.teethhelper.UI.DateActivity;
+import com.example.nikita.teethhelper.presenters.ListPresenter;
 import com.example.nikita.teethhelper.presenters.ReportActivityPresenter;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import es.dmoral.toasty.Toasty;
 
-public class ReportActivity extends AppCompatActivity {
-
+public class ReportActivity extends AppCompatActivity implements Contract.View {
     public Intent date;
+    private ReportActivityPresenter mReportActivityPresenter;
 
     @OnClick(R.id.buttonRendersOrder)
     void onClickRendersOrder() {
-        ReportActivityPresenter orderActivityPresenter = new ReportActivityPresenter(this);
-        orderActivityPresenter.writeToFile("renders");
+        mReportActivityPresenter.writeToFile("renders");
     }
 
     @OnClick(R.id.buttonDoctorsOrder)
     void onClickDoctorsOrder() {
-        ReportActivityPresenter reportActivityPresenter = new ReportActivityPresenter(this);
-        reportActivityPresenter.writeToFile("doctors");
+        mReportActivityPresenter.writeToFile("doctors");
     }
 
     @OnClick(R.id.buttonPatientsOrder)
     void onClickPatientsOrder() {
-        ReportActivityPresenter orderActivityPresenter = new ReportActivityPresenter(this);
-        orderActivityPresenter.writeToFile("patients");
+        mReportActivityPresenter.writeToFile("patients");
     }
 
     @OnClick(R.id.buttonVisitsOrder)
     void onClickVisitsOrder() {
         Intent intent = new Intent(getApplicationContext(), DateActivity.class);
         startActivityForResult(intent, 1);
-
     }
     @OnClick(R.id.buttonVisitsStatisticOrder)
     void onClickVisitsStatisticOrder() {
@@ -56,23 +54,34 @@ public class ReportActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onStart(){
+        super.onStart();
+        mReportActivityPresenter = new ReportActivityPresenter(this);
+        mReportActivityPresenter.onStart();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if(resultCode == RESULT_OK) {
+            date = intent;
             switch (requestCode) {
                 case 1:
-                    date = intent;
-                    ReportActivityPresenter reportActivityPresenter = new ReportActivityPresenter(this);
-                    reportActivityPresenter.writeToFile("visits for period");
+                    mReportActivityPresenter.writeToFile("visits for period");
                 case 2:
-                    date = intent;
-                    ReportActivityPresenter reportActivityPresenter2 = new ReportActivityPresenter(this);
-                    reportActivityPresenter2.writeToFile("visits statistic for period");
+                    mReportActivityPresenter.writeToFile("visits statistic for period");
             }
         }
     }
 
-    public void showError(String result){
+    @Override
+    public void showMessage(String result){
         Log.d("ERROR: ", result);
         Toasty.error(getApplicationContext(), result, Toast.LENGTH_SHORT, true).show();
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        mReportActivityPresenter.onStop();
     }
 }

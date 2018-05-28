@@ -6,8 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.example.nikita.teethhelper.DBHepler;
-import com.example.nikita.teethhelper.data.Visit;
+import com.example.nikita.teethhelper.DBHelper;
 import com.example.nikita.teethhelper.presenters.ListPresenter;
 import com.example.nikita.teethhelper.R;
 import com.example.nikita.teethhelper.data.Render;
@@ -20,6 +19,7 @@ import io.reactivex.SingleEmitter;
 import io.reactivex.SingleOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
@@ -28,22 +28,22 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class RendersTable implements defaultTable {
-    String[] tagNames;
-    DBHepler dbHepler;
-    SQLiteDatabase db;
-    Context context;
-    ListPresenter listPresenter;
+    private String[] mTagNames;
+    private Context mContext;
+    private DBHelper dbHepler;
+    private SQLiteDatabase mDb;
+    private ListPresenter mListPresenter;
 
     public RendersTable(Context context){
-        dbHepler = new DBHepler(context);
-        db = dbHepler.getWritableDatabase();
+        dbHepler = new DBHelper(context);
+        mDb = dbHepler.getWritableDatabase();
     }
 
     public RendersTable(Context context, ListPresenter listPresenter){
-        this.listPresenter = listPresenter;
-        this.context = context;
-        dbHepler = new DBHepler(context);
-        db = dbHepler.getWritableDatabase();
+        this.mListPresenter = listPresenter;
+        this.mContext = context;
+        dbHepler = new DBHelper(context);
+        mDb = dbHepler.getWritableDatabase();
     }
 
     @Override
@@ -53,75 +53,119 @@ public class RendersTable implements defaultTable {
                 .subscribeWith(new DisposableSingleObserver<ArrayList<Render>>() {
                     @Override
                     public void onSuccess(ArrayList<Render> renders) {
-                        tagNames = context.getResources().getStringArray(R.array.renderTagNames);
-                        listPresenter.prepareDataByRenders(renders, tagNames);
+                        mTagNames = mContext.getResources().getStringArray(R.array.renderTagNames);
+                        mListPresenter.prepareDataByRenders(renders, mTagNames);
                     }
                     @Override
                     public void onError(Throwable e) {
-                        listPresenter.sendMessage(context.getResources().getString(R.string.error));
+                        mListPresenter.sendMessage(mContext.getResources().getString(R.string.error));
                     }
                 });
+        mListPresenter.disposables.add(disposable);
+    }
+
+    public DisposableObserver<defaultObject> addRow() {
+        return new DisposableObserver<defaultObject>() {
+
+            @Override
+            public void onNext(defaultObject defaultObject) {
+                Render render = (Render) defaultObject;
+                ContentValues cv = new ContentValues();
+                cv.put("service", render.service);
+                cv.put("patient", render.patient);
+                cv.put("doctor", render.doctor);
+                cv.put("sum", render.sum);
+                cv.put("date", render.date);
+                long rowID = mDb.insert("renders", null, cv);
+                Log.d("ADDED: ", "id = " + rowID);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                mListPresenter.sendMessage(mContext.getResources().getString(R.string.error));
+            }
+
+            @Override
+            public void onComplete() {
+                mListPresenter.sendMessage(mContext.getResources().getString(R.string.addedRender));
+                mListPresenter.updateDataByTableId(0);
+            }
+        };
     }
 
     @Override
-    public void addRow(defaultObject defaultObject) {
-        Render render = (Render) defaultObject;
-        ContentValues cv = new ContentValues();
-        cv.put("service", render.service);
-        cv.put("patient", render.patient);
-        cv.put("doctor", render.doctor);
-        cv.put("sum", render.sum);
-        cv.put("date", render.date);
-        long rowID = db.insert("renders", null, cv);
-        Log.d("ADDED: ", "id = " + rowID);
-        listPresenter.sendMessage("new render was added successful!");
+    public DisposableObserver<defaultObject> deleteRow() {
+        return new DisposableObserver<defaultObject>() {
+            @Override
+            public void onNext(defaultObject defaultObject) {
+                Render render = (Render) defaultObject;
+                String service = render.service;
+                String patient = render.patient;
+                String doctor = render.doctor;
+                String sum = String.valueOf(render.sum);
+                String date = render.date;
+                String[] values = new String[]{service, patient, doctor, date};
+                Log.d("DEL", sum);
+                int dltCount = mDb.delete("renders","service=? and patient=? and doctor=? and date=?", values);
+                Log.d("DELETED: ", "deleted " + dltCount + " rows");
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                mListPresenter.sendMessage(mContext.getResources().getString(R.string.error));
+            }
+
+            @Override
+            public void onComplete() {
+                mListPresenter.sendMessage(mContext.getResources().getString(R.string.deletedRender));
+                mListPresenter.updateDataByTableId(0);
+            }
+        };
     }
 
     @Override
-    public void deleteRow(defaultObject defaultObject) {
-        Render render = (Render) defaultObject;
-        String service = render.service;
-        String patient = render.patient;
-        String doctor = render.doctor;
-        String sum = String.valueOf(render.sum);
-        String date = render.date;
-        String[] values = new String[]{service, patient, doctor, date};
-        Log.d("DEL", sum);
-        int dltCount = db.delete("renders","service=? and patient=? and doctor=? and date=?", values);
-        Log.d("DELETED: ", "deleted " + dltCount + " rows");
-        listPresenter.updateDataByTableId(0);
-        listPresenter.sendMessage("render was deleted successfully!");
-    }
+    public DisposableObserver<defaultObject[]> updateRow() {
+        return new DisposableObserver<defaultObject[]>() {
+            @Override
+            public void onNext(defaultObject[] defaultObject) {
+                Render oldRender = (Render) defaultObject[0];
+                Render newRender = (Render) defaultObject[1];
+                ContentValues cv = new ContentValues();
+                cv.put("service", newRender.service);
+                cv.put("patient", newRender.patient);
+                cv.put("doctor", newRender.doctor);
+                cv.put("sum", newRender.sum);
+                cv.put("date", newRender.date);
+                String service = oldRender.service;
+                String patient = oldRender.patient;
+                String doctor = oldRender.doctor;
+                String sum = String.valueOf(oldRender.sum);
+                String date = oldRender.date;
+                Log.d("OLD DATA", oldRender.service + " " + oldRender.patient + " " + oldRender.service + " " + oldRender.sum + " " + oldRender.date);
+                Log.d("OLD DATA", newRender.service + " " + newRender.patient + " " + newRender.service + " " + newRender.sum + " " + newRender.date);
+                String[] values = new String[]{service, patient, doctor, date};
+                int updCount = mDb.update("renders", cv, "service=? and patient=? and doctor=? and date=?", values);
+                Log.d("UPDATED", "updated " + updCount + " rows ");
+            }
 
-    @Override
-    public void updateRow(defaultObject oldDefaultObject, defaultObject newDefaultObject) {
-        Render oldRender = (Render) oldDefaultObject;
-        Render newRender = (Render) newDefaultObject;
-        ContentValues cv = new ContentValues();
-        cv.put("service", newRender.service);
-        cv.put("patient", newRender.patient);
-        cv.put("doctor", newRender.doctor);
-        cv.put("sum", newRender.sum);
-        cv.put("date", newRender.date);
-        String service = oldRender.service;
-        String patient = oldRender.patient;
-        String doctor = oldRender.doctor;
-        String sum = String.valueOf(oldRender.sum);
-        String date = oldRender.date;
-        Log.d("OLD DATA", oldRender.service + " " + oldRender.patient + " " + oldRender.service + " " + oldRender.sum + " " + oldRender.date);
-        Log.d("OLD DATA", newRender.service + " " + newRender.patient + " " + newRender.service + " " + newRender.sum + " " + newRender.date);
-        String[] values = new String[]{service, patient, doctor, date};
-        int updCount = db.update("renders", cv, "service=? and patient=? and doctor=? and date=?", values);
-        Log.d("UPDATED", "updated " + updCount + " rows ");
-        listPresenter.updateDataByTableId(0);
-        listPresenter.sendMessage("render was updated!");
+            @Override
+            public void onError(Throwable e) {
+                mListPresenter.sendMessage(mContext.getResources().getString(R.string.error));
+            }
+
+            @Override
+            public void onComplete() {
+                mListPresenter.sendMessage(mContext.getResources().getString(R.string.updatedRender));
+                mListPresenter.updateDataByTableId(0);
+            }
+        };
     }
 
     public Single<ArrayList<Render>> getRenders = Single.create(new SingleOnSubscribe<ArrayList<Render>>() {
         @Override
         public void subscribe(SingleEmitter<ArrayList<Render>> e) throws Exception {
             ArrayList<Render> renders = new ArrayList<Render>();
-            Cursor c = db.query("renders", null, null, null, null, null, null);
+            Cursor c = mDb.query("renders", null, null, null, null, null, null);
             if (c.moveToFirst()) {
                 int patientColIndex = c.getColumnIndex("patient");
                 int doctorColIndex = c.getColumnIndex("doctor");

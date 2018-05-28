@@ -15,8 +15,8 @@ import java.util.List;
  * Created by Nikita on 27.03.2018.
  */
 
-public class DBHepler extends SQLiteOpenHelper {
-    public DBHepler(Context context) {
+public class DBHelper extends SQLiteOpenHelper {
+    public DBHelper(Context context) {
         super(context, "Stomatology", null, 1);
     }
     @Override
