@@ -101,23 +101,23 @@ public class ListActivity extends AppCompatActivity implements Contract.View {
         switch (mTableId){
             case RENDERS_TABLE_ID:
                 intent = new Intent(ListActivity.this, RenderDataActivity.class);
-                startActivityForResult(intent, 1);
+                startActivityForResult(intent, REQUEST_CODE_ADD);
                 break;
             case DOCTORS_TABLE_ID:
                 intent = new Intent(ListActivity.this, DoctorDataActivity.class);
-                startActivityForResult(intent, 1);
+                startActivityForResult(intent, REQUEST_CODE_ADD);
                 break;
             case PATIENTS_TABLE_ID:
                 intent = new Intent(ListActivity.this, PatientDataActivity.class);
-                startActivityForResult(intent, 1);
+                startActivityForResult(intent, REQUEST_CODE_ADD);
                 break;
             case SERVICES_TABLE_ID:
                 intent = new Intent(ListActivity.this, ServiceDataActivity.class);
-                startActivityForResult(intent, 1);
+                startActivityForResult(intent, REQUEST_CODE_ADD);
                 break;
             case VISITS_TABLE_ID:
                 intent = new Intent(ListActivity.this, VisitsDataActivity.class);
-                startActivityForResult(intent, 1);
+                startActivityForResult(intent, REQUEST_CODE_ADD);
                 break;
         }
         return super.onOptionsItemSelected(item);
