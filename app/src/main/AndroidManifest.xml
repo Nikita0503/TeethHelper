@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_teeth_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".UI.MainActivity">
+        <activity android:name=".UI.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,33 +22,42 @@
         <activity android:name=".UI.TablesActivity" />
         <activity
             android:name=".UI.ListActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.TableTheme" />
         <activity
             android:name=".UI.RecordActivities.PatientDataActivity"
+            android:screenOrientation="portrait"
             android:label="@string/patientField"
             android:theme="@style/PurpleTheme" />
         <activity
             android:name=".UI.RecordActivities.DoctorDataActivity"
+            android:screenOrientation="portrait"
             android:label="@string/doctorField"
             android:theme="@style/RedTheme" />
         <activity
             android:name=".UI.RecordActivities.RenderDataActivity"
+            android:screenOrientation="portrait"
             android:label="@string/renderField"
             android:theme="@style/AquaTheme" />
         <activity
             android:name=".UI.RecordActivities.ServiceDataActivity"
+            android:screenOrientation="portrait"
             android:label="@string/serviceField"
             android:theme="@style/OrangeTheme" />
         <activity
             android:name=".UI.RecordActivities.VisitsDataActivity"
+            android:screenOrientation="portrait"
             android:label="@string/visitField"
             android:theme="@style/GreenTheme" />
         <activity
             android:name=".UI.RequestActivity"
+            android:screenOrientation="portrait"
             android:label="@string/requestField"
             android:theme="@style/BlueTheme" />
-        <activity android:name=".UI.ReportActivity" />
+        <activity android:name=".UI.ReportActivity"
+            android:screenOrientation="portrait"/>
         <activity android:name=".UI.DateActivity"
+            android:screenOrientation="portrait"
             android:label="@string/dateField"
             android:theme="@style/GreenTheme" />
     </application>
