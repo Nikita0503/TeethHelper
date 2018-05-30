@@ -43,6 +43,8 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class ListPresenter implements Contract.Presenter{
+    public static final int REQUEST_CODE_ADD = 1;
+    public static final int REQUEST_CODE_UPDATE = 2;
     public static final int RENDERS_TABLE_ID = 0;
     public static final int DOCTORS_TABLE_ID = 1;
     public static final int PATIENTS_TABLE_ID = 2;
@@ -375,7 +377,7 @@ public class ListPresenter implements Contract.Presenter{
                 data.putExtra("oldDoctor", render.doctor);
                 data.putExtra("oldSum", render.sum);
                 data.putExtra("oldDate", render.date);
-                mListActivity.startActivityForResult(data, 2);
+                mListActivity.startActivityForResult(data, REQUEST_CODE_UPDATE);
                 break;
             case DOCTORS_TABLE_ID:
                 Doctor doctor = getDoctorByObjectData(oldObjectData);
@@ -388,7 +390,7 @@ public class ListPresenter implements Contract.Presenter{
                 data.putExtra("oldSpecialization", doctor.specialization);
                 data.putExtra("oldExperience", doctor.experience);
                 data.putExtra("oldBerth", doctor.berth);
-                mListActivity.startActivityForResult(data, 2);
+                mListActivity.startActivityForResult(data, REQUEST_CODE_UPDATE);
                 break;
             case PATIENTS_TABLE_ID:
                 Patient patient = getPatientByObjectData(oldObjectData);
@@ -399,7 +401,7 @@ public class ListPresenter implements Contract.Presenter{
                 data.putExtra("oldPassport", patient.passport);
                 data.putExtra("oldAddress", patient.address);
                 data.putExtra("oldDisease", patient.disease);
-                mListActivity.startActivityForResult(data, 2);
+                mListActivity.startActivityForResult(data, REQUEST_CODE_UPDATE);
                 break;
             case SERVICES_TABLE_ID:
                 Service service = getServiceByObjectData(oldObjectData);
@@ -410,7 +412,7 @@ public class ListPresenter implements Contract.Presenter{
                 data.putExtra("oldDoctor", service.doctor);
                 data.putExtra("oldCost", service.cost);
                 data.putExtra("oldDate", service.date);
-                mListActivity.startActivityForResult(data, 2);
+                mListActivity.startActivityForResult(data, REQUEST_CODE_UPDATE);
                 break;
             case VISITS_TABLE_ID:
                 Visit visit = getVisitByObjectData(oldObjectData);
@@ -419,7 +421,7 @@ public class ListPresenter implements Contract.Presenter{
                 data.putExtra("oldPatient", visit.patient);
                 data.putExtra("oldDate", visit.date);
                 data.putExtra("oldService", visit.service);
-                mListActivity.startActivityForResult(data, 2);
+                mListActivity.startActivityForResult(data, REQUEST_CODE_UPDATE);
                 break;
         }
     }
@@ -556,27 +558,27 @@ public class ListPresenter implements Contract.Presenter{
     }
 
     public void updateDataByTableId(int tableId){
-        defaultTable presenter;
+        defaultTable table;
         switch (tableId){
             case RENDERS_TABLE_ID:
-                presenter = new RendersTable(mListActivity.getApplicationContext(), this);
+                table = new RendersTable(mListActivity.getApplicationContext(), this);
                 break;
             case DOCTORS_TABLE_ID:
-                presenter = new DoctorsTable(mListActivity.getApplicationContext(), this);
+                table = new DoctorsTable(mListActivity.getApplicationContext(), this);
                 break;
             case PATIENTS_TABLE_ID:
-                presenter = new PatientsTable(mListActivity.getApplicationContext(), this);
+                table = new PatientsTable(mListActivity.getApplicationContext(), this);
                 break;
             case SERVICES_TABLE_ID:
-                presenter = new ServicesTable(mListActivity.getApplicationContext(), this);
+                table = new ServicesTable(mListActivity.getApplicationContext(), this);
                 break;
             case VISITS_TABLE_ID:
-                presenter = new VisitsTable(mListActivity.getApplicationContext(), this);
+                table = new VisitsTable(mListActivity.getApplicationContext(), this);
                 break;
             default:
-                presenter = null;
+                table = null;
         }
-        presenter.fetchData();
+        table.fetchData();
     }
 
     public void sendMessage(String result){
