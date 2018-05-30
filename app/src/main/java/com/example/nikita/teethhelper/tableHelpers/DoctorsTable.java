@@ -28,6 +28,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class DoctorsTable implements defaultTable {
+    public static final int DOCTORS_TABLE_ID = 1;
     private String[] mTagNames;
     private Context mContext;
     private SQLiteDatabase mDb;
@@ -88,7 +89,7 @@ public class DoctorsTable implements defaultTable {
             @Override
             public void onComplete() {
                 mListPresenter.sendMessage(mContext.getResources().getString(R.string.addedDoctor));
-                mListPresenter.updateDataByTableId(1);
+                mListPresenter.updateDataByTableId(DOCTORS_TABLE_ID);
             }
         };
     }
@@ -120,7 +121,7 @@ public class DoctorsTable implements defaultTable {
             @Override
             public void onComplete() {
                 mListPresenter.sendMessage(mContext.getResources().getString(R.string.deletedDoctor));
-                mListPresenter.updateDataByTableId(1);
+                mListPresenter.updateDataByTableId(DOCTORS_TABLE_ID);
             }
         };
     }
@@ -162,7 +163,7 @@ public class DoctorsTable implements defaultTable {
             @Override
             public void onComplete() {
                 mListPresenter.sendMessage(mContext.getResources().getString(R.string.updatedDoctor));
-                mListPresenter.updateDataByTableId(1);
+                mListPresenter.updateDataByTableId(DOCTORS_TABLE_ID);
             }
         };
     }

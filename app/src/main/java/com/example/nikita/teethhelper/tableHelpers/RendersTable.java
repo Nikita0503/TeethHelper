@@ -28,6 +28,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class RendersTable implements defaultTable {
+    public static final int RENDERS_TABLE_ID = 0;
     private String[] mTagNames;
     private Context mContext;
     private DBHelper dbHepler;
@@ -88,7 +89,7 @@ public class RendersTable implements defaultTable {
             @Override
             public void onComplete() {
                 mListPresenter.sendMessage(mContext.getResources().getString(R.string.addedRender));
-                mListPresenter.updateDataByTableId(0);
+                mListPresenter.updateDataByTableId(RENDERS_TABLE_ID);
             }
         };
     }
@@ -118,7 +119,7 @@ public class RendersTable implements defaultTable {
             @Override
             public void onComplete() {
                 mListPresenter.sendMessage(mContext.getResources().getString(R.string.deletedRender));
-                mListPresenter.updateDataByTableId(0);
+                mListPresenter.updateDataByTableId(RENDERS_TABLE_ID);
             }
         };
     }
@@ -156,7 +157,7 @@ public class RendersTable implements defaultTable {
             @Override
             public void onComplete() {
                 mListPresenter.sendMessage(mContext.getResources().getString(R.string.updatedRender));
-                mListPresenter.updateDataByTableId(0);
+                mListPresenter.updateDataByTableId(RENDERS_TABLE_ID);
             }
         };
     }

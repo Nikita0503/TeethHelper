@@ -43,6 +43,11 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class ListPresenter implements Contract.Presenter{
+    public static final int RENDERS_TABLE_ID = 0;
+    public static final int DOCTORS_TABLE_ID = 1;
+    public static final int PATIENTS_TABLE_ID = 2;
+    public static final int SERVICES_TABLE_ID = 3;
+    public static final int VISITS_TABLE_ID = 4;
     public CompositeDisposable disposables;
     private ListActivity mListActivity;
 
@@ -57,27 +62,27 @@ public class ListPresenter implements Contract.Presenter{
 
     public void fetchData(int tableId){
         switch (tableId){
-            case 0:
+            case RENDERS_TABLE_ID:
                 RendersTable rendersTable = new RendersTable(mListActivity, this);
                 rendersTable.fetchData();
                 mListActivity.setColors(mListActivity.getResources().getColor(R.color.colorDarkAqua), mListActivity.getResources().getColor(R.color.colorAqua), mListActivity.getResources().getString(R.string.renders));
                 break;
-            case 1:
+            case DOCTORS_TABLE_ID:
                 DoctorsTable doctorsTable = new DoctorsTable(mListActivity, this);
                 doctorsTable.fetchData();
                 mListActivity.setColors(mListActivity.getResources().getColor(R.color.colorDarkRed), mListActivity.getResources().getColor(R.color.colorRed), mListActivity.getResources().getString(R.string.doctors));
                 break;
-            case 2:
+            case PATIENTS_TABLE_ID:
                 PatientsTable patientsTable = new PatientsTable(mListActivity, this);
                 patientsTable.fetchData();
                 mListActivity.setColors(mListActivity.getResources().getColor(R.color.colorDarkPurple), mListActivity.getResources().getColor(R.color.colorPurple), mListActivity.getResources().getString(R.string.patients));
                 break;
-            case 3:
+            case SERVICES_TABLE_ID:
                 ServicesTable servicesTable = new ServicesTable(mListActivity, this);
                 servicesTable.fetchData();
                 mListActivity.setColors(mListActivity.getResources().getColor(R.color.colorDarkOrange), mListActivity.getResources().getColor(R.color.colorOrange), mListActivity.getResources().getString(R.string.services));
                 break;
-            case 4:
+            case VISITS_TABLE_ID:
                 VisitsTable visitsTable = new VisitsTable(mListActivity, this);
                 visitsTable.fetchData();
                 mListActivity.setColors(mListActivity.getResources().getColor(R.color.colorDarkGreen), mListActivity.getResources().getColor(R.color.colorGreen), mListActivity.getResources().getString(R.string.visits));
@@ -284,23 +289,23 @@ public class ListPresenter implements Contract.Presenter{
         final defaultObject object;
         defaultTable table = null;
         switch (tableId) {
-            case 0:
+            case RENDERS_TABLE_ID:
                 object = getRenderByObjectData(objectData);
                 table = new RendersTable(mListActivity.getApplicationContext(), this);
                 break;
-            case 1:
+            case DOCTORS_TABLE_ID:
                 object = getDoctorByObjectData(objectData);
                 table = new DoctorsTable(mListActivity.getApplicationContext(), this);
                 break;
-            case 2:
+            case PATIENTS_TABLE_ID:
                 object = getPatientByObjectData(objectData);
                 table = new PatientsTable(mListActivity.getApplicationContext(), this);
                 break;
-            case 3:
+            case SERVICES_TABLE_ID:
                 object = getServiceByObjectData(objectData);
                 table = new ServicesTable(mListActivity.getApplicationContext(), this);
                 break;
-            case 4:
+            case VISITS_TABLE_ID:
                 object = getVisitByObjectData(objectData);
                 table = new VisitsTable(mListActivity.getApplicationContext(), this);
                 break;
@@ -323,23 +328,23 @@ public class ListPresenter implements Contract.Presenter{
         final defaultObject object;
         defaultTable table = null;
         switch (tableId){
-            case 0:
+            case RENDERS_TABLE_ID:
                 object = getRenderByObjectData(objectData);
                 table = new RendersTable(mListActivity.getApplicationContext(), this);
                 break;
-            case 1:
+            case DOCTORS_TABLE_ID:
                 object = getDoctorByObjectData(objectData);
                 table = new DoctorsTable(mListActivity.getApplicationContext(), this);
                 break;
-            case 2:
+            case PATIENTS_TABLE_ID:
                 object = getPatientByObjectData(objectData);
                 table = new PatientsTable(mListActivity.getApplicationContext(), this);
                 break;
-            case 3:
+            case SERVICES_TABLE_ID:
                 object = getServiceByObjectData(objectData);
                 table = new ServicesTable(mListActivity.getApplicationContext(), this);
                 break;
-            case 4:
+            case VISITS_TABLE_ID:
                 object = getVisitByObjectData(objectData);
                 table = new VisitsTable(mListActivity.getApplicationContext(), this);
                 break;
@@ -361,7 +366,7 @@ public class ListPresenter implements Contract.Presenter{
     public void prepareDataForUpdate(ArrayList<String> oldObjectData, int tableId){// изменить название метода на более логичное
         Intent data;
         switch (tableId){
-            case 0:
+            case RENDERS_TABLE_ID:
                 Render render = getRenderByObjectData(oldObjectData);
                 Log.d("123", render.service + " " + render.patient + " " + render.doctor + " " + render.sum + " " + render.doctor);
                 data = new Intent(mListActivity, RenderDataActivity.class);
@@ -372,7 +377,7 @@ public class ListPresenter implements Contract.Presenter{
                 data.putExtra("oldDate", render.date);
                 mListActivity.startActivityForResult(data, 2);
                 break;
-            case 1:
+            case DOCTORS_TABLE_ID:
                 Doctor doctor = getDoctorByObjectData(oldObjectData);
                 Log.d("123", doctor.code + " " + doctor.name + " " + doctor.passport + " " + doctor.address + " " + doctor.specialization + " " + doctor.experience + " " + doctor.berth);
                 data = new Intent(mListActivity, DoctorDataActivity.class);
@@ -385,7 +390,7 @@ public class ListPresenter implements Contract.Presenter{
                 data.putExtra("oldBerth", doctor.berth);
                 mListActivity.startActivityForResult(data, 2);
                 break;
-            case 2:
+            case PATIENTS_TABLE_ID:
                 Patient patient = getPatientByObjectData(oldObjectData);
                 Log.d("123", patient.code + " " + patient.name + " " + patient.passport + " " + patient.address + " " + patient.disease);
                 data = new Intent(mListActivity, PatientDataActivity.class);
@@ -396,7 +401,7 @@ public class ListPresenter implements Contract.Presenter{
                 data.putExtra("oldDisease", patient.disease);
                 mListActivity.startActivityForResult(data, 2);
                 break;
-            case 3:
+            case SERVICES_TABLE_ID:
                 Service service = getServiceByObjectData(oldObjectData);
                 Log.d("OLDPREPARE", service.patient + " " + service.doctor + " " + service.date + " " + service.cost + " " + service.manipulation);
                 data = new Intent(mListActivity, ServiceDataActivity.class);
@@ -407,7 +412,7 @@ public class ListPresenter implements Contract.Presenter{
                 data.putExtra("oldDate", service.date);
                 mListActivity.startActivityForResult(data, 2);
                 break;
-            case 4:
+            case VISITS_TABLE_ID:
                 Visit visit = getVisitByObjectData(oldObjectData);
                 Log.d("123", visit.patient + " " + visit.date + " " + visit.service);
                 data = new Intent(mListActivity, VisitsDataActivity.class);
@@ -424,27 +429,27 @@ public class ListPresenter implements Contract.Presenter{
         final defaultObject newObject;
         defaultTable table = null;
         switch (tableId){
-            case 0:
+            case RENDERS_TABLE_ID:
                 oldObject = getRenderByObjectData(oldObjectData);
                 newObject = getRenderByObjectData(newObjectData);
                 table = new RendersTable(mListActivity.getApplicationContext(), this);
                 break;
-            case 1:
+            case DOCTORS_TABLE_ID:
                 oldObject = getDoctorByObjectData(oldObjectData);
                 newObject = getDoctorByObjectData(newObjectData);
                 table = new DoctorsTable(mListActivity.getApplicationContext(), this);
                 break;
-            case 2:
+            case PATIENTS_TABLE_ID:
                 oldObject = getPatientByObjectData(oldObjectData);
                 newObject = getPatientByObjectData(newObjectData);
                 table = new PatientsTable(mListActivity.getApplicationContext(), this);
                 break;
-            case 3:
+            case SERVICES_TABLE_ID:
                 oldObject = getServiceByObjectData(oldObjectData);
                 newObject = getServiceByObjectData(newObjectData);
                 table = new ServicesTable(mListActivity.getApplicationContext(), this);
                 break;
-            case 4:
+            case VISITS_TABLE_ID:
                 oldObject = getVisitByObjectData(oldObjectData);
                 newObject = getVisitByObjectData(newObjectData);
                 table = new VisitsTable(mListActivity.getApplicationContext(), this);
@@ -553,19 +558,19 @@ public class ListPresenter implements Contract.Presenter{
     public void updateDataByTableId(int tableId){
         defaultTable presenter;
         switch (tableId){
-            case 0:
+            case RENDERS_TABLE_ID:
                 presenter = new RendersTable(mListActivity.getApplicationContext(), this);
                 break;
-            case 1:
+            case DOCTORS_TABLE_ID:
                 presenter = new DoctorsTable(mListActivity.getApplicationContext(), this);
                 break;
-            case 2:
+            case PATIENTS_TABLE_ID:
                 presenter = new PatientsTable(mListActivity.getApplicationContext(), this);
                 break;
-            case 3:
+            case SERVICES_TABLE_ID:
                 presenter = new ServicesTable(mListActivity.getApplicationContext(), this);
                 break;
-            case 4:
+            case VISITS_TABLE_ID:
                 presenter = new VisitsTable(mListActivity.getApplicationContext(), this);
                 break;
             default:

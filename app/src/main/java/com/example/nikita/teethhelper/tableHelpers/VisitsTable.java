@@ -28,6 +28,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class VisitsTable implements defaultTable {
+    public static final int VISITS_TABLE_ID = 4;
     private String[] mTagNames;
     private DBHelper mDbHepler;
     private SQLiteDatabase mDb;
@@ -87,7 +88,7 @@ public class VisitsTable implements defaultTable {
             @Override
             public void onComplete() {
                 mListPresenter.sendMessage(mContext.getResources().getString(R.string.addedVisit));
-                mListPresenter.updateDataByTableId(4);
+                mListPresenter.updateDataByTableId(VISITS_TABLE_ID);
             }
         };
     }
@@ -114,7 +115,7 @@ public class VisitsTable implements defaultTable {
             @Override
             public void onComplete() {
                 mListPresenter.sendMessage(mContext.getResources().getString(R.string.deletedVisit));
-                mListPresenter.updateDataByTableId(4);
+                mListPresenter.updateDataByTableId(VISITS_TABLE_ID);
             }
         };
     }
@@ -148,7 +149,7 @@ public class VisitsTable implements defaultTable {
             @Override
             public void onComplete() {
                 mListPresenter.sendMessage(mContext.getResources().getString(R.string.updatedVisit));
-                mListPresenter.updateDataByTableId(4);
+                mListPresenter.updateDataByTableId(VISITS_TABLE_ID);
             }
         };
     }

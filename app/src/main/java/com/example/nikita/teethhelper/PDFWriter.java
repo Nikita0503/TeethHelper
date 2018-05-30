@@ -26,6 +26,8 @@ import io.reactivex.observers.DisposableObserver;
  */
 
 public class PDFWriter {
+    public static final int START_X = 100;
+    public static final int START_Y = 40;
     private Context mContext;
 
     public PDFWriter(Context context){
@@ -40,8 +42,8 @@ public class PDFWriter {
                 Paint redPaint = new Paint();
                 redPaint.setColor(Color.BLUE);
                 redPaint.setTextSize(28);
-                int x = 100;
-                int y = 40;
+                int x = START_X;
+                int y = START_Y;
                 for(int i = 0; i < text.size(); i++){
                     PdfDocument.PageInfo pageInfo =
                             new PdfDocument.PageInfo.Builder(800, 1200, i+1).create();
@@ -90,8 +92,8 @@ public class PDFWriter {
                 Paint redPaint = new Paint();
                 redPaint.setColor(Color.RED);
                 redPaint.setTextSize(28);
-                int x = 100;
-                int y = 40;
+                int x = START_X;
+                int y = START_X;
                 for(int i = 0; i < text.size(); i++){
                     PdfDocument.PageInfo pageInfo =
                             new PdfDocument.PageInfo.Builder(800, 1200, i+1).create();
@@ -135,8 +137,8 @@ public class PDFWriter {
                 Paint redPaint = new Paint();
                 redPaint.setColor(Color.parseColor("#AA66CC"));
                 redPaint.setTextSize(28);
-                int x = 100;
-                int y = 40;
+                int x = START_X;
+                int y = START_Y;
                 for(int i = 0; i < text.size(); i++){
                     PdfDocument.PageInfo pageInfo =
                             new PdfDocument.PageInfo.Builder(800, 1200, i+1).create();
@@ -181,8 +183,8 @@ public class PDFWriter {
                 Paint redPaint = new Paint();
                 redPaint.setColor(Color.parseColor("#AA66CC"));
                 redPaint.setTextSize(28);
-                int x = 100;
-                int y = 40;
+                int x = START_X;
+                int y = START_Y;
                 for(int i = 0; i < text.size(); i++){
                     PdfDocument.PageInfo pageInfo =
                             new PdfDocument.PageInfo.Builder(800, 1200, i+1).create();
@@ -227,8 +229,8 @@ public class PDFWriter {
                 Paint redPaint = new Paint();
                 redPaint.setColor(Color.parseColor("#AA66CC"));
                 redPaint.setTextSize(28);
-                int x = 100;
-                int y = 40;
+                int x = START_X;
+                int y = START_Y;
                 int rowNumber = 0;
                 int pageNumber = 1;
                 PdfDocument.PageInfo pageInfo =

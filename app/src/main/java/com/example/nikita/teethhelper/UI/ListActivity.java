@@ -31,6 +31,13 @@ import butterknife.ButterKnife;
 import es.dmoral.toasty.Toasty;
 
 public class ListActivity extends AppCompatActivity implements Contract.View {
+    public static final int REQUEST_CODE_ADD = 1;
+    public static final int REQUEST_CODE_UPDATE = 2;
+    public static final int RENDERS_TABLE_ID = 0;
+    public static final int DOCTORS_TABLE_ID = 1;
+    public static final int PATIENTS_TABLE_ID = 2;
+    public static final int SERVICES_TABLE_ID = 3;
+    public static final int VISITS_TABLE_ID = 4;
     private int mTableId;
     private ListPresenter mPresenter;
     @BindView(R.id.elvMain)
@@ -92,23 +99,23 @@ public class ListActivity extends AppCompatActivity implements Contract.View {
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
         switch (mTableId){
-            case 0:
+            case RENDERS_TABLE_ID:
                 intent = new Intent(ListActivity.this, RenderDataActivity.class);
                 startActivityForResult(intent, 1);
                 break;
-            case 1:
+            case DOCTORS_TABLE_ID:
                 intent = new Intent(ListActivity.this, DoctorDataActivity.class);
                 startActivityForResult(intent, 1);
                 break;
-            case 2:
+            case PATIENTS_TABLE_ID:
                 intent = new Intent(ListActivity.this, PatientDataActivity.class);
                 startActivityForResult(intent, 1);
                 break;
-            case 3:
+            case SERVICES_TABLE_ID:
                 intent = new Intent(ListActivity.this, ServiceDataActivity.class);
                 startActivityForResult(intent, 1);
                 break;
-            case 4:
+            case VISITS_TABLE_ID:
                 intent = new Intent(ListActivity.this, VisitsDataActivity.class);
                 startActivityForResult(intent, 1);
                 break;
@@ -126,10 +133,10 @@ public class ListActivity extends AppCompatActivity implements Contract.View {
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (intent == null) {return;}
         switch (requestCode){
-            case 1:
+            case REQUEST_CODE_ADD:
                 ArrayList<String> data = new ArrayList<String>();
                 switch (mTableId){
-                    case 0:
+                    case RENDERS_TABLE_ID:
                         data.add(intent.getStringExtra("service"));
                         data.add(intent.getStringExtra("patient"));
                         data.add(intent.getStringExtra("doctor"));
@@ -137,7 +144,7 @@ public class ListActivity extends AppCompatActivity implements Contract.View {
                         data.add(intent.getStringExtra("date"));
                         mPresenter.prepareDataForAddition(data, mTableId);
                         break;
-                    case 1:
+                    case DOCTORS_TABLE_ID:
                         data.add(intent.getStringExtra("name"));
                         data.add(intent.getStringExtra("passport"));
                         data.add(intent.getStringExtra("address"));
@@ -146,14 +153,14 @@ public class ListActivity extends AppCompatActivity implements Contract.View {
                         data.add(intent.getStringExtra("berth"));
                         mPresenter.prepareDataForAddition(data, mTableId);
                         break;
-                    case 2:
+                    case PATIENTS_TABLE_ID:
                         data.add(intent.getStringExtra("name"));
                         data.add(intent.getStringExtra("passport"));
                         data.add(intent.getStringExtra("address"));
                         data.add(intent.getStringExtra("disease"));
                         mPresenter.prepareDataForAddition(data, mTableId);
                         break;
-                    case 3:
+                    case SERVICES_TABLE_ID:
                         data.add(intent.getStringExtra("manipulation"));
                         data.add(intent.getStringExtra("patient"));
                         data.add(intent.getStringExtra("doctor"));
@@ -161,7 +168,7 @@ public class ListActivity extends AppCompatActivity implements Contract.View {
                         data.add(intent.getStringExtra("date"));
                         mPresenter.prepareDataForAddition(data, mTableId);
                         break;
-                    case 4:
+                    case VISITS_TABLE_ID:
                         data.add(intent.getStringExtra("patient"));
                         data.add(intent.getStringExtra("date"));
                         data.add(intent.getStringExtra("service"));
@@ -169,11 +176,11 @@ public class ListActivity extends AppCompatActivity implements Contract.View {
                 }
 
                 break;
-            case 2:
+            case REQUEST_CODE_UPDATE:
                 ArrayList<String> oldData = new ArrayList<String>();
                 ArrayList<String> newData = new ArrayList<String>();
                 switch (mTableId){
-                    case 0:
+                    case RENDERS_TABLE_ID:
                         oldData.add(intent.getStringExtra("oldService"));
                         oldData.add(intent.getStringExtra("oldPatient"));
                         oldData.add(intent.getStringExtra("oldDoctor"));
@@ -186,7 +193,7 @@ public class ListActivity extends AppCompatActivity implements Contract.View {
                         newData.add(intent.getStringExtra("date"));
                         mPresenter.prepareDataForUpdate(oldData, newData, mTableId);
                         break;
-                    case 1:
+                    case DOCTORS_TABLE_ID:
                         oldData.add(String.valueOf(intent.getIntExtra("code", -1)));
                         oldData.add(intent.getStringExtra("oldName"));
                         oldData.add(intent.getStringExtra("oldPassport"));
@@ -203,7 +210,7 @@ public class ListActivity extends AppCompatActivity implements Contract.View {
                         newData.add(intent.getStringExtra("berth"));
                         mPresenter.prepareDataForUpdate(oldData, newData, mTableId);
                         break;
-                    case 2:
+                    case PATIENTS_TABLE_ID:
                         oldData.add(String.valueOf(intent.getIntExtra("code", -1)));
                         oldData.add(intent.getStringExtra("oldName"));
                         oldData.add(intent.getStringExtra("oldPassport"));
@@ -216,7 +223,7 @@ public class ListActivity extends AppCompatActivity implements Contract.View {
                         newData.add(intent.getStringExtra("disease"));
                         mPresenter.prepareDataForUpdate(oldData, newData, mTableId);
                         break;
-                    case 3:
+                    case SERVICES_TABLE_ID:
                         oldData.add(intent.getStringExtra("oldManipulation"));
                         oldData.add(intent.getStringExtra("oldPatient"));
                         oldData.add(intent.getStringExtra("oldDoctor"));
@@ -229,7 +236,7 @@ public class ListActivity extends AppCompatActivity implements Contract.View {
                         newData.add(intent.getStringExtra("date"));
                         mPresenter.prepareDataForUpdate(oldData, newData, mTableId);
                         break;
-                    case 4:
+                    case VISITS_TABLE_ID:
                         oldData.add(intent.getStringExtra("oldPatient"));
                         oldData.add(intent.getStringExtra("oldDate"));
                         oldData.add(intent.getStringExtra("oldService"));

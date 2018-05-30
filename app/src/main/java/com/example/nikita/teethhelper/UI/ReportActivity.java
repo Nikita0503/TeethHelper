@@ -17,6 +17,8 @@ import butterknife.OnClick;
 import es.dmoral.toasty.Toasty;
 
 public class ReportActivity extends AppCompatActivity implements Contract.View {
+    public static final int REQUEST_CODE_VISITS_FOR_PERIOD = 1;
+    public static final int REQUEST_CODE_VISITS_STATISTIC = 2;
     public Intent date;
     private ReportActivityPresenter mReportActivityPresenter;
 
@@ -65,9 +67,9 @@ public class ReportActivity extends AppCompatActivity implements Contract.View {
         if(resultCode == RESULT_OK) {
             date = intent;
             switch (requestCode) {
-                case 1:
+                case REQUEST_CODE_VISITS_FOR_PERIOD:
                     mReportActivityPresenter.writeToFile("visits for period");
-                case 2:
+                case REQUEST_CODE_VISITS_STATISTIC:
                     mReportActivityPresenter.writeToFile("visits statistic for period");
             }
         }
