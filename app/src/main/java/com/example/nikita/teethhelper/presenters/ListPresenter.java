@@ -363,7 +363,7 @@ public class ListPresenter implements Contract.Presenter{
                 .subscribeWith(table.deleteRow()));
     }
 
-    public void prepareDataForUpdate(ArrayList<String> oldObjectData, int tableId){// изменить название метода на более логичное
+    public void prepareDataForUpdate(ArrayList<String> oldObjectData, int tableId){
         Intent data;
         switch (tableId){
             case RENDERS_TABLE_ID:
