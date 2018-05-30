@@ -52,7 +52,7 @@ public class ServiceDataActivityPresenter implements TableContract.TablePresente
             return;
         }
         if (service.cost < 0){
-            sendError(mDataActivity.getResources().getString(R.string.invalidService));
+            sendError(mDataActivity.getResources().getString(R.string.invalidCost));
             return;
         }
         if (service.date.trim().length() <= 0) {
